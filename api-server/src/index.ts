@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import auth from "./controller/AuthController";
 import users from "./controller/UserController";
+import demand from "./controller/DemandController";
 import { verifyToken } from "./middleware/AuthMiddleware";
 import cors from "cors";
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", auth);
 app.use("/api/user", users);
+app.use("/api/demand",demand );
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

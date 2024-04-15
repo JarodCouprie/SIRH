@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
 import { verifyToken } from "../middleware/AuthMiddleware";
 import { Request, Response, Router } from "express";
 import { UserService } from "../service/UserService";
 
-dotenv.config();
 const router = Router();
 
 router.get("/", verifyToken, async (req: Request, res: Response) => {
