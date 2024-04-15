@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import auth from "./controller/AuthController";
 import users from "./controller/UserController";
+import expense from "./controller/ExpenseController";
 import { verifyToken } from "./middleware/AuthMiddleware";
 import cors from "cors";
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", auth);
 app.use("/api/user", users);
+app.use("/api/expense", expense);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API Congés test");
