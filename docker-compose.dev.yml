@@ -1,0 +1,41 @@
+version: "3.8"
+name: sirh-dev
+services:
+  phpmyadmin:
+    platform: linux/amd64
+    image: beeyev/phpmyadmin-lightweight:latest
+    container_name: phpmyadmin-sirh-dev
+    restart: unless-stopped
+    tty: true
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PASSWORD: root
+    ports:
+      - '8080:80'
+    depends_on:
+      - mysql
+    networks:
+      - sirh-app-dev
+  mysql:
+    platform: linux/amd64
+    image: mysql:latest
+    container_name: mysql-sirh-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sirh-db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    volumes:
+      - sirh_data_dev:/var/lib/mysql
+    networks:
+      - sirh-app-dev
+networks:
+  sirh-app-dev:
+    driver: bridge
+volumes:
+  sirh_data_dev:
+    driver: local

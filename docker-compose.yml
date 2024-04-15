@@ -2,35 +2,58 @@ version: "3"
 services:
   react-app:
     build: ./react-app
-    container_name: front
+    container_name: sirh-front
     stdin_open: true
     ports:
       - "3000:3000"
     networks:
-      - mern-app
+      - sirh-app
     depends_on:
       - api-server
   api-server:
     build: ./api-server
-    container_name: back
+    container_name: back-sirh
     ports:
       - "5000:5000"
     networks:
-      - mern-app
+      - sirh-app
     depends_on:
-      - mongo
-  mongo:
-    image: mongo:latest
-    container_name: mongo
+      - mysql
+  mysql:
+    platform: linux/amd64
+    image: mysql:latest
+    container_name: mysql-sirh
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sirh-db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: user
     ports:
-      - "27017:27017"
-    networks:
-      - mern-app
+      - "3306:3306"
     volumes:
-      - mongo-data:/data/db
+      - sirh_data:/var/lib/mysql
+    networks:
+      - sirh-app
+  phpmyadmin:
+    platform: linux/amd64
+    image: beeyev/phpmyadmin-lightweight:latest
+    container_name: phpmyadmin-sirh
+    restart: unless-stopped
+    tty: true
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PASSWORD: root
+    ports:
+      - '8080:80'
+    depends_on:
+      - mysql
+    networks:
+      - sirh-app
 networks:
-  mern-app:
+  sirh-app:
     driver: bridge
 volumes:
-  mongo-data:
+  sirh_data:
     driver: local
