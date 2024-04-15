@@ -1,0 +1,224 @@
+DROP TABLE IF EXISTS belong_team_service, belong_service, belong_team, equipment, location_contract, agency, insurance_contract, insurance_company, address, service, team, document, logs, expense, absence, demand, localisation, users;
+
+
+CREATE TABLE users
+(
+    id          BIGINT,
+    email       VARCHAR(50),
+    password    VARCHAR(50),
+    firstName   VARCHAR(50),
+    lastName    VARCHAR(50),
+    address     VARCHAR(50),
+    nationality VARCHAR(50),
+    role        VARCHAR(50),
+    iban        VARCHAR(50),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE localisation
+(
+    id  BIGINT,
+    lat DECIMAL(15, 2),
+    lng DECIMAL(15, 2),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE demand
+(
+    id                      BIGINT,
+    startDate               DATE,
+    endDate                 DATE,
+    motivation              VARCHAR(50),
+    createdAt               DATE,
+    status                  VARCHAR(50),
+    type                    VARCHAR(50),
+    id_user_create_demand   BIGINT NOT NULL,
+    id_user_validate_demand BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
+    FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
+);
+
+CREATE TABLE absence
+(
+    id                       BIGINT,
+    type                     VARCHAR(50),
+    startDate                DATE,
+    endDate                  DATE,
+    motivation               VARCHAR(50),
+    createdAt                DATE,
+    status                   VARCHAR(50),
+    id_user_create_absence   BIGINT NOT NULL,
+    id_user_validate_absence BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_create_absence) REFERENCES users (id),
+    FOREIGN KEY (id_user_validate_absence) REFERENCES users (id)
+);
+
+CREATE TABLE expense
+(
+    id                       BIGINT,
+    type                     VARCHAR(50),
+    amount                   INT,
+    motivation               VARCHAR(50),
+    createdAt                DATE,
+    status                   VARCHAR(50),
+    id_user_create_expense   BIGINT NOT NULL,
+    id_user_validate_expense BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_create_expense) REFERENCES users (id),
+    FOREIGN KEY (id_user_validate_expense) REFERENCES users (id)
+);
+
+CREATE TABLE logs
+(
+    id                 BIGINT,
+    dates              DATE,
+    status             INT,
+    path               VARCHAR(50),
+    event              VARCHAR(50),
+    ipAddress          VARCHAR(50),
+    methods            VARCHAR(50),
+    id_user_create_log BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_create_log) REFERENCES users (id)
+);
+
+CREATE TABLE document
+(
+    id                          BIGINT,
+    fileName                    VARCHAR(50),
+    contentType                 VARCHAR(50),
+    size                        VARCHAR(50),
+    uploadDate                  DATE,
+    fileKey                     VARCHAR(255),
+    expirationDate              DATE,
+    url                         VARCHAR(50),
+    id_user_contain_document    BIGINT NOT NULL,
+    id_expense_contain_document BIGINT NOT NULL,
+    id_absence_contain_document BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE (id_user_contain_document),
+    FOREIGN KEY (id_user_contain_document) REFERENCES users (id),
+    FOREIGN KEY (id_expense_contain_document) REFERENCES expense (id),
+    FOREIGN KEY (id_absence_contain_document) REFERENCES absence (id)
+);
+
+CREATE TABLE team
+(
+    id                BIGINT,
+    name              VARCHAR(50),
+    minimumUsers      INT,
+    id_user_lead_team BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_lead_team) REFERENCES users (id)
+);
+
+CREATE TABLE service
+(
+    id                   BIGINT,
+    name                 VARCHAR(50),
+    teams                VARCHAR(50),
+    id_user_lead_service BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_user_lead_service) REFERENCES users (id)
+);
+
+CREATE TABLE address
+(
+    id                          BIGINT,
+    street                      VARCHAR(50),
+    streetNumber                VARCHAR(50),
+    locality                    VARCHAR(50),
+    zipcode                     VARCHAR(50),
+    location                    VARCHAR(50),
+    id_localisation_own_address BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_localisation_own_address) REFERENCES localisation (id)
+);
+
+CREATE TABLE insurance_company
+(
+    id                               BIGINT,
+    name                             VARCHAR(50),
+    id_address_own_insurance_company BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_address_own_insurance_company) REFERENCES address (id)
+);
+
+CREATE TABLE insurance_contract
+(
+    id                                          BIGINT,
+    startDate                                   DATE,
+    endDate                                     DATE,
+    id_insurance_company_own_insurance_contract BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_insurance_company_own_insurance_contract) REFERENCES insurance_company (id)
+);
+
+CREATE TABLE agency
+(
+    id                               BIGINT,
+    address                          VARCHAR(50),
+    name                             VARCHAR(50),
+    organisation                     VARCHAR(50),
+    id_insurance_contract_own_agency BIGINT NOT NULL,
+    id_address_own_agency            BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_insurance_contract_own_agency) REFERENCES insurance_contract (id),
+    FOREIGN KEY (id_address_own_agency) REFERENCES address (id)
+);
+
+CREATE TABLE location_contract
+(
+    id                              BIGINT,
+    startDate                       DATE,
+    endDate                         DATE,
+    id_agency_own_location_contract BIGINT NOT NULL,
+    id_user_own_location_contract   BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_agency_own_location_contract) REFERENCES agency (id),
+    FOREIGN KEY (id_user_own_location_contract) REFERENCES users (id)
+);
+
+CREATE TABLE equipment
+(
+    id                                     BIGINT,
+    name                                   VARCHAR(50),
+    serialNumber                           INT,
+    purchaseDate                           DATE,
+    type                                   VARCHAR(50),
+    locationContract                       VARCHAR(50),
+    id_location_contract_contain_equipment BIGINT,
+    id_insurance_contract_insure_equipment BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_location_contract_contain_equipment) REFERENCES location_contract (id),
+    FOREIGN KEY (id_insurance_contract_insure_equipment) REFERENCES insurance_contract (id)
+);
+
+CREATE TABLE belong_team
+(
+    id_team BIGINT,
+    id_user BIGINT,
+    PRIMARY KEY (id_team, id_user),
+    FOREIGN KEY (id_team) REFERENCES team (id),
+    FOREIGN KEY (id_user) REFERENCES users (id)
+);
+
+CREATE TABLE belong_service
+(
+    id_service BIGINT,
+    id_user    BIGINT,
+    PRIMARY KEY (id_service, id_user),
+    FOREIGN KEY (id_service) REFERENCES service (id),
+    FOREIGN KEY (id_user) REFERENCES users (id)
+);
+
+CREATE TABLE belong_team_service
+(
+    id_team    BIGINT,
+    id_service BIGINT,
+    PRIMARY KEY (id_team, id_service),
+    FOREIGN KEY (id_team) REFERENCES team (id),
+    FOREIGN KEY (id_service) REFERENCES service (id)
+);
