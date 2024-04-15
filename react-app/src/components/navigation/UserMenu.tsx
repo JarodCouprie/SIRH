@@ -67,7 +67,7 @@ export function UserMenu() {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Jarod Couprie</DropdownMenuLabel>
+        <DropdownMenuLabel>Prénom Nom</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
