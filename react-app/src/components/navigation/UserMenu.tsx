@@ -1,0 +1,178 @@
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  DotsVerticalIcon,
+  ExitIcon,
+  Half2Icon,
+  MixerVerticalIcon,
+  MoonIcon,
+  PersonIcon,
+  SunIcon,
+} from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/hooks/useTheme.tsx";
+import { useAuth } from "@/hooks/useAuth.tsx";
+import { AuthTokens } from "@/type/context/authTokens.tsx";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+export function UserMenu() {
+  const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
+  // const navigate = useNavigate();
+  // const { setToken } = useAuth() as AuthTokens;
+  // const handleLogOut = () => {
+  //   setToken("", "");
+  //   navigate(`/login`);
+  // };
+  const handleDarkTheme = () => {
+    setDarkTheme();
+  };
+  const handleLightTheme = () => {
+    setLightTheme();
+  };
+  const handleSystemTheme = () => {
+    setSystemTheme();
+  };
+  const localTheme = localStorage.theme || "dark";
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="border-t border-zinc-700 p-2">
+          <Button variant="navNotActive" className="w-full justify-between">
+            Options avancées
+            <DotsVerticalIcon />
+          </Button>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Jarod Couprie</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Mon profil
+            <DropdownMenuShortcut>
+              <PersonIcon />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Paramètres
+            <DropdownMenuShortcut>
+              <MixerVerticalIcon />
+            </DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Thème</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <div className="flex flex-col gap-1">
+                  <DropdownMenuItem
+                    onClick={handleLightTheme}
+                    className={
+                      localTheme === "light"
+                        ? "bg-zinc-200 dark:bg-zinc-800"
+                        : ""
+                    }
+                  >
+                    Clair
+                    <DropdownMenuShortcut>
+                      <SunIcon />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDarkTheme}
+                    className={
+                      localTheme === "dark"
+                        ? "bg-zinc-200 dark:bg-zinc-800"
+                        : ""
+                    }
+                  >
+                    Foncé
+                    <DropdownMenuShortcut>
+                      <MoonIcon />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleSystemTheme}
+                  className={
+                    localTheme === "os-default"
+                      ? "bg-zinc-200 dark:bg-zinc-800"
+                      : ""
+                  }
+                >
+                  Système
+                  <DropdownMenuShortcut>
+                    <Half2Icon />
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <ConfirmLogOutDialog />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function ConfirmLogOutDialog() {
+  const navigate = useNavigate();
+  const { setToken } = useAuth() as AuthTokens;
+  const handleLogOut = () => {
+    setToken("", "");
+    navigate(`/login`);
+  };
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          Déconnexion
+          <DropdownMenuShortcut>
+            <ExitIcon />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Êtes-vous sûr?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Vous allez être déconnecté et redirigé vers l'écran de connexion.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogAction onClick={handleLogOut}>
+            Déconnexion
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}

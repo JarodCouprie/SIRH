@@ -1,12 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "baseUrl": "./src",
+    "target": "ESNext",
+    "module": "ESNext",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node"
+  },
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true
   },
   "include": [
     "src/**/*.ts"

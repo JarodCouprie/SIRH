@@ -1,11 +1,10 @@
 DROP TABLE IF EXISTS belong_team_service, belong_service, belong_team, equipment, location_contract, agency, insurance_contract, insurance_company, address, service, team, document, logs, expense, absence, demand, localisation, users;
 
-
 CREATE TABLE users
 (
-    id          BIGINT,
+    id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     email       VARCHAR(50),
-    password    VARCHAR(50),
+    password    VARCHAR(255),
     firstName   VARCHAR(50),
     lastName    VARCHAR(50),
     address     VARCHAR(50),
@@ -17,7 +16,7 @@ CREATE TABLE users
 
 CREATE TABLE localisation
 (
-    id  BIGINT,
+    id  BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     lat DECIMAL(15, 2),
     lng DECIMAL(15, 2),
     PRIMARY KEY (id)
@@ -25,15 +24,15 @@ CREATE TABLE localisation
 
 CREATE TABLE demand
 (
-    id                      BIGINT,
+    id                      BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     startDate               DATE,
     endDate                 DATE,
     motivation              VARCHAR(50),
     createdAt               DATE,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
-    id_user_create_demand   BIGINT NOT NULL,
-    id_user_validate_demand BIGINT NOT NULL,
+    id_user_create_demand   BIGINT        NOT NULL,
+    id_user_validate_demand BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
     FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
@@ -41,15 +40,15 @@ CREATE TABLE demand
 
 CREATE TABLE absence
 (
-    id                       BIGINT,
+    id                       BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     type                     VARCHAR(50),
     startDate                DATE,
     endDate                  DATE,
     motivation               VARCHAR(50),
     createdAt                DATE,
     status                   VARCHAR(50),
-    id_user_create_absence   BIGINT NOT NULL,
-    id_user_validate_absence BIGINT NOT NULL,
+    id_user_create_absence   BIGINT        NOT NULL,
+    id_user_validate_absence BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_create_absence) REFERENCES users (id),
     FOREIGN KEY (id_user_validate_absence) REFERENCES users (id)
@@ -57,14 +56,14 @@ CREATE TABLE absence
 
 CREATE TABLE expense
 (
-    id                       BIGINT,
+    id                       BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     type                     VARCHAR(50),
     amount                   INT,
     motivation               VARCHAR(50),
     createdAt                DATE,
     status                   VARCHAR(50),
-    id_user_create_expense   BIGINT NOT NULL,
-    id_user_validate_expense BIGINT NOT NULL,
+    id_user_create_expense   BIGINT        NOT NULL,
+    id_user_validate_expense BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_create_expense) REFERENCES users (id),
     FOREIGN KEY (id_user_validate_expense) REFERENCES users (id)
@@ -72,21 +71,21 @@ CREATE TABLE expense
 
 CREATE TABLE logs
 (
-    id                 BIGINT,
+    id                 BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     dates              DATE,
     status             INT,
     path               VARCHAR(50),
     event              VARCHAR(50),
     ipAddress          VARCHAR(50),
     methods            VARCHAR(50),
-    id_user_create_log BIGINT NOT NULL,
+    id_user_create_log BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_create_log) REFERENCES users (id)
 );
 
 CREATE TABLE document
 (
-    id                          BIGINT,
+    id                          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     fileName                    VARCHAR(50),
     contentType                 VARCHAR(50),
     size                        VARCHAR(50),
@@ -94,9 +93,9 @@ CREATE TABLE document
     fileKey                     VARCHAR(255),
     expirationDate              DATE,
     url                         VARCHAR(50),
-    id_user_contain_document    BIGINT NOT NULL,
-    id_expense_contain_document BIGINT NOT NULL,
-    id_absence_contain_document BIGINT NOT NULL,
+    id_user_contain_document    BIGINT        NOT NULL,
+    id_expense_contain_document BIGINT        NOT NULL,
+    id_absence_contain_document BIGINT        NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (id_user_contain_document),
     FOREIGN KEY (id_user_contain_document) REFERENCES users (id),
@@ -106,64 +105,64 @@ CREATE TABLE document
 
 CREATE TABLE team
 (
-    id                BIGINT,
+    id                BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     name              VARCHAR(50),
     minimumUsers      INT,
-    id_user_lead_team BIGINT NOT NULL,
+    id_user_lead_team BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_lead_team) REFERENCES users (id)
 );
 
 CREATE TABLE service
 (
-    id                   BIGINT,
+    id                   BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     name                 VARCHAR(50),
     teams                VARCHAR(50),
-    id_user_lead_service BIGINT NOT NULL,
+    id_user_lead_service BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_lead_service) REFERENCES users (id)
 );
 
 CREATE TABLE address
 (
-    id                          BIGINT,
+    id                          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     street                      VARCHAR(50),
     streetNumber                VARCHAR(50),
     locality                    VARCHAR(50),
     zipcode                     VARCHAR(50),
     location                    VARCHAR(50),
-    id_localisation_own_address BIGINT NOT NULL,
+    id_localisation_own_address BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_localisation_own_address) REFERENCES localisation (id)
 );
 
 CREATE TABLE insurance_company
 (
-    id                               BIGINT,
+    id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     name                             VARCHAR(50),
-    id_address_own_insurance_company BIGINT NOT NULL,
+    id_address_own_insurance_company BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_address_own_insurance_company) REFERENCES address (id)
 );
 
 CREATE TABLE insurance_contract
 (
-    id                                          BIGINT,
+    id                                          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     startDate                                   DATE,
     endDate                                     DATE,
-    id_insurance_company_own_insurance_contract BIGINT NOT NULL,
+    id_insurance_company_own_insurance_contract BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_insurance_company_own_insurance_contract) REFERENCES insurance_company (id)
 );
 
 CREATE TABLE agency
 (
-    id                               BIGINT,
+    id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     address                          VARCHAR(50),
     name                             VARCHAR(50),
     organisation                     VARCHAR(50),
-    id_insurance_contract_own_agency BIGINT NOT NULL,
-    id_address_own_agency            BIGINT NOT NULL,
+    id_insurance_contract_own_agency BIGINT        NOT NULL,
+    id_address_own_agency            BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_insurance_contract_own_agency) REFERENCES insurance_contract (id),
     FOREIGN KEY (id_address_own_agency) REFERENCES address (id)
@@ -171,11 +170,11 @@ CREATE TABLE agency
 
 CREATE TABLE location_contract
 (
-    id                              BIGINT,
+    id                              BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     startDate                       DATE,
     endDate                         DATE,
-    id_agency_own_location_contract BIGINT NOT NULL,
-    id_user_own_location_contract   BIGINT NOT NULL,
+    id_agency_own_location_contract BIGINT        NOT NULL,
+    id_user_own_location_contract   BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_agency_own_location_contract) REFERENCES agency (id),
     FOREIGN KEY (id_user_own_location_contract) REFERENCES users (id)
@@ -183,14 +182,14 @@ CREATE TABLE location_contract
 
 CREATE TABLE equipment
 (
-    id                                     BIGINT,
+    id                                     BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     name                                   VARCHAR(50),
     serialNumber                           INT,
     purchaseDate                           DATE,
     type                                   VARCHAR(50),
     locationContract                       VARCHAR(50),
     id_location_contract_contain_equipment BIGINT,
-    id_insurance_contract_insure_equipment BIGINT NOT NULL,
+    id_insurance_contract_insure_equipment BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_location_contract_contain_equipment) REFERENCES location_contract (id),
     FOREIGN KEY (id_insurance_contract_insure_equipment) REFERENCES insurance_contract (id)
@@ -222,3 +221,7 @@ CREATE TABLE belong_team_service
     FOREIGN KEY (id_team) REFERENCES team (id),
     FOREIGN KEY (id_service) REFERENCES service (id)
 );
+
+INSERT INTO users(firstName, lastName, email, password, address, nationality, role, iban)
+VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
+        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban");
