@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { verifyToken } from "../middleware/AuthMiddleware";
 import { AuthService } from "../service/AuthService";
 import { UserService } from "../service/UserService";
+import { CustomRequest } from "../helper/CustomRequest";
 
 const router = Router();
 dotenv.config();
@@ -33,8 +34,7 @@ router.put(
 
 router.get("/me", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await UserService.getUserById(
-    // @ts-ignore
-    req.token.userId,
+    (req as CustomRequest).token.userId,
   );
   res.status(code).json({ message, data });
 });

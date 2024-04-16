@@ -85,18 +85,28 @@ export const UserList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.data.map((user: UserModel) => (
-          <TableRow
-            key={`${user.id}`}
-            className="hover:cursor-pointer"
-            onClick={() => handleClick(user.id)}
-          >
-            <TableCell className="text-right font-medium">{user.id}</TableCell>
-            <TableCell className="text-right">{user.firstname}</TableCell>
-            <TableCell className="text-right">{user.lastname}</TableCell>
-            <TableCell className="text-right">{user.email}</TableCell>
+        {data?.data?.length ? (
+          data?.data?.map((user: UserModel) => (
+            <TableRow
+              key={`${user.id}`}
+              className="hover:cursor-pointer"
+              onClick={() => handleClick(user.id)}
+            >
+              <TableCell className="text-right font-medium">
+                {user.id}
+              </TableCell>
+              <TableCell className="text-right">{user.firstname}</TableCell>
+              <TableCell className="text-right">{user.lastname}</TableCell>
+              <TableCell className="text-right">{user.email}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={4} className="h-24 text-center">
+              Aucun utilisateur
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
