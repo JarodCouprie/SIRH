@@ -45,7 +45,7 @@ router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesDemand(req.params.id);
+    const { code, message, data } = await ExpenseService.getExpenseDemand(req.params.id);
     res.status(code).json({ message, data });
 });
 
