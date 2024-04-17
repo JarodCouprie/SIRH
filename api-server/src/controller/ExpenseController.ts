@@ -44,7 +44,7 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.confirmExpenseDemand(req.params.id, req.body);
+    const { code, message, data } = await ExpenseService.confirmExpenseDemand(req.params.id, req.body.ExpenseStatus, req.body.validatorId);
     res.status(code).json({ message, data });
 });
 

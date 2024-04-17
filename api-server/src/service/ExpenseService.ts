@@ -1,21 +1,13 @@
 import { ExpenseRepository } from "../repository/ExpenseRepository";
-import { Expense, ExpenseResponse } from "../model/Expense";
+import {Expense, ExpenseResponse, ExpenseStatus} from "../model/Expense";
 
 export class ExpenseService {
 
-    public static async getExpensesValuesById(id:string){
+    public static async getExpensesValuesByUserId(params:any){
 
     }
 
-    public static async getExpensesValues(){
-
-    }
-
-    public static async getExpensesDataById(id:string){
-
-    }
-
-    public static async getExpensesData() {
+    public static async getExpensesValues(params:any){
 
     }
 
@@ -35,7 +27,7 @@ export class ExpenseService {
 
     }
 
-    public static async confirmExpenseDemand(id:string, expense:Expense) {
+    public static async confirmExpenseDemand(id:string, status:ExpenseStatus,validatorId:string) {
 
     }
 }
