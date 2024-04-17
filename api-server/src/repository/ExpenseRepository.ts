@@ -48,10 +48,11 @@ export class ExpenseRepository {
             UPDATE expense
             SET type = ?,
             amount = ?,
-            motivation = ?
+            motivation = ?,
+            facturationDate = ?
             WHERE id = ?;
             `,
-            [expense.type, expense.amount, expense.motivation, id],
+            [expense.type, expense.amount, expense.motivation, expense.facturationDate, id],
         );
         return result;
     }

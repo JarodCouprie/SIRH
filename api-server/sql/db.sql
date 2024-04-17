@@ -61,6 +61,7 @@ CREATE TABLE expense
     amount                   INT,
     motivation               VARCHAR(50),
     createdAt                DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    facturationDate          DATE NOT NULL,
     status                   VARCHAR(50),
     id_owner   BIGINT        NOT NULL,
     id_validator BIGINT      NULL,
@@ -228,8 +229,8 @@ VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.O
         ("User", "Lambda", "user@lambda.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
         "user address", "user nationaly", "ROLE_USER", "user iban");
 
-INSERT INTO expense(type,amount,motivation,status,id_owner,id_validator)
-VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null ),
-       ("COMPENSATION", 50, "Indemnisation", "REFUNDED", 2, 1 ),
-       ("FOOD", 100, "Repas pro", "WAITING", 1, null ),
-       ("HOUSING", 149, "Hotel", "WAITING", 1, null );
+INSERT INTO expense(type,amount,motivation,status,id_owner,id_validator, facturationDate)
+VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
+       ("COMPENSATION", 50, "Indemnisation", "REFUNDED", 2, 1, '2023-12-13'),
+       ("FOOD", 100, "Repas pro", "WAITING", 1, null, '2024-04-15'),
+       ("HOUSING", 149, "Hotel", "WAITING", 1, null, '2024-04-01');

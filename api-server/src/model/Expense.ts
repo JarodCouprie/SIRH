@@ -5,6 +5,7 @@ export class Expense {
     amount: number;
     motivation: string;
     createdAt: Date;
+    facturationDate: Date;
     status: ExpenseStatus;
     ownerId: number;
     userValidateId?: number;
@@ -14,6 +15,7 @@ export class Expense {
         amount: number,
         motivation: string,
         createdAt: Date,
+        facturationDate: Date,
         status: ExpenseStatus,
         ownerId: number,
         userValidateId?: number) {
@@ -21,6 +23,7 @@ export class Expense {
         this.amount = amount;
         this.motivation = motivation;
         this.createdAt = createdAt;
+        this.facturationDate = createdAt;
         this.status = status;
         this.ownerId = ownerId;
         this.userValidateId = userValidateId;
