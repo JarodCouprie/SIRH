@@ -16,7 +16,7 @@ router.get("/:id_demand", verifyToken, async (req: Request, res: Response) => {
 })
 
 router.put("/:id_demand", verifyToken, async (req: Request, res: Response) => {
-    const {code, message, data} = await DemandService.editDemand(req.params.id_demand);
+    const {code, message, data} = await DemandService.editDemand(req.params.id_demand,req.body);
     res.status(code).json({message, data})
 })
 
@@ -26,7 +26,7 @@ router.delete("/:id_demand", verifyToken, async (req: Request, res: Response) =>
 })
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
-    const {code, message, data} = await DemandService.createDemand();
+    const {code, message, data} = await DemandService.createDemand(req.body);
     res.status(code).json({message,data})
     // console.log(req.body);
     // res.status(200).json("gg");
