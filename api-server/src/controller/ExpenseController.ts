@@ -7,21 +7,15 @@ const router = Router();
 dotenv.config();
 
 // Recupération des valeurs et données
-router.get("/values/:user_id", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesValuesById(req.params.user_id);
+router.get("/:user_id", verifyToken, async (req: Request, res: Response) => {
+    const { code, message, data } = await ExpenseService.getExpensesValuesByUserId(req.params);
     res.status(code).json({ message, data });
 });
 
-router.get("/values", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesValues();
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+    const { code, message, data } = await ExpenseService.getExpensesValues(req.params);
     res.status(code).json({ message, data });
 });
-
-router.get("/data/:user_id", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesDataById(req.params.user_id);
-    res.status(code).json({ message, data });
-});
-
 router.get("/data", verifyToken, async (req: Request, res: Response) => {
     const { code, message, data } = await ExpenseService.getExpensesData();
     res.status(code).json({ message, data });
