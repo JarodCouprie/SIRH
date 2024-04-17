@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS belong_team_service, belong_service, belong_team, equipment
 CREATE TABLE users
 (
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    email       VARCHAR(50),
+    email       VARCHAR(50) UNIQUE NOT NULL,
     password    VARCHAR(255),
     firstName   VARCHAR(50),
     lastName    VARCHAR(50),
@@ -31,11 +31,11 @@ CREATE TABLE demand
     createdAt               DATE,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
-    id_user_create_demand   BIGINT        NOT NULL,
-    id_user_validate_demand BIGINT        NOT NULL,
+    id_owner   BIGINT        NOT NULL,
+    id_validator BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
-    FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
+    FOREIGN KEY (id_owner) REFERENCES users (id),
+    FOREIGN KEY (id_validator) REFERENCES users (id)
 );
 
 CREATE TABLE absence
@@ -47,11 +47,11 @@ CREATE TABLE absence
     motivation               VARCHAR(50),
     createdAt                DATE,
     status                   VARCHAR(50),
-    id_user_create_absence   BIGINT        NOT NULL,
-    id_user_validate_absence BIGINT        NOT NULL,
+    id_owner   BIGINT        NOT NULL,
+    id_validator BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_user_create_absence) REFERENCES users (id),
-    FOREIGN KEY (id_user_validate_absence) REFERENCES users (id)
+    FOREIGN KEY (id_owner) REFERENCES users (id),
+    FOREIGN KEY (id_validator) REFERENCES users (id)
 );
 
 CREATE TABLE expense
@@ -60,13 +60,13 @@ CREATE TABLE expense
     type                     VARCHAR(50),
     amount                   INT,
     motivation               VARCHAR(50),
-    createdAt                DATE,
+    createdAt                DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status                   VARCHAR(50),
-    id_user_create_expense   BIGINT        NOT NULL,
-    id_user_validate_expense BIGINT        NOT NULL,
+    id_owner   BIGINT        NOT NULL,
+    id_validator BIGINT      NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_user_create_expense) REFERENCES users (id),
-    FOREIGN KEY (id_user_validate_expense) REFERENCES users (id)
+    FOREIGN KEY (id_owner) REFERENCES users (id),
+    FOREIGN KEY (id_validator) REFERENCES users (id)
 );
 
 CREATE TABLE logs
@@ -224,4 +224,12 @@ CREATE TABLE belong_team_service
 
 INSERT INTO users(firstName, lastName, email, password, address, nationality, role, iban)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban");
+        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban"),
+        ("User", "Lambda", "user@lambda.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
+        "user address", "user nationaly", "ROLE_USER", "user iban");
+
+INSERT INTO expense(type,amount,motivation,status,id_owner,id_validator)
+VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null ),
+       ("COMPENSATION", 50, "Indemnisation", "REFUNDED", 2, 1 ),
+       ("FOOD", 100, "Repas pro", "WAITING", 1, null ),
+       ("HOUSING", 149, "Hotel", "WAITING", 1, null );
