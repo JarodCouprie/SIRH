@@ -33,7 +33,7 @@ export class ExpenseService {
     public static async createExpenseDemand(expense:Expense) {
         try {
             const result: any = await ExpenseRepository.createExpenseDemand(expense);
-            return new ControllerResponse<ExpenseListDTO[]>(200, "Operation was a success");
+            return new ControllerResponse(200, "Operation was a success");
         }catch(error) {
             logger.error(`Failed to create expenses. Error: ${error}`);
             return new ControllerResponse(500, "Failed to create expenses");
@@ -41,18 +41,42 @@ export class ExpenseService {
     }
 
     public static async editExpenseDemand(id:string, expense:Expense) {
-
+        try {
+            const result: any = await ExpenseRepository.updateExpenseDemand(id, expense);
+            return new ControllerResponse(200, "Operation was a success");
+        }catch(error) {
+            logger.error(`Failed to update expenses. Error: ${error}`);
+            return new ControllerResponse(500, "Failed to update expenses");
+        }
     }
 
     public static async delExpenseDemand(id:string){
-
+        try {
+            const result: any = await ExpenseRepository.delExpenseDemand(id);
+            return new ControllerResponse(200, "Operation was a success");
+        }catch(error) {
+            logger.error(`Failed to delete expenses. Error: ${error}`);
+            return new ControllerResponse(500, "Failed to delete expenses");
+        }
     }
 
     public static async getExpenseDemand(id:string) {
-
+        try {
+            const expense: any = await ExpenseRepository.getExpenseDemand(id);
+            return new ControllerResponse<ExpenseListDTO>(200, "", expense);
+        }catch(error) {
+            logger.error(`Failed to get expense. Error: ${error}`);
+            return new ControllerResponse<ExpenseListDTO>(500, "Failed to get expense");
+        }
     }
 
     public static async confirmExpenseDemand(id:string, status:ExpenseStatus,validatorId:string) {
-
+        try {
+            const result: any = await ExpenseRepository.confirmExpenseDemand(id, status, validatorId);
+            return new ControllerResponse(200, "Operation was a success");
+        }catch(error) {
+            logger.error(`Failed to confirm expenses. Error: ${error}`);
+            return new ControllerResponse(500, "Failed to confirm expenses");
+        }
     }
 }
