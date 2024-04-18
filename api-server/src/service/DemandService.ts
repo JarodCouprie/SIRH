@@ -20,7 +20,7 @@ export class DemandService {
     }
 
     public static async getDemandById(id: string) {
-        try {
+        try{
             const demand: any = await DemandRepository.getDemandById(+id);
             if (!demand) {
                 return new ControllerResponse(401, "Demand doesn't exist");
