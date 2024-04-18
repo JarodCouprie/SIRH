@@ -5,24 +5,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "overflow-hidden inline-flex items-center whitespace-nowrap rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-zinc-300",
+  "overflow-hidden inline-flex items-center whitespace-nowrap rounded text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-gray-300",
   {
     variants: {
       variant: {
         default:
-          "justify-center bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90",
+          "justify-center bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90",
         destructive:
-          "justify-center bg-red-500 text-zinc-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90",
+          "justify-center bg-red-500 text-gray-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90",
         outline:
-          "justify-center border border-zinc-200 bg-white shadow-sm hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
+          "justify-center border border-gray-200 bg-white shadow-sm hover:bg-gray-100 hover:text-gray-900 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50",
         secondary:
-          "justify-center bg-zinc-100 text-zinc-900 shadow-sm hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80",
+          "justify-center bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
         ghost:
-          "text-zinc-900 justify-center hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:text-zinc-50",
-        link: "justify-center text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50",
-        navActive: "justify-start shadow bg-zinc-50 text-zinc-900",
+          "text-gray-900 justify-center hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:text-gray-50",
+        link: "justify-center text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
+        navActive: "justify-start shadow bg-gray-50 text-gray-900",
         navNotActive:
-          "justify-start hover:bg-zinc-800 hover:text-zinc-50 text-zinc-50",
+          "justify-start hover:bg-gray-800 hover:text-gray-50 text-gray-50",
+        callToAction:
+          "justify-center bg-indigo-700 text-indigo-50 hover:bg-indigo-800",
       },
       size: {
         default: "h-9 px-4 py-2",

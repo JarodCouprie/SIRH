@@ -10,7 +10,7 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await UserService.getUserById(req.params.id);
+  const { code, message, data } = await UserService.getUserById(+req.params.id);
   res.status(code).json({ message, data });
 });
 

@@ -9,6 +9,7 @@ import {
   generateRefreshToken,
   generateNewAccessToken,
 } from "../helper/Token";
+import { CustomRequest } from "../helper/CustomRequest";
 
 export class AuthService {
   public static async createUser(
@@ -60,11 +61,11 @@ export class AuthService {
 
   public static async refreshToken(req: Request) {
     try {
-      const accessToken = await generateNewAccessToken(req);
-      if (accessToken instanceof ControllerResponse) {
-        return accessToken;
+      const tokens = await generateNewAccessToken(req);
+      if (tokens instanceof ControllerResponse) {
+        return tokens;
       }
-      return new ControllerResponse(200, "", { accessToken });
+      return new ControllerResponse(200, "", tokens);
     } catch (error) {
       logger.error(`Login failed. Error: ${error}`);
       return new ControllerResponse(500, "Login failed");
@@ -75,8 +76,7 @@ export class AuthService {
     try {
       const { password, confirmPassword } = req.body;
       if (password === confirmPassword) {
-        // @ts-ignore
-        const id = req.token.userId;
+        const id = (req as CustomRequest).token.userId;
         const hashedPassword = await bcrypt.hash(password, 10);
         const resetUserPassword = new ResetUserPassword(id, hashedPassword);
         await UserRepository.resetPassword(resetUserPassword);

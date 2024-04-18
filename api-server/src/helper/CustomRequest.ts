@@ -2,5 +2,11 @@ import { Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
 export interface CustomRequest extends Request {
-  token: string | JwtPayload;
+  token: JwtPayload;
+}
+
+declare module "jsonwebtoken" {
+  export interface JwtPayload {
+    userId: number;
+  }
 }
