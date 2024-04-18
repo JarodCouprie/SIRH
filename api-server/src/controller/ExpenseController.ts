@@ -16,10 +16,6 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
     const { code, message, data } = await ExpenseService.getExpensesValues(req.params);
     res.status(code).json({ message, data });
 });
-router.get("/data", verifyToken, async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesData();
-    res.status(code).json({ message, data });
-});
 
 // Gestion des demandes liées aux frais
 
