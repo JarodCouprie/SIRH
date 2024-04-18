@@ -23,6 +23,8 @@ const buttonVariants = cva(
         navActive: "justify-start shadow bg-zinc-50 text-zinc-900",
         navNotActive:
           "justify-start hover:bg-zinc-800 hover:text-zinc-50 text-zinc-50",
+        callToAction:
+          "justify-center bg-indigo-700 text-indigo-50 hover:bg-indigo-800",
       },
       size: {
         default: "h-9 px-4 py-2",
