@@ -1,6 +1,14 @@
 import { NavLink, Outlet, useNavigation } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button.tsx";
-import { HomeIcon, PersonIcon, RocketIcon } from "@radix-ui/react-icons";
+import {
+  BackpackIcon,
+  CalendarIcon,
+  DashboardIcon,
+  FileIcon,
+  PersonIcon,
+  QuestionMarkIcon,
+  ReaderIcon,
+} from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { UserMenu } from "@/components/navigation/UserMenu.tsx";
 
@@ -22,8 +30,63 @@ export function Navbar() {
                   : buttonVariants({ variant: "navNotActive", size: "nav" })
               }
             >
-              <HomeIcon className="mr-4 h-4 w-4" />
+              <DashboardIcon className="mr-4 h-4 w-4" />
               Dashboard
+            </NavLink>
+            <NavLink
+              to={"/demand"}
+              className={({ isActive }) =>
+                isActive
+                  ? buttonVariants({ variant: "navActive", size: "nav" })
+                  : buttonVariants({ variant: "navNotActive", size: "nav" })
+              }
+            >
+              <QuestionMarkIcon className="mr-4 h-4 w-4" />
+              Demandes
+            </NavLink>
+            <NavLink
+              to={"/expense"}
+              className={({ isActive }) =>
+                isActive
+                  ? buttonVariants({ variant: "navActive", size: "nav" })
+                  : buttonVariants({ variant: "navNotActive", size: "nav" })
+              }
+            >
+              <ReaderIcon className="mr-4 h-4 w-4" />
+              Frais
+            </NavLink>
+            <NavLink
+              to={"/absence"}
+              className={({ isActive }) =>
+                isActive
+                  ? buttonVariants({ variant: "navActive", size: "nav" })
+                  : buttonVariants({ variant: "navNotActive", size: "nav" })
+              }
+            >
+              <CalendarIcon className="mr-4 h-4 w-4" />
+              Absences
+            </NavLink>
+            <NavLink
+              to={"/file"}
+              className={({ isActive }) =>
+                isActive
+                  ? buttonVariants({ variant: "navActive", size: "nav" })
+                  : buttonVariants({ variant: "navNotActive", size: "nav" })
+              }
+            >
+              <FileIcon className="mr-4 h-4 w-4" />
+              Documents
+            </NavLink>
+            <NavLink
+              to={"/organisation"}
+              className={({ isActive }) =>
+                isActive
+                  ? buttonVariants({ variant: "navActive", size: "nav" })
+                  : buttonVariants({ variant: "navNotActive", size: "nav" })
+              }
+            >
+              <BackpackIcon className="mr-4 h-4 w-4" />
+              Organisation
             </NavLink>
             <NavLink
               to={"/user"}
@@ -34,18 +97,7 @@ export function Navbar() {
               }
             >
               <PersonIcon className="mr-4 h-4 w-4" />
-              Utilisateurs
-            </NavLink>
-            <NavLink
-              to={"/contact"}
-              className={({ isActive }) =>
-                isActive
-                  ? buttonVariants({ variant: "navActive", size: "nav" })
-                  : buttonVariants({ variant: "navNotActive", size: "nav" })
-              }
-            >
-              <RocketIcon className="mr-4 h-4 w-4" />
-              Support
+              Collaborateurs
             </NavLink>
           </div>
         </div>

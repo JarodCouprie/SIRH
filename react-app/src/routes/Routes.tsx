@@ -67,8 +67,24 @@ export const Routes = () => {
               ],
             },
             {
-              path: "contact",
-              element: <div>Contact</div>,
+              path: "organisation",
+              element: <div>Organisation</div>,
+            },
+            {
+              path: "demand",
+              element: <div>Demandes</div>,
+            },
+            {
+              path: "expense",
+              element: <div>Frais</div>,
+            },
+            {
+              path: "absence",
+              element: <div>Absences</div>,
+            },
+            {
+              path: "file",
+              element: <div>Documents</div>,
             },
           ],
         },
