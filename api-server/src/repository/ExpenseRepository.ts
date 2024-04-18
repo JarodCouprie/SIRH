@@ -14,7 +14,7 @@ export class ExpenseRepository {
             `,
             [offset, limit],
         );
-        return rows[0];
+        return rows;
     }
 
     public static async getExpensesValuesByUserId(user_id:string, offset: number, limit: number ){
@@ -26,18 +26,18 @@ export class ExpenseRepository {
                 ORDER BY id
                 LIMIT ?,?;
             `,
-            [offset, limit, user_id],
+            [user_id, offset, limit],
         );
-        return rows[0];
+        return rows;
     }
 
     public static async createExpenseDemand(expense:Expense) {
         const [result]: any = await this.pool.query(
             `
-            INSERT INTO expense (type, amount, motivation, status, id_owner)
-            VALUES (?,?,?,?,?);
+            INSERT INTO expense (type, amount, motivation, status, id_owner, facturationDate)
+            VALUES (?,?,?,?,?,?);
             `,
-            [expense.type, expense.amount, expense.motivation, expense.status, expense.ownerId],
+            [expense.type, expense.amount, expense.motivation, expense.status, expense.ownerId, expense.facturationDate],
         );
         return result;
     }
@@ -82,7 +82,7 @@ export class ExpenseRepository {
             `
             UPDATE expense
             SET status = ?,
-            validatorId = ?
+            id_validator = ?
             WHERE id = ?;
             `,
             [status, validatorId, id],

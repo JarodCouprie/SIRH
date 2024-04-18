@@ -62,7 +62,7 @@ CREATE TABLE expense
     motivation               VARCHAR(50),
     createdAt                DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     facturationDate          DATE NOT NULL,
-    status                   VARCHAR(50),
+    status                   VARCHAR(50) NOT NULL DEFAULT 'WAITING',
     id_owner   BIGINT        NOT NULL,
     id_validator BIGINT      NULL,
     PRIMARY KEY (id),
