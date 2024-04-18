@@ -21,7 +21,7 @@ export const Routes = () => {
     {
       path: "/login",
       element: (
-        <div className="grid h-dvh w-dvw place-items-center bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+        <div className="grid h-dvh w-dvw place-items-center bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
           <LoginForm />
         </div>
       ),

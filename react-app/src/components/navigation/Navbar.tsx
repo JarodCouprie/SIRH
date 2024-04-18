@@ -15,10 +15,10 @@ import { UserMenu } from "@/components/navigation/UserMenu.tsx";
 export function Navbar() {
   const { state } = useNavigation();
   return (
-    <div className="flex h-dvh w-dvw bg-zinc-950">
-      <aside className="flex w-80 max-w-80 flex-col justify-between gap-4 bg-zinc-950">
+    <div className="flex h-dvh w-dvw bg-gray-950">
+      <aside className="flex w-80 max-w-80 flex-col justify-between gap-4 bg-gray-900">
         <div className="flex flex-col">
-          <h1 className="border-b border-zinc-700 p-4 text-center text-lg font-bold text-zinc-100">
+          <h1 className="border-b border-gray-700 p-4 text-center text-lg font-bold text-gray-100">
             SIRH
           </h1>
           <div className="flex flex-col gap-2 p-4">
@@ -103,7 +103,7 @@ export function Navbar() {
         </div>
         <UserMenu />
       </aside>
-      <main className="w-full bg-zinc-50 p-4 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+      <main className="w-full bg-gray-100 p-4 text-gray-950 dark:bg-gray-950 dark:text-gray-100">
         <Outlet />
         {state === "loading" && (
           <div className="space-y-2">
