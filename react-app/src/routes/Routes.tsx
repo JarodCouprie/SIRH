@@ -14,6 +14,7 @@ import { AuthTokens } from "@/type/context/authTokens.tsx";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
+import { Expense } from "@/pages/expense/Expense.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -76,7 +77,7 @@ export const Routes = () => {
             },
             {
               path: "expense",
-              element: <div>Frais</div>,
+              element: <Expense />,
             },
             {
               path: "absence",
