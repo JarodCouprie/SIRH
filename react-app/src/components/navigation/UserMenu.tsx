@@ -59,7 +59,7 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="border-t border-zinc-700 p-2">
+        <div className="border-t border-gray-700 p-2">
           <Button variant="navNotActive" className="w-full justify-between">
             Options avancées
             <DotsVerticalIcon />
@@ -94,7 +94,7 @@ export function UserMenu() {
                     onClick={handleLightTheme}
                     className={
                       localTheme === "light"
-                        ? "bg-zinc-200 dark:bg-zinc-800"
+                        ? "bg-gray-200 dark:bg-gray-800"
                         : ""
                     }
                   >
@@ -107,7 +107,7 @@ export function UserMenu() {
                     onClick={handleDarkTheme}
                     className={
                       localTheme === "dark"
-                        ? "bg-zinc-200 dark:bg-zinc-800"
+                        ? "bg-gray-200 dark:bg-gray-800"
                         : ""
                     }
                   >
@@ -122,7 +122,7 @@ export function UserMenu() {
                   onClick={handleSystemTheme}
                   className={
                     localTheme === "os-default"
-                      ? "bg-zinc-200 dark:bg-zinc-800"
+                      ? "bg-gray-200 dark:bg-gray-800"
                       : ""
                   }
                 >

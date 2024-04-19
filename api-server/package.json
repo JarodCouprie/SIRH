@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev-back": "node --watch --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/index.js",
+    "prettier": "prettier --write src/"
   },
   "author": "Jarod Couprie",
   "devDependencies": {

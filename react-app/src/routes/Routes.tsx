@@ -13,6 +13,7 @@ import { User, Users } from "@/pages/user/Users.tsx";
 import { AuthTokens } from "@/type/context/authTokens.tsx";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { toast } from "sonner";
+import NotFound from "@/pages/error/NotFound.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -20,10 +21,14 @@ export const Routes = () => {
     {
       path: "/login",
       element: (
-        <div className="grid h-dvh w-dvw place-items-center bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+        <div className="grid h-dvh w-dvw place-items-center bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
           <LoginForm />
         </div>
       ),
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ];
   const securedRoutes = [
@@ -62,8 +67,24 @@ export const Routes = () => {
               ],
             },
             {
-              path: "contact",
-              element: <div>Contact</div>,
+              path: "organisation",
+              element: <div>Organisation</div>,
+            },
+            {
+              path: "demand",
+              element: <div>Demandes</div>,
+            },
+            {
+              path: "expense",
+              element: <div>Frais</div>,
+            },
+            {
+              path: "absence",
+              element: <div>Absences</div>,
+            },
+            {
+              path: "file",
+              element: <div>Documents</div>,
             },
           ],
         },

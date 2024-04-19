@@ -37,7 +37,7 @@ export function Users() {
         }
       >
         <Await resolve={users}>
-          <div className="rounded border border-zinc-800">
+          <div className="rounded border border-gray-800">
             <UserList />
           </div>
         </Await>
