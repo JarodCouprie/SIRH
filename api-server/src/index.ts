@@ -23,7 +23,7 @@ app.use("/api/user", users);
 app.use("/api/expense", expense);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
-  res.send("API Congés test");
+  res.send("API SIRH");
 });
 
 app.listen(port, () => {

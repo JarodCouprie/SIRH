@@ -15,7 +15,7 @@ export class UserService {
     }
   }
 
-  public static async getUserById(id: string) {
+  public static async getUserById(id: number) {
     try {
       const user: any = await UserRepository.getUserById(+id);
       if (!user) {
