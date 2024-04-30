@@ -3,6 +3,7 @@ import { TbCalendarClock } from "react-icons/tb";
 import { TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
 import { Button } from "@/components/ui/button.tsx";
+import { useNavigate } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,6 +25,7 @@ import { DemandDTO } from "@/models/DemandModel.ts";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandDTO[]>([]);
+  const navigate = useNavigate();
 
   const fetchDemand = async () => {
     await customFetcher("http://localhost:5000/api/demand").then((response) => {
@@ -40,11 +42,17 @@ export function Demand() {
 
   console.log(demandList);
 
+  const handleClick = () => {
+    navigate("/demand/create");
+  };
+
   return (
     <>
       <div>Demandes</div>
       <div className="flex w-full justify-end py-4">
-        <Button variant="callToAction">Faire une demande</Button>
+        <Button variant="callToAction" onClick={handleClick}>
+          Faire une demande
+        </Button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
