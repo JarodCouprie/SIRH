@@ -59,9 +59,10 @@ export class DemandRepository {
                                     motivation,
                                     status,
                                     type,
+                                    number_day,
                                     id_user_create_demand
                                     )
-                VALUES (?,?, ?, ?, ?, ?)
+                VALUES (?,?, ?, ?, ?, ?,?)
             `,
       [
         demand.startDate,
@@ -69,6 +70,7 @@ export class DemandRepository {
         demand.motivation,
         demand.status,
         demand.type,
+        demand.number_day,
         demand.idOwner,
       ],
     );

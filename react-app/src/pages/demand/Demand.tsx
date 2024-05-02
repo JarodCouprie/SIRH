@@ -157,7 +157,9 @@ export function Demand() {
                       "fr-FR",
                     )}
                   </TableCell>
-                  <TableCell className="text-left">30</TableCell>
+                  <TableCell className="text-left">
+                    {demand.number_day}
+                  </TableCell>
                   <TableCell className="text-left">{demand.status}</TableCell>
                 </TableRow>
               ))

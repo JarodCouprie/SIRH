@@ -3,6 +3,7 @@ export class DemandDTO {
   endDate: Date;
   createdAt: Date;
   status: string;
+  number_day: number;
   type: DemandType;
 
   constructor(
@@ -10,12 +11,14 @@ export class DemandDTO {
     endDate: Date,
     createdAt: Date,
     status: string,
+    number_day: number,
     type: DemandType,
   ) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.createdAt = createdAt;
     this.status = status;
+    this.number_day = number_day;
     this.type = type;
   }
 }

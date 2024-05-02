@@ -43,12 +43,26 @@ export function CreateDemand() {
     const endDate = end_date?.toISOString().split("T")[0];
     const status = "WAITING";
     const idOwner = "1";
+
+    let number_day = null;
+
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const differenceMs = end.getTime() - start.getTime();
+
+      number_day = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+    }
+
+    console.log("Nombre de jours entre les deux dates:", number_day);
+
     const demandeData = {
       startDate,
       endDate,
       motivation,
       status,
       type,
+      number_day,
       idOwner,
     };
 

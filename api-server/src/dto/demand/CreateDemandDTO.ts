@@ -6,6 +6,7 @@ export class CreateDemand {
   motivation: string;
   status: string;
   type: DemandType;
+  number_day: number;
   idOwner: number;
 
   constructor(
@@ -14,6 +15,7 @@ export class CreateDemand {
     motivation: string,
     status: string,
     type: DemandType,
+    number_day: number,
     idOwner: number,
   ) {
     this.startDate = startDate;
@@ -21,6 +23,7 @@ export class CreateDemand {
     this.motivation = motivation;
     this.status = status;
     this.type = type;
+    this.number_day = number_day;
     this.idOwner = idOwner;
   }
 }

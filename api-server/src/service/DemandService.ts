@@ -71,6 +71,7 @@ export class DemandService {
         body.motivation,
         body.status,
         body.type,
+        body.number_day,
         body.idOwner,
       );
       const demand: any = await DemandRepository.createDemand(newDemand);

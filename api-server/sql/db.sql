@@ -31,6 +31,7 @@ CREATE TABLE demand
     createdAt               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
+    number_day              INT,
     id_user_create_demand   BIGINT        NOT NULL,
     id_user_validate_demand BIGINT        NULL,
     PRIMARY KEY (id),
