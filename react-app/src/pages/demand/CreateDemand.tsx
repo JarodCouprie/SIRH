@@ -31,23 +31,36 @@ export function CreateDemand() {
   const navigate = useNavigate();
   const [start_date, setStartDate] = React.useState<Date>();
   const [end_date, setEndDate] = React.useState<Date>();
+
   const handleClickSummitButton = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const type = formData.get("type");
-    const description = formData.get("description");
-    const s_date = start_date;
-    const e_date = end_date;
-    const demandeData = { type, description, s_date, e_date };
+    const motivation = formData.get("description");
+    const startDate = start_date?.toISOString().split("T")[0];
+    const endDate = end_date?.toISOString().split("T")[0];
+    const status = "WAITING";
+    const idOwner = "1";
+    const demandeData = {
+      startDate,
+      endDate,
+      motivation,
+      status,
+      type,
+      idOwner,
+    };
+
     const response = await fetch("http://localhost:5000/api/demand", {
       method: "POST",
       body: JSON.stringify(demandeData),
       headers: {
+        Authorization: `Bearer ${localStorage.accessToken}`,
         "Content-Type": "application/json",
       },
     });
+
     const fetchData = await response.json();
     if (response.status === 200) {
       setToken(fetchData.data.accessToken, fetchData.data.refreshToken);
@@ -55,8 +68,8 @@ export function CreateDemand() {
     } else {
       toast.error(`${fetchData.message}`);
     }
-    console.log(type, description, s_date, e_date);
   };
+
   const handleClick = () => {
     navigate("/demand");
   };
@@ -123,7 +136,7 @@ export function CreateDemand() {
 
             <div className="flex justify-center">
               <Input
-                className=" mt-3 w-11/12 p-6"
+                className=" mt-3 w-11/12 p-6 "
                 type="text"
                 id="description"
                 placeholder="Description"
@@ -192,7 +205,7 @@ export function CreateDemand() {
                 <Button variant="callToAction">Enregistrer</Button>
               </div>
               <div>
-                <Button variant="ghost"> Annuler</Button>
+                <Button variant="outline"> Annuler</Button>
               </div>
             </div>
           </Card>
