@@ -54,22 +54,22 @@ export function Expense() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700">
+              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Général
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700">
+              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Remboursés
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700">
+              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Non Remboursés
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700">
+              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 {" "}
                 En Attente{" "}
               </span>
@@ -77,7 +77,7 @@ export function Expense() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div>
+      <div className="py-2">
         <ExpenseListCard />
       </div>
     </>
