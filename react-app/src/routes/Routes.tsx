@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Demand } from "@/pages/demand/Demand.tsx";
 import { CreateDemand } from "@/pages/demand/CreateDemand.tsx";
+import { ReadDemand } from "@/pages/demand/ReadDemand.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -79,6 +80,10 @@ export const Routes = () => {
             {
               path: "demand/create",
               element: <CreateDemand />,
+            },
+            {
+              path: "demand/visu",
+              element: <ReadDemand />,
             },
             {
               path: "expense",

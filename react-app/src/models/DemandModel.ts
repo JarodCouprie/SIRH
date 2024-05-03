@@ -1,4 +1,5 @@
 export class DemandDTO {
+  id: number;
   startDate: Date;
   endDate: Date;
   createdAt: Date;
@@ -7,6 +8,7 @@ export class DemandDTO {
   type: DemandType;
 
   constructor(
+    id: number,
     startDate: Date,
     endDate: Date,
     createdAt: Date,
@@ -14,6 +16,7 @@ export class DemandDTO {
     number_day: number,
     type: DemandType,
   ) {
+    this.id = id;
     this.startDate = startDate;
     this.endDate = endDate;
     this.createdAt = createdAt;
