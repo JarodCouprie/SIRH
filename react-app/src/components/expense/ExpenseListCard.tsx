@@ -54,34 +54,36 @@ export function ExpenseListCard(props: any) {
     case ExpenseStatus.WAITING:
       statusText = "En Attente";
       statusStyle =
-        "h-fit w-fit rounded dark:bg-amber-200 bg-amber-300 dark:bg-opacity-20 bg-opacity-40 px-2 dark:text-yellow-400 text-yellow-700";
+        "h-fit w-fit rounded dark:bg-amber-200 bg-amber-300 dark:bg-opacity-20 bg-opacity-40 px-2 dark:text-yellow-400 text-yellow-700 text-md font-medium ";
       break;
     case ExpenseStatus.REFUNDED:
       statusText = "Remboursé";
       statusStyle =
-        "h-fit w-fit rounded bg-green-400 bg-opacity-30 px-2 text-green-700 dark:bg-green-300 dark:text-green-400";
+        "h-fit w-fit rounded bg-green-400 bg-opacity-30 px-2 text-green-700 dark:bg-green-300 dark:text-green-400 text-md font-medium ";
       break;
     case ExpenseStatus.NOT_REFUNDED:
       statusText = "Non Remboursé";
       statusStyle =
-        "h-fit w-fit rounded bg-red-400 bg-opacity-30 px-2 text-red-700 dark:bg-red-500 dark:bg-opacity-15 dark:text-red-500";
+        "h-fit w-fit rounded bg-red-400 bg-opacity-30 px-2 text-red-700 dark:bg-red-500 dark:bg-opacity-15 dark:text-red-500 text-md font-medium ";
       break;
   }
   return (
     <>
-      <Card>
-        <CardContent className="p-2">
+      <Card className="rounded-md">
+        <CardContent className="px-2 py-1">
           <div className="flex w-full items-center">
             <div className="mx-4 w-10">{icon}</div>
             <div className="grid w-full grid-cols-4 items-center">
-              <div className="grid grid-rows-2 gap-2">
+              <div className="grid grid-rows-2">
                 <div>{typeText}</div>
                 <div>
                   {expense.createdAt.toLocaleDateString("fr-FR", dateOptions)}
                 </div>
               </div>
-              <div>{expense.amount}€</div>
-              <div>
+              <div className="text-md font-medium ">
+                {expense.amount.toFixed(2)}€
+              </div>
+              <div className="text-md font-medium">
                 {expense.facturationDate.toLocaleDateString(
                   "fr-FR",
                   dateOptions,
@@ -92,7 +94,7 @@ export function ExpenseListCard(props: any) {
               </div>
             </div>
             <div className="w-10 px-4">
-              <DotsVerticalIcon className="size-10" />
+              <DotsVerticalIcon className="size-7 cursor-pointer" />
             </div>
           </div>
         </CardContent>

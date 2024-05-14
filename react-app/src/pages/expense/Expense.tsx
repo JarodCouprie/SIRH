@@ -12,6 +12,7 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { useEffect, useState } from "react";
 import { ExpenseList } from "@/models/ExpenseModel.ts";
 import { ExpenseListCard } from "@/components/expense/ExpenseListCard.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 
 export function Expense() {
   let selectedType: selectedTypeEnum = selectedTypeEnum.ALL;
@@ -54,30 +55,39 @@ export function Expense() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
+              <span className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Général
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
+              <span className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Remboursés
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
+              <span className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
                 Non Remboursés
               </span>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <span className="cursor-pointer border-indigo-700 hover:border-b-2 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
-                {" "}
-                En Attente{" "}
+              <span className="cursor-pointer border-indigo-700 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400">
+                En Attente
               </span>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
       <div className="py-2">
+        <Card className="my-2 rounded-md bg-gray-300">
+          <CardContent className="p-1">
+            <div className="text-md grid grid-cols-4 items-center font-medium">
+              <div className="pl-20"> Demande </div>
+              <div className="pl-10"> Montant </div>
+              <div className="pl-4"> Date de facturation </div>
+              <div> Statut </div>
+            </div>
+          </CardContent>
+        </Card>
         <ExpenseListCard />
       </div>
     </>
