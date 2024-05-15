@@ -1,13 +1,6 @@
-import {
-  Await,
-  useAsyncValue,
-  useLoaderData,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import { UserModel } from "../../models/UserModel.ts";
-import { Suspense, useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { useNavigate } from "react-router-dom";
+import { UserModel } from "@/models/UserModel.ts";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,137 +10,177 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button.tsx";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  CaretSortIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
+import { customFetcher } from "@/helper/fetchInstance.ts";
+import { MainRoot } from "@/components/navigation/MainRoot.tsx";
+import { Label } from "@/components/ui/label.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 
 export function Users() {
-  const { users }: any = useLoaderData();
-  return (
-    <>
-      <div className="pb-4">
-        <h1>Utilisateurs</h1>
-      </div>
-      <Suspense
-        fallback={
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        }
-      >
-        <Await resolve={users}>
-          <div className="rounded border border-gray-800">
-            <UserList />
-          </div>
-        </Await>
-      </Suspense>
-    </>
-  );
-}
-
-export const UserList = () => {
-  const data: any = useAsyncValue();
+  const [users, setUsers] = useState<UserModel[]>([]);
+  const [usersLoaded, setUsersLoaded] = useState(false);
   const navigate = useNavigate();
+  const [pageSize, setPageSize] = useState(5);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalData, setTotalData] = useState(0);
 
   function handleClick(userId: number) {
     navigate(`/user/${userId}`);
   }
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-right">
-            <Button variant="ghost" size="sm">
-              Identifiant
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </TableHead>
-          <TableHead className="text-right">
-            <Button variant="ghost" size="sm">
-              Prénom
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </TableHead>
-          <TableHead className="text-right">
-            <Button variant="ghost" size="sm">
-              Nom
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </TableHead>
-          <TableHead className="text-right">
-            <Button variant="ghost" size="sm">
-              Email
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data?.data?.length ? (
-          data?.data?.map((user: UserModel) => (
-            <TableRow
-              key={`${user.id}`}
-              className="hover:cursor-pointer"
-              onClick={() => handleClick(user.id)}
-            >
-              <TableCell className="text-right font-medium">
-                {user.id}
-              </TableCell>
-              <TableCell className="text-right">{user.firstname}</TableCell>
-              <TableCell className="text-right">{user.lastname}</TableCell>
-              <TableCell className="text-right">{user.email}</TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan={4} className="h-24 text-center">
-              Aucun utilisateur
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-  );
-};
-
-export function User() {
-  const { id } = useParams();
-  const { token } = useAuth() as AuthTokens;
-  if (!id) {
-    return (
-      <div>
-        <h1>Cet utilisateur n'existe pas</h1>
-      </div>
-    );
-  }
-  const [user, setUser] = useState<UserModel>({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    createdAt: new Date(),
-    active: true,
-  });
-  const fetchUser = async () => {
-    await fetch(`http://localhost:5000/api/user/${id}`, {
-      headers: { Authorization: `Bearer ${token.accessToken}` },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data.data);
-      });
+  const fetchUsers = async (pageSize: number, pageNumber: number) => {
+    await customFetcher(
+      `http://localhost:5000/api/user/list?` +
+        new URLSearchParams({
+          pageSize: pageSize.toString() || "10",
+          pageNumber: pageNumber.toString() || "1",
+        }),
+    ).then((response) => {
+      if (response.response.status !== 200) {
+        return;
+      }
+      setTotalData(response.data.data.totalData);
+      setUsers(response.data.data.list);
+      setUsersLoaded(true);
+    });
   };
 
   useEffect(() => {
-    fetchUser().then();
-  }, []);
+    fetchUsers(pageSize, pageNumber).then();
+  }, [pageSize, pageNumber]);
 
-  return (
-    <div>
-      <h1>Utilisateur n°{user.id}</h1>
-      <span>Nom : {user.firstname}</span>
-    </div>
+  const handleNewUser = () => {
+    navigate("/user/new");
+  };
+
+  const newUser = (
+    <Button variant="callToAction" onClick={handleNewUser}>
+      <PlusIcon className="mr-2 size-4" />
+      Ajouter un utilisateur
+    </Button>
   );
+
+  const handlePageSize = (pageSize: string) => {
+    setPageNumber(1);
+    setPageSize(+pageSize);
+  };
+
+  const handlePreviousPageNumber = () => {
+    setPageNumber(pageNumber - 1);
+  };
+
+  const handleNextPageNumber = () => {
+    setPageNumber(pageNumber + 1);
+  };
+
+  const usersTable = (
+    <MainRoot title="Utilisateurs" action={newUser}>
+      <div className="rounded border border-slate-700">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Button variant="ghost" size="sm">
+                  Identifiant
+                  <CaretSortIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button variant="ghost" size="sm">
+                  Prénom
+                  <CaretSortIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button variant="ghost" size="sm">
+                  Nom
+                  <CaretSortIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button variant="ghost" size="sm">
+                  Email
+                  <CaretSortIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users?.length ? (
+              users?.map((user: UserModel) => (
+                <TableRow
+                  key={`${user.id}`}
+                  className="hover:cursor-pointer"
+                  onClick={() => handleClick(user.id)}
+                >
+                  <TableCell className="font-medium">{user.id}</TableCell>
+                  <TableCell>{user.firstname}</TableCell>
+                  <TableCell>{user.lastname}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center">
+                  Aucun utilisateur
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex w-full justify-between py-2">
+        <div className="flex items-center gap-2">
+          <Label>Utilisateurs par page</Label>
+          <Select
+            onValueChange={(value) => handlePageSize(value)}
+            defaultValue={pageSize.toString()}
+          >
+            <SelectTrigger className="w-fit">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-950 dark:text-gray-100">
+            {`${1 + pageSize * (pageNumber - 1)} - ${users.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+          </span>
+          <Button
+            variant="ghost"
+            onClick={handlePreviousPageNumber}
+            disabled={pageNumber === 1}
+          >
+            <CaretLeftIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleNextPageNumber}
+            disabled={pageSize * pageNumber >= totalData}
+          >
+            <CaretRightIcon />
+          </Button>
+        </div>
+      </div>
+    </MainRoot>
+  );
+  return usersLoaded && usersTable;
 }

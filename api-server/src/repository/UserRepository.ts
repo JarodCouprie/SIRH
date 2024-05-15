@@ -9,6 +9,29 @@ export class UserRepository {
     return rows;
   }
 
+  public static async getUsersCount() {
+    const [rows]: any = await this.pool.query(
+      `
+          SELECT COUNT(*) as count
+          FROM users
+      `,
+    );
+    return rows[0].count;
+  }
+
+  public static async listUsers(limit = 10, offset = 0) {
+    const [rows] = await this.pool.query(
+      `
+          SELECT *
+          FROM users
+          ORDER BY firstname
+          LIMIT ? OFFSET ?
+      `,
+      [limit, offset],
+    );
+    return rows;
+  }
+
   public static async getUserById(id: number) {
     const [rows]: any = await this.pool.query(
       `

@@ -40,12 +40,6 @@ import {
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
-  // const navigate = useNavigate();
-  // const { setToken } = useAuth() as AuthTokens;
-  // const handleLogOut = () => {
-  //   setToken("", "");
-  //   navigate(`/login`);
-  // };
   const handleDarkTheme = () => {
     setDarkTheme();
   };
