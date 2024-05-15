@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth.tsx";
 import { LoginForm } from "@/pages/auth/LoginForm.tsx";
-import { ProtectedRoute } from "@/routes/ProtectedRoute.tsx";
+import { ProtectedRoutes } from "@/routes/ProtectedRoutes.tsx";
 import {
   createBrowserRouter,
   Navigate,
@@ -11,8 +11,12 @@ import { AuthTokens } from "@/type/context/authTokens.tsx";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Root } from "@/components/navigation/Root.tsx";
-import { absenceRoutes } from "@/pages/absence/AbsenceRoutes.tsx";
+import { absenceRoutes } from "@/routes/AbsenceRoutes.tsx";
 import { userRoutes } from "@/routes/UserRoutes.tsx";
+import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
+import { demandRoutes } from "@/routes/DemandRoutes.tsx";
+import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
+import { fileRoutes } from "@/routes/FileRoutes.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -29,13 +33,20 @@ export const Routes = () => {
   const securedRoutes = [
     {
       path: "/",
-      element: <ProtectedRoute />,
+      element: <ProtectedRoutes />,
       children: [
         {
           path: "/",
           element: <Root />,
           errorElement: <PageError />,
-          children: [absenceRoutes, userRoutes],
+          children: [
+            absenceRoutes,
+            userRoutes,
+            organisationRoutes,
+            demandRoutes,
+            expenseRoutes,
+            fileRoutes,
+          ],
         },
       ],
     },
