@@ -1,3 +1,5 @@
+import { DemandType } from "@/pages/demand/DemandDetail.tsx";
+
 export class DemandDTO {
   id: number;
   startDate: Date;
@@ -5,6 +7,7 @@ export class DemandDTO {
   createdAt: Date;
   status: string;
   number_day: number;
+  motivation: string;
   type: DemandType;
 
   constructor(
@@ -14,6 +17,7 @@ export class DemandDTO {
     createdAt: Date,
     status: string,
     number_day: number,
+    motivation: string,
     type: DemandType,
   ) {
     this.id = id;
@@ -22,6 +26,7 @@ export class DemandDTO {
     this.createdAt = createdAt;
     this.status = status;
     this.number_day = number_day;
+    this.motivation = motivation;
     this.type = type;
   }
 }

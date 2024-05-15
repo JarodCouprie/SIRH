@@ -15,8 +15,9 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Demand } from "@/pages/demand/Demand.tsx";
-import { CreateDemand } from "@/pages/demand/CreateDemand.tsx";
+import { DemandCreate } from "@/pages/demand/DemandCreate.tsx";
 import { DemandDetail } from "@/pages/demand/DemandDetail.tsx";
+import { DemandEdit } from "@/pages/demand/DemandEdit.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -79,11 +80,15 @@ export const Routes = () => {
             },
             {
               path: "demand/create",
-              element: <CreateDemand />,
+              element: <DemandCreate />,
             },
             {
-              path: "demand/detail",
+              path: "demand/detail/:id",
               element: <DemandDetail />,
+            },
+            {
+              path: "demand/edit/:id",
+              element: <DemandEdit />,
             },
             {
               path: "expense",

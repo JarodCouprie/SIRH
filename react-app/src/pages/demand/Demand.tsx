@@ -97,8 +97,8 @@ export function Demand() {
     navigate("/demand/create");
   };
 
-  const handleClick = () => {
-    navigate("/demand/detail");
+  const handleClick = (id: number) => {
+    navigate(`/demand/detail/${id}`);
   };
 
   const getClassForStatus = (status: any) => {
@@ -267,7 +267,7 @@ export function Demand() {
                 <TableRow
                   key={demand.id}
                   className="hover:cursor-pointer"
-                  onClick={handleClick}
+                  onClick={() => handleClick(demand.id)}
                 >
                   <TableCell className="flex gap-2 text-left">
                     {getStatusOption(demand.type).icon}

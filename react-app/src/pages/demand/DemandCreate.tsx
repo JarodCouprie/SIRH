@@ -27,12 +27,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils.ts";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
 import React from "react";
 
-export function CreateDemand() {
-  const { setToken } = useAuth() as AuthTokens;
+export function DemandCreate() {
   const navigate = useNavigate();
   const [start_date, setStartDate] = React.useState<Date>();
   const [end_date, setEndDate] = React.useState<Date>();
@@ -44,8 +41,8 @@ export function CreateDemand() {
     const formData = new FormData(event.currentTarget);
     const type = formData.get("type");
     const motivation = formData.get("description");
-    const startDate = start_date?.toISOString().split("T")[0];
-    const endDate = end_date?.toISOString().split("T")[0];
+    const startDate = start_date?.toLocaleDateString("fr-CA");
+    const endDate = end_date?.toLocaleDateString("fr-CA");
     const status = "WAITING";
     const idOwner = "1";
 
@@ -58,8 +55,6 @@ export function CreateDemand() {
 
       number_day = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
     }
-
-    console.log("Nombre de jours entre les deux dates:", number_day);
 
     const demandeData = {
       startDate,
@@ -82,7 +77,6 @@ export function CreateDemand() {
 
     const fetchData = await response.json();
     if (response.status === 200) {
-      setToken(fetchData.data.accessToken, fetchData.data.refreshToken);
       navigate("/demand", { replace: true });
     } else {
       toast.error(`${fetchData.message}`);
