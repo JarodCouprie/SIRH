@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Root } from "@/components/navigation/Root.tsx";
 import { absenceRoutes } from "@/pages/absence/AbsenceRoutes.tsx";
-import { userRoutes } from "@/pages/user/UserRoutes.tsx";
+import { userRoutes } from "@/routes/UserRoutes.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
