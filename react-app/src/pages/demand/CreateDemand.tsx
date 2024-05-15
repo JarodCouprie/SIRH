@@ -1,4 +1,9 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
 import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
 import { Input } from "@/components/ui/input.tsx";
@@ -21,10 +26,10 @@ import {
 } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils.ts";
-import React from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth.tsx";
 import { AuthTokens } from "@/type/context/authTokens.tsx";
+import React from "react";
 
 export function CreateDemand() {
   const { setToken } = useAuth() as AuthTokens;
@@ -89,11 +94,11 @@ export function CreateDemand() {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div>
-        <Button className="mb-3 mt-3" variant="ghost" onClick={handleClick}>
-          <FaArrowLeft />
-          <div className="ms-1">Demandes</div>
+        <Button variant="link" onClick={handleClick}>
+          <FaArrowLeft className="mr-2" />
+          <div>Demandes</div>
         </Button>
       </div>
       <div className="grid grid-cols-3 gap-4">
@@ -131,13 +136,16 @@ export function CreateDemand() {
         </Card>
       </div>
 
-      <form onSubmit={handleClickSummitButton}>
-        <div className="pt-4">
-          <Card>
-            <CardHeader>Nouvelle demande</CardHeader>
+      <Card>
+        <CardHeader>Nouvelle demande</CardHeader>
+        <CardContent>
+          <form
+            onSubmit={handleClickSummitButton}
+            className="flex flex-col gap-3"
+          >
             <Select name="type">
               <div className="flex justify-center">
-                <SelectTrigger className="w-11/12 p-6 outline outline-1">
+                <SelectTrigger className="p-6 outline outline-1">
                   <SelectValue placeholder="Type de demande" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,23 +156,21 @@ export function CreateDemand() {
               </div>
             </Select>
 
-            <div className="flex justify-center">
-              <Input
-                className=" mt-3 w-11/12 p-6 "
-                type="text"
-                id="description"
-                placeholder="Description"
-                name="description"
-              ></Input>
-            </div>
+            <Input
+              className="p-6"
+              type="text"
+              id="description"
+              placeholder="Description"
+              name="description"
+            ></Input>
 
-            <div className="mb-3 mt-3 flex justify-evenly justify-items-center gap-12">
+            <div className="flex justify-between justify-items-center gap-3">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-5/12 justify-start p-6 text-left font-normal outline outline-1",
+                      "w-full justify-start p-6 text-left font-normal outline outline-1",
                       !start_date && "text-muted-foreground",
                     )}
                   >
@@ -191,7 +197,7 @@ export function CreateDemand() {
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-5/12 justify-start p-6 text-left font-normal outline outline-1",
+                      "w-full justify-start p-6 text-left font-normal outline outline-1",
                       !end_date && "text-muted-foreground",
                     )}
                   >
@@ -214,17 +220,13 @@ export function CreateDemand() {
               </Popover>
             </div>
 
-            <div className="m-2 flex justify-start">
-              <div className="pe-3 ps-3">
-                <Button variant="callToAction">Enregistrer</Button>
-              </div>
-              <div>
-                <Button variant="outline"> Annuler</Button>
-              </div>
+            <div className="flex justify-end gap-2 pt-6">
+              <Button variant="ghost"> Annuler</Button>
+              <Button variant="callToAction">Enregistrer</Button>
             </div>
-          </Card>
-        </div>
-      </form>
-    </>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

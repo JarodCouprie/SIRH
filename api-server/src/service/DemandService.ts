@@ -1,19 +1,38 @@
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { DemandRepository } from "../repository/DemandRepository";
-import { Demand } from "../model/Demand";
+import { Demand, DemandType } from "../model/Demand";
 import { logger } from "../helper/Logger";
 import { DemandDTO } from "../dto/demand/DemandDTO";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
+import { Request } from "express";
 
 export class DemandService {
-  public static async getDemand() {
+  public static async getDemand(req: Request) {
     try {
-      const demand: any = await DemandRepository.getDemand();
-      const demandDto: DemandDTO[] = demand.map(
+      const pageSize = req.query.pageSize || "0";
+      const pageNumber = req.query.pageNumber || "10";
+      const type = req.query.type?.toString() || "";
+      const limit = +pageSize;
+      const offset = (+pageNumber - 1) * +pageSize;
+      let demandCount = await DemandRepository.getDemandCountWithType(type);
+
+      let demands: any = await DemandRepository.getDemandWithType(
+        limit,
+        offset,
+        type,
+      );
+      if (!type) {
+        demands = await DemandRepository.getDemand(limit, offset);
+        demandCount = await DemandRepository.getDemandCount();
+      }
+      const demandDto: DemandDTO[] = demands.map(
         (demand: Demand) => new DemandDTO(demand),
       );
-      return new ControllerResponse<DemandDTO[]>(200, "", demandDto);
+      return new ControllerResponse(200, "", {
+        totalData: demandCount,
+        list: demandDto,
+      });
     } catch (error) {
       logger.error(`Failed to get demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get demand");
