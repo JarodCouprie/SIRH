@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
   ExpenseList,
   ExpenseStatus,
@@ -7,6 +6,8 @@ import {
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { MdOutlineEuroSymbol } from "react-icons/md";
 import { FaBed, FaCar, FaUtensils } from "react-icons/fa";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export function ExpenseListCard(props: any) {
   const expense: ExpenseList =
@@ -23,8 +24,7 @@ export function ExpenseListCard(props: any) {
   const status: ExpenseStatus = expense.status;
   let icon;
   let typeText: string;
-  let statusText: string;
-  let statusStyle: string;
+  let statusBadge;
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
     year: "numeric",
@@ -33,72 +33,57 @@ export function ExpenseListCard(props: any) {
   };
   switch (type) {
     case ExpenseType.COMPENSATION:
-      icon = <MdOutlineEuroSymbol className="size-10" />;
+      icon = (
+        <MdOutlineEuroSymbol className="size-8 text-black dark:text-slate-50" />
+      );
       typeText = "Indemnités";
       break;
     case ExpenseType.TRAVEL:
-      icon = <FaCar className="size-10" />;
+      icon = <FaCar className="size-8 text-black dark:text-slate-50" />;
       typeText = "Déplacement";
       break;
     case ExpenseType.FOOD:
-      icon = <FaUtensils className="size-10" />;
+      icon = <FaUtensils className="size-7 text-black dark:text-slate-50" />;
       typeText = "Restauration";
       break;
     case ExpenseType.HOUSING:
-      icon = <FaBed className="size-10" />;
+      icon = <FaBed className="size-8 text-black dark:text-slate-50" />;
       typeText = "Hébergement";
       break;
   }
 
   switch (status) {
     case ExpenseStatus.WAITING:
-      statusText = "En Attente";
-      statusStyle =
-        "h-fit w-fit rounded dark:bg-amber-200 bg-amber-300 dark:bg-opacity-20 bg-opacity-40 px-2 dark:text-yellow-400 text-yellow-700 text-md font-medium ";
+      statusBadge = <Badge variant="waiting"> En attente </Badge>;
       break;
     case ExpenseStatus.REFUNDED:
-      statusText = "Remboursé";
-      statusStyle =
-        "h-fit w-fit rounded bg-green-400 bg-opacity-30 px-2 text-green-700 dark:bg-green-300 dark:text-green-400 text-md font-medium ";
+      statusBadge = <Badge variant="accepted"> Remboursé </Badge>;
       break;
     case ExpenseStatus.NOT_REFUNDED:
-      statusText = "Non Remboursé";
-      statusStyle =
-        "h-fit w-fit rounded bg-red-400 bg-opacity-30 px-2 text-red-700 dark:bg-red-500 dark:bg-opacity-15 dark:text-red-500 text-md font-medium ";
+      statusBadge = <Badge variant="denied"> Non remboursé </Badge>;
       break;
   }
+
   return (
-    <>
-      <Card className="rounded-md">
-        <CardContent className="px-2 py-1">
-          <div className="flex w-full items-center">
-            <div className="mx-4 w-10">{icon}</div>
-            <div className="grid w-full grid-cols-4 items-center">
-              <div className="grid grid-rows-2">
-                <div>{typeText}</div>
-                <div>
-                  {expense.createdAt.toLocaleDateString("fr-FR", dateOptions)}
-                </div>
-              </div>
-              <div className="text-md font-medium ">
-                {expense.amount.toFixed(2)}€
-              </div>
-              <div className="text-md font-medium">
-                {expense.facturationDate.toLocaleDateString(
-                  "fr-FR",
-                  dateOptions,
-                )}
-              </div>
-              <div className="">
-                <div className={statusStyle}>{statusText}</div>
-              </div>
-            </div>
-            <div className="w-10 px-4">
-              <DotsVerticalIcon className="size-7 cursor-pointer" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </>
+    <TableRow className="rounded-md">
+      <TableCell className="mx-4 w-10">{icon}</TableCell>
+      <TableCell>
+        <div>{typeText}</div>
+        <div className="text-xs">
+          {new Date(expense.createdAt).toLocaleDateString("fr-FR", dateOptions)}
+        </div>
+      </TableCell>
+      <TableCell className="text-left">{expense.amount.toFixed(2)}€</TableCell>
+      <TableCell className="text-left">
+        {new Date(expense.facturationDate).toLocaleDateString(
+          "fr-FR",
+          dateOptions,
+        )}
+      </TableCell>
+      <TableCell className="text-left">{statusBadge}</TableCell>
+      <TableCell className="w-10 px-4">
+        <DotsVerticalIcon className="size-7 cursor-pointer" />
+      </TableCell>
+    </TableRow>
   );
 }

@@ -31,7 +31,7 @@ export enum ExpenseType {
 
 export enum ExpenseStatus {
   REFUNDED = "REFUNDED",
-  NOT_REFUNDED = "NOT_REFUNDED",
+  NOT_REFUNDED = "NOT REFUNDED",
   WAITING = "WAITING",
 }
 
@@ -51,5 +51,27 @@ export class ExpenseResponse {
     this.motivation = motivation;
     this.answeredAt = answeredAt;
     this.answeredBy = answeredBy;
+  }
+}
+
+export class ExpenseAmountDateAndStatus {
+  amount: number;
+  facturationDate: Date;
+  status: ExpenseStatus;
+
+  constructor(amount: number, facturationDate: Date, status: ExpenseStatus) {
+    this.amount = amount;
+    this.facturationDate = facturationDate;
+    this.status = status;
+  }
+}
+
+export class ExpenseCardModel {
+  amount: number;
+  invoicesAmount: number;
+
+  constructor(amount: number, invoicesAmount: number) {
+    this.amount = amount;
+    this.invoicesAmount = invoicesAmount;
   }
 }

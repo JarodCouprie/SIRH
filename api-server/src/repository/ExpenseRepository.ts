@@ -9,12 +9,23 @@ export class ExpenseRepository {
       `
               SELECT *
               FROM expense
-              ORDER BY id
+              ORDER BY facturationDate DESC
               LIMIT ?,?;
           `,
       [offset, limit],
     );
     return rows;
+  }
+
+  public static async getExpensesCount() {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT COUNT(*) AS count
+              FROM expense;
+          `,
+      [],
+    );
+    return rows[0].count;
   }
 
   public static async getExpensesValuesByType(
@@ -25,7 +36,7 @@ export class ExpenseRepository {
     const [rows]: any = await this.pool.query(
       `
               SELECT *
-              FROM expense WHERE status = ?
+              FROM expense WHERE type = ?
               ORDER BY id
               LIMIT ?,?;
           `,
@@ -62,13 +73,53 @@ export class ExpenseRepository {
       `
                 SELECT *
                 FROM expense
-                WHERE id_owner = ? AND status = ?
-                ORDER BY id
+                WHERE id_owner = ? AND type = ?
+                ORDER BY facturationDate DESC
                 LIMIT ?,?;
             `,
       [user_id, type, offset, limit],
     );
     return rows;
+  }
+  public static async getExpensesCountByUserId(id_owner: string) {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT COUNT(*) AS count
+              FROM expense
+              WHERE id_owner = ?
+              ORDER BY facturationDate DESC;
+          `,
+      [id_owner],
+    );
+    return rows[0].count;
+  }
+
+  public static async getExpensesCountByType(type: string) {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT COUNT(*) AS count
+              FROM expense
+              WHERE type =  ?
+              ORDER BY facturationDate DESC;
+          `,
+      [type],
+    );
+    return rows[0].count;
+  }
+  public static async getExpensesCountByTypeAndUserId(
+    type: string,
+    id_owner: string,
+  ) {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT COUNT(*) AS count
+              FROM expense
+              WHERE type = ?
+              AND id_owner = ?;
+          `,
+      [type, id_owner],
+    );
+    return rows[0].count;
   }
 
   public static async createExpenseDemand(expense: Expense) {
@@ -145,5 +196,66 @@ export class ExpenseRepository {
       [status, validatorId, id],
     );
     return result;
+  }
+
+  public static async getExpensesAmountDateAndStatus() {
+    const [rows]: any = await this.pool.query(
+      `
+        SELECT amount, 
+               facturationDate,
+               status
+        FROM expense;
+      `,
+      [],
+    );
+    return rows;
+  }
+  public static async getExpensesAmountDateAndStatusByUserId(user_id: string) {
+    const [rows]: any = await this.pool.query(
+      `
+        SELECT amount,
+               facturationDate,
+               status
+        FROM expense
+        WHERE id_owner = ?;
+      `,
+      [user_id],
+    );
+    return rows;
+  }
+
+  public static async getExpensesAmountDateAndStatusByDate(
+    monthName: string,
+    year: string,
+  ) {
+    const [rows]: any = await this.pool.query(
+      `
+        SELECT amount, 
+               facturationDate,
+               status
+        FROM expense
+        WHERE date_format(facturationDate, '%M') = ?;
+      `,
+      [monthName, year],
+    );
+    return rows;
+  }
+  public static async getExpensesAmountDateAndStatusByUserIdAndDate(
+    user_id: string,
+    monthName: string,
+    year: string,
+  ) {
+    const [rows]: any = await this.pool.query(
+      `
+        SELECT amount,
+               facturationDate,
+               status
+        FROM expense
+        WHERE id_owner = ?
+        AND date_format(facturationDate, '%M') = ? AND date_format(facturationDate, '%Y') = ?;
+      `,
+      [user_id, monthName, year],
+    );
+    return rows;
   }
 }

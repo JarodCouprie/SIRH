@@ -4,21 +4,22 @@ import { ExpenseListDTO } from "../dto/expense/ExpenseListDTO";
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { logger } from "../helper/Logger";
 import { Request } from "express";
+import { ExpenseAmountDateAndStatusDTO } from "../dto/expense/ExpenseAmountDateAndStatusDTO";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request) {
     try {
       const offset = req.query.offset || "0";
       const limit = req.query.limit || "10";
-      const status = req.query.status || null;
+      const type = req.query.type || null;
 
-      if (status != null) {
+      if (type != null) {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByUserIdAndType(
             req.params.user_id,
             +offset,
             +limit,
-            status.toString(),
+            type.toString(),
           );
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
@@ -49,14 +50,14 @@ export class ExpenseService {
     try {
       const offset = req.query.offset || "0";
       const limit = req.query.limit || "10";
-      const status = req.query.status || null;
+      const type = req.query.type || null;
 
-      if (status != null) {
+      if (type != null) {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByType(
             +offset,
             +limit,
-            status.toString(),
+            type.toString(),
           );
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
@@ -131,7 +132,6 @@ export class ExpenseService {
 
   public static async confirmExpenseDemand(req: Request) {
     try {
-      console.log(req.body);
       const status = req.body.ExpenseStatus;
       const validatorId = req.body.ValidatorId;
       const result: any = await ExpenseRepository.confirmExpenseDemand(
@@ -143,6 +143,165 @@ export class ExpenseService {
     } catch (error) {
       logger.error(`Failed to confirm expenses. Error: ${error}`);
       return new ControllerResponse(500, "Failed to confirm expenses");
+    }
+  }
+
+  public static async getExpensesCount(req: Request) {
+    try {
+      const type: string = req.query.type?.toString() || "ALL";
+      let count: number;
+      if (type == null || type == "ALL") {
+        const result: any = await ExpenseRepository.getExpensesCount();
+        count = result;
+      } else {
+        const result: any =
+          await ExpenseRepository.getExpensesCountByType(type);
+        count = result;
+      }
+      return new ControllerResponse<number>(200, "", count);
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to get expenses");
+    }
+  }
+
+  public static async getExpensesCountByUserId(req: Request) {
+    try {
+      const type = req.query.type?.toString() || "ALL";
+      const id_owner = req.params.user_id;
+      let count;
+      if (type == null || type == "ALL") {
+        const result: any =
+          await ExpenseRepository.getExpensesCountByUserId(id_owner);
+        count = result;
+      } else {
+        const result: any =
+          await ExpenseRepository.getExpensesCountByTypeAndUserId(
+            type,
+            id_owner,
+          );
+        count = result;
+      }
+      return new ControllerResponse<number>(200, "", count);
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to get expenses");
+    }
+  }
+
+  public static async getExpensesAmountDateAndStatus(req: Request) {
+    try {
+      const expenses: Expense[] =
+        await ExpenseRepository.getExpensesAmountDateAndStatus();
+
+      const expensesAmountDateAndStatusDTO: ExpenseAmountDateAndStatusDTO[] =
+        expenses.map(
+          (expense: Expense) => new ExpenseAmountDateAndStatusDTO(expense),
+        );
+      return new ControllerResponse<ExpenseAmountDateAndStatusDTO[]>(
+        200,
+        "",
+        expensesAmountDateAndStatusDTO,
+      );
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Failed to get expenses amount and facturation date",
+      );
+    }
+  }
+
+  public static async getExpensesAmountDateAndStatusByUserId(req: Request) {
+    try {
+      const user_id = req.params.user_id;
+      const expenses: Expense[] =
+        await ExpenseRepository.getExpensesAmountDateAndStatusByUserId(user_id);
+
+      const expensesAmountDateAndStatusDTO: ExpenseAmountDateAndStatusDTO[] =
+        expenses.map(
+          (expense: Expense) => new ExpenseAmountDateAndStatusDTO(expense),
+        );
+      return new ControllerResponse<ExpenseAmountDateAndStatusDTO[]>(
+        200,
+        "",
+        expensesAmountDateAndStatusDTO,
+      );
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Failed to get expenses amount and facturation date",
+      );
+    }
+  }
+
+  public static async getExpensesAmountDateAndStatusByMonth(req: Request) {
+    try {
+      const selectedDate =
+        req.query.date?.toString() || new Date().toDateString();
+      const monthName = new Date(selectedDate).toLocaleDateString("eng", {
+        month: "long",
+      });
+      const year = new Date(selectedDate).getFullYear().toString();
+
+      const expenses: Expense[] =
+        await ExpenseRepository.getExpensesAmountDateAndStatusByDate(
+          monthName,
+          year,
+        );
+
+      const expensesAmountDateAndStatusDTO: ExpenseAmountDateAndStatusDTO[] =
+        expenses.map(
+          (expense: Expense) => new ExpenseAmountDateAndStatusDTO(expense),
+        );
+      return new ControllerResponse<ExpenseAmountDateAndStatusDTO[]>(
+        200,
+        "",
+        expensesAmountDateAndStatusDTO,
+      );
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Failed to get expenses amount and facturation date",
+      );
+    }
+  }
+
+  public static async getExpensesAmountDateAndStatusByUserIdAndMonth(
+    req: Request,
+  ) {
+    try {
+      const user_id = req.params.user_id;
+      const selectedDate: string =
+        req.query.date?.toString() || new Date().toDateString();
+      const monthName = new Date(selectedDate).toLocaleDateString("eng", {
+        month: "long",
+      });
+      const year = new Date(selectedDate).getFullYear().toString();
+      const expenses: Expense[] =
+        await ExpenseRepository.getExpensesAmountDateAndStatusByUserIdAndDate(
+          user_id,
+          monthName,
+          year,
+        );
+
+      const expensesAmountDateAndStatusDTO: ExpenseAmountDateAndStatusDTO[] =
+        expenses.map(
+          (expense: Expense) => new ExpenseAmountDateAndStatusDTO(expense),
+        );
+      return new ControllerResponse<ExpenseAmountDateAndStatusDTO[]>(
+        200,
+        "",
+        expensesAmountDateAndStatusDTO,
+      );
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Failed to get expenses amount and facturation date",
+      );
     }
   }
 }

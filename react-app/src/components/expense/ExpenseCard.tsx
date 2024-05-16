@@ -1,11 +1,13 @@
 import { Card, CardContent, CardDescription } from "@/components/ui/card.tsx";
 import { MdOutlineCancel, MdOutlineEuroSymbol } from "react-icons/md";
 import { FaHourglassStart, FaRegCheckCircle } from "react-icons/fa";
+import { ExpenseCardModel } from "@/models/ExpenseModel.ts";
 
 export function ExpenseCard(props: any) {
   const type: ExpenseCardType = props.type || ExpenseCardType.EXPENSE;
-  const totalMoney: number = props.money || 0;
-  const invoiceNumber: number = props.invoice || 0;
+  const ExpenseCardData = props.data || new ExpenseCardModel(0, 0);
+  const totalMoney: number = ExpenseCardData.amount;
+  const invoiceNumber: number = ExpenseCardData.invoicesAmount;
   let invoiceText = "factures";
 
   if (invoiceNumber > 1) invoiceText = "factures";
@@ -16,7 +18,7 @@ export function ExpenseCard(props: any) {
 
   switch (type) {
     case ExpenseCardType.EXPENSE:
-      CardDesc = "Frais du mois";
+      CardDesc = "Total du mois";
       icon = <MdOutlineEuroSymbol className="size-10" />;
       break;
     case ExpenseCardType.WAITING:
