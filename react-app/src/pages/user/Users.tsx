@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Users() {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -119,7 +120,15 @@ export function Users() {
                   onClick={() => handleClick(user.id)}
                 >
                   <TableCell className="flex gap-2 font-medium">
-                    <div className="size-8 rounded-full bg-red-600"></div>
+                    <Avatar>
+                      <AvatarImage
+                        src={`https://api.dicebear.com/8.x/adventurer-neutral/svg?seed=${user.id}`}
+                      />
+                      <AvatarFallback>
+                        {user.firstname.charAt(0)}
+                        {user.lastname.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex flex-col">
                       <div>
                         {user.firstname} {user.lastname}
