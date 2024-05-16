@@ -224,4 +224,6 @@ CREATE TABLE belong_team_service
 
 INSERT INTO users(firstName, lastName, email, password, address, nationality, role, iban)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban");
+        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban"),
+       ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
+        "user address", "user nationaly", "ROLE_USER", "user iban");

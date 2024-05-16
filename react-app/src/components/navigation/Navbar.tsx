@@ -1,15 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button.tsx";
 import { UserMenu } from "@/components/navigation/UserMenu.tsx";
-import { TbCalendarQuestion, TbLayoutDashboard } from "react-icons/tb";
+import { TbBuildingCommunity, TbLayoutDashboard } from "react-icons/tb";
 import React from "react";
-import {
-  BackpackIcon,
-  CalendarIcon,
-  FileIcon,
-  PersonIcon,
-  ReaderIcon,
-} from "@radix-ui/react-icons";
+import { FileIcon } from "@radix-ui/react-icons";
+import { LuCalendarX } from "react-icons/lu";
+import { MdOutlineReceiptLong } from "react-icons/md";
+import { BsPersonRaisedHand } from "react-icons/bs";
+import { GrGroup } from "react-icons/gr";
 
 export function NavBar() {
   return (
@@ -20,25 +18,25 @@ export function NavBar() {
         </h1>
         <div className="flex flex-col gap-2 p-4">
           <NavBarLink link="/" title="Dashboard">
-            <TbLayoutDashboard className="mr-4 h-4 w-4" />
+            <TbLayoutDashboard className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/demand" title="Demandes">
-            <TbCalendarQuestion className="mr-4 h-4 w-4" />
+            <BsPersonRaisedHand className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/expense" title="Frais">
-            <ReaderIcon className="mr-4 h-4 w-4" />
+            <MdOutlineReceiptLong className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/absence" title="Absences">
-            <CalendarIcon className="mr-4 h-4 w-4" />
+            <LuCalendarX className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/file" title="Documents">
-            <FileIcon className="mr-4 h-4 w-4" />
+            <FileIcon className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/organisation" title="Organisation">
-            <BackpackIcon className="mr-4 h-4 w-4" />
+            <TbBuildingCommunity className="mr-4 size-6" />
           </NavBarLink>
           <NavBarLink link="/user" title="Collaborateurs">
-            <PersonIcon className="mr-4 h-4 w-4" />
+            <GrGroup className="mr-4 size-6" />
           </NavBarLink>
         </div>
       </div>

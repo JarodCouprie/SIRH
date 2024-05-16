@@ -93,25 +93,18 @@ export function Users() {
             <TableRow>
               <TableHead>
                 <Button variant="ghost" size="sm">
-                  Identifiant
+                  Collaborateur
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button variant="ghost" size="sm">
+                  Ville
                   <CaretSortIcon className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
               <TableHead>
                 <Button variant="ghost" size="sm">
-                  Prénom
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Nom
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Email
+                  Numéro de téléphone
                   <CaretSortIcon className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -125,10 +118,19 @@ export function Users() {
                   className="hover:cursor-pointer"
                   onClick={() => handleClick(user.id)}
                 >
-                  <TableCell className="font-medium">{user.id}</TableCell>
-                  <TableCell>{user.firstname}</TableCell>
-                  <TableCell>{user.lastname}</TableCell>
-                  <TableCell>{user.email}</TableCell>
+                  <TableCell className="flex gap-2 font-medium">
+                    <div className="size-8 rounded-full bg-red-600"></div>
+                    <div className="flex flex-col">
+                      <div>
+                        {user.firstname} {user.lastname}
+                      </div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        {user.email}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               ))
             ) : (
