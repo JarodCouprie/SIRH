@@ -19,6 +19,17 @@ export function NewUser() {
   const [userAddressDisplayed, setUserAddressDisplayed] = useState(false);
   const [userBankInfosDisplayed, setUserBankInfosDisplayed] = useState(false);
   const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [country, setCountry] = useState("");
+  const [streetNumber, setStreetNumber] = useState("");
+  const [street, setStreet] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [locality, setLocality] = useState("");
+  const [iban, setIban] = useState("");
+  const [bic, setBic] = useState("");
   const handleGoBackToList = () => {
     navigate("/user");
   };
@@ -70,6 +81,8 @@ export function NewUser() {
           id="lastname"
           placeholder="Nom"
           name="lastname"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
           required
         />
       </div>
@@ -80,6 +93,8 @@ export function NewUser() {
           id="email"
           placeholder="Adresse email"
           name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
@@ -90,6 +105,8 @@ export function NewUser() {
           id="phone"
           placeholder="Numéro de téléphone"
           name="phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
           required
         />
       </div>
@@ -100,6 +117,8 @@ export function NewUser() {
           id="nationality"
           placeholder="Nationalité"
           name="nationality"
+          value={nationality}
+          onChange={(e) => setNationality(e.target.value)}
           required
         />
       </div>
@@ -117,6 +136,8 @@ export function NewUser() {
           id="country"
           placeholder="Pays"
           name="country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
           required
         />
       </div>
@@ -127,6 +148,8 @@ export function NewUser() {
           id="streetNumber"
           placeholder="Numéro de rue"
           name="streetNumber"
+          value={streetNumber}
+          onChange={(e) => setStreetNumber(e.target.value)}
           required
         />
       </div>
@@ -137,6 +160,8 @@ export function NewUser() {
           id="street"
           placeholder="Nom de la rue"
           name="street"
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
           required
         />
       </div>
@@ -147,6 +172,8 @@ export function NewUser() {
           id="zipcode"
           placeholder="Code postal"
           name="zipcode"
+          value={zipcode}
+          onChange={(e) => setZipcode(e.target.value)}
           required
         />
       </div>
@@ -157,6 +184,8 @@ export function NewUser() {
           id="locality"
           placeholder="Ville"
           name="locality"
+          value={locality}
+          onChange={(e) => setLocality(e.target.value)}
           required
         />
       </div>
@@ -169,11 +198,27 @@ export function NewUser() {
       <Separator />
       <div className="flex flex-col gap-2">
         <Label htmlFor="iban">IBAN</Label>
-        <Input type="text" id="iban" placeholder="IBAN" name="iban" required />
+        <Input
+          type="text"
+          id="iban"
+          placeholder="IBAN"
+          name="iban"
+          value={iban}
+          onChange={(e) => setIban(e.target.value)}
+          required
+        />
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="bic">BIC</Label>
-        <Input type="text" id="bic" placeholder="BIC" name="bic" required />
+        <Input
+          type="text"
+          id="bic"
+          placeholder="BIC"
+          name="bic"
+          value={bic}
+          onChange={(e) => setBic(e.target.value)}
+          required
+        />
       </div>
     </div>
   );
