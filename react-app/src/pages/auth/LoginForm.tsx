@@ -11,7 +11,7 @@ import { AuthTokens } from "@/type/context/authTokens.tsx";
 export function LoginForm() {
   const navigate = useNavigate();
   const { setToken } = useAuth() as AuthTokens;
-  const handleClickSummitButton = async (
+  const handleClickSubmitButton = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
@@ -41,7 +41,7 @@ export function LoginForm() {
       </h1>
       <form
         className="flex flex-col items-center gap-6"
-        onSubmit={handleClickSummitButton}
+        onSubmit={handleClickSubmitButton}
       >
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="text-xl" htmlFor="email">

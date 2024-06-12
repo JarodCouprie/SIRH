@@ -11,6 +11,8 @@ const buttonVariants = cva(
       variant: {
         default:
           "justify-center bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90",
+        defaultLeft:
+          "justify-start bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90",
         destructive:
           "justify-center bg-red-500 text-gray-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90",
         outline:
@@ -19,7 +21,11 @@ const buttonVariants = cva(
           "justify-center bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80",
         ghost:
           "text-gray-900 justify-center hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:text-gray-50",
+        ghostLeft:
+          "text-gray-900 justify-start hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:text-gray-50",
         link: "justify-center text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
+        linkLeft:
+          "justify-start text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
         navActive: "justify-start shadow bg-gray-50 text-gray-900",
         navNotActive:
           "justify-start hover:bg-gray-800 hover:text-gray-50 text-gray-50",
