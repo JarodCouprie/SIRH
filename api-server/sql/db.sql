@@ -14,14 +14,6 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
-CREATE TABLE localisation
-(
-    id  BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    lat DECIMAL(15, 2),
-    lng DECIMAL(15, 2),
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE demand
 (
     id                      BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -131,10 +123,9 @@ CREATE TABLE address
     streetNumber                VARCHAR(50),
     locality                    VARCHAR(50),
     zipcode                     VARCHAR(50),
-    location                    VARCHAR(50),
-    id_localisation_own_address BIGINT        NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (id_localisation_own_address) REFERENCES localisation (id)
+    lat                         DECIMAL(15, 2),
+    lng                         DECIMAL(15, 2),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE insurance_company
