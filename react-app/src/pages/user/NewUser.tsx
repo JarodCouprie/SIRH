@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function NewUser() {
   const navigate = useNavigate();
@@ -51,11 +51,24 @@ export function NewUser() {
     setUserBankInfosDisplayed(true);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
+  const handleSubmit = () => {
+    const newUser = {
+      firstname,
+      lastname,
+      email,
+      phone,
+      nationality,
+      country,
+      address: {
+        street,
+        streetNumber,
+        zipcode,
+        locality,
+      },
+      iban,
+      bic,
+    };
+    console.log(newUser);
   };
 
   const userInfos = (
@@ -220,6 +233,14 @@ export function NewUser() {
           required
         />
       </div>
+      <div className="flex justify-end gap-4">
+        <Button variant="ghost" type="button" onClick={handleGoBackToList}>
+          Annuler
+        </Button>
+        <Button variant="callToAction" type="submit" onClick={handleSubmit}>
+          Créer
+        </Button>
+      </div>
     </div>
   );
 
@@ -228,21 +249,21 @@ export function NewUser() {
       <Button
         variant={userInfosDisplayed ? "defaultLeft" : "linkLeft"}
         onClick={handleUserInfosDisplayed}
-        type="button"
+        type="submit"
       >
         Informations générales
       </Button>
       <Button
         variant={userAddressDisplayed ? "defaultLeft" : "linkLeft"}
         onClick={handleUserAddressDisplayed}
-        type="button"
+        type="submit"
       >
         Adresse
       </Button>
       <Button
         variant={userBankInfosDisplayed ? "defaultLeft" : "linkLeft"}
         onClick={handleUserBankInfos}
-        type="button"
+        type="submit"
       >
         Informations bancaires
       </Button>
@@ -267,24 +288,12 @@ export function NewUser() {
           </CardHeader>
           <CardContent>
             <Separator />
-            <form className="flex flex-col gap-4 py-4" onSubmit={handleSubmit}>
+            <form className="py-4" onSubmit={(event) => event.preventDefault()}>
               <div className="flex justify-start gap-8">
                 {formNavigation}
                 {userInfosDisplayed && userInfos}
                 {userAddressDisplayed && userAddress}
                 {userBankInfosDisplayed && userBankInfos}
-              </div>
-              <div className="flex justify-end gap-4">
-                <Button
-                  variant="ghost"
-                  type="button"
-                  onClick={handleGoBackToList}
-                >
-                  Annuler
-                </Button>
-                <Button variant="callToAction" type="submit">
-                  Créer
-                </Button>
               </div>
             </form>
           </CardContent>
