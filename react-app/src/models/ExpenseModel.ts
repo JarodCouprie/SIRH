@@ -75,3 +75,10 @@ export class ExpenseCardModel {
     this.invoicesAmount = invoicesAmount;
   }
 }
+export enum selectedTypeEnum {
+  "ALL" = "ALL",
+  TRAVEL = "TRAVEL",
+  COMPENSATION = "COMPENSATION",
+  FOOD = "FOOD",
+  HOUSING = "HOUSING",
+}

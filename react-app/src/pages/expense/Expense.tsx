@@ -1,7 +1,3 @@
-import {
-  ExpenseCard,
-  ExpenseCardType,
-} from "@/components/expense/ExpenseCard.tsx";
 import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
@@ -10,12 +6,7 @@ import {
 } from "@/components/ui/breadcrumb.tsx";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { useEffect, useState } from "react";
-import {
-  ExpenseAmountDateAndStatus,
-  ExpenseCardModel,
-  ExpenseList,
-  ExpenseStatus,
-} from "@/models/ExpenseModel.ts";
+import { ExpenseList, selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import { ExpenseListCard } from "@/components/expense/ExpenseListCard.tsx";
 import {
   Table,
@@ -34,6 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetails.tsx";
+import { useNavigate } from "react-router-dom";
 
 export function Expense() {
   const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
@@ -41,19 +34,8 @@ export function Expense() {
   const [expensesCount, setExpensesCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [expensesAmountDateAndStatus, setexpensesAmountDateAndStatus] =
-    useState<ExpenseAmountDateAndStatus[]>([]);
-  const [expensesCardModelMonthly, setExpensesCardModelMonthly] = useState(
-    new ExpenseCardModel(0, 0),
-  );
-  const [expensesCardModelRefunded, setExpensesCardModelRefunded] = useState(
-    new ExpenseCardModel(0, 0),
-  );
-  const [expensesCardModelNotRefunded, setExpensesCardModelNotRefunded] =
-    useState(new ExpenseCardModel(0, 0));
-  const [expensesCardModelWaiting, setExpensesCardModelWaiting] = useState(
-    new ExpenseCardModel(0, 0),
-  );
+  const navigate = useNavigate();
+
   const fetchExpenses = async () => {
     if (selectedType == selectedTypeEnum.ALL) {
       await customFetcher(
@@ -99,105 +81,31 @@ export function Expense() {
     });
   };
 
-  const fetchExpensesAmountDateAndStatus = async () => {
-    await customFetcher(
-      "http://localhost:5000/api/expense/amount-date-and-status-by-month?" +
-        new URLSearchParams({
-          date: new Date().toString(),
-        }).toString(),
-    ).then((response) => {
-      if (response.response.status !== 200) {
-        return;
-      }
-      setexpensesAmountDateAndStatus(response.data.data);
-    });
-  };
-
   useEffect(() => {
     fetchExpenses().then();
     fetchExpenseCount().then();
   }, [pageNumber, selectedType, limit]);
 
-  useEffect(() => {
-    fetchExpensesAmountDateAndStatus().then();
-  }, []);
-
-  useEffect(() => {
-    if (expensesAmountDateAndStatus.length == 0) return;
-    let monthlyAmount = 0;
-    let monthlyInvoiceAmount = 0;
-    let waitingAmount = 0;
-    let waitingInvoiceAmount = 0;
-    let refundedAmount = 0;
-    let refundedInvoiceAmount = 0;
-    let notRefundedAmount = 0;
-    let notRefundedInvoiceAmount = 0;
-    expensesAmountDateAndStatus.forEach((row) => {
-      let rowDate: Date = new Date(row.facturationDate);
-      let todayDate: Date = new Date();
-      if (rowDate.getFullYear() + 1 != todayDate.getFullYear() + 1) return;
-
-      monthlyAmount += row.amount;
-      monthlyInvoiceAmount += 1;
-
-      switch (row.status) {
-        case ExpenseStatus.REFUNDED:
-          refundedAmount += row.amount;
-          refundedInvoiceAmount += 1;
-          break;
-        case ExpenseStatus.NOT_REFUNDED:
-          notRefundedAmount += row.amount;
-          notRefundedInvoiceAmount += 1;
-          break;
-        case ExpenseStatus.WAITING:
-          waitingAmount += row.amount;
-          waitingInvoiceAmount += 1;
-          break;
-      }
-    });
-    setExpensesCardModelMonthly(
-      new ExpenseCardModel(monthlyAmount, monthlyInvoiceAmount),
-    );
-    setExpensesCardModelRefunded(
-      new ExpenseCardModel(refundedAmount, refundedInvoiceAmount),
-    );
-    setExpensesCardModelNotRefunded(
-      new ExpenseCardModel(notRefundedAmount, notRefundedInvoiceAmount),
-    );
-    setExpensesCardModelWaiting(
-      new ExpenseCardModel(waitingAmount, waitingInvoiceAmount),
-    );
-  }, [expensesAmountDateAndStatus]);
   function maxValue() {
     let maxValue = limit * (pageNumber - 1) + limit;
     if (maxValue > expensesCount) maxValue = expensesCount;
     return maxValue;
   }
 
+  const handleRedirection = () => {
+    navigate("create");
+  };
+
   return (
     <>
       <div className="flex justify-between py-4">
         <div className="max-[300px]:text-xl min-[300px]:text-2xl"> Frais</div>
-        <Button variant="callToAction"> Demande de remboursement </Button>
+        <Button variant="callToAction" onClick={handleRedirection}>
+          {" "}
+          Demande de remboursement{" "}
+        </Button>
       </div>
-      <div className="grid gap-2 max-sm:grid-rows-4 sm:max-lg:grid-cols-2 sm:max-lg:grid-rows-2 lg:grid-cols-4">
-        <ExpenseCard
-          type={ExpenseCardType.EXPENSE}
-          data={expensesCardModelMonthly}
-        />
-        <ExpenseCard
-          type={ExpenseCardType.REFUNDED}
-          data={expensesCardModelRefunded}
-        />
-        <ExpenseCard
-          type={ExpenseCardType.NON_REFUNDED}
-          data={expensesCardModelNotRefunded}
-        />
-        <ExpenseCard
-          type={ExpenseCardType.WAITING}
-          data={expensesCardModelWaiting}
-        />
-      </div>
+      <MonthlyExpenseDetails />
       <div className="border-b-2 pt-6">
         <Breadcrumb>
           <BreadcrumbList>
@@ -323,12 +231,4 @@ export function Expense() {
       </div>
     </>
   );
-}
-
-enum selectedTypeEnum {
-  "ALL" = "ALL",
-  TRAVEL = "TRAVEL",
-  COMPENSATION = "COMPENSATION",
-  FOOD = "FOOD",
-  HOUSING = "HOUSING",
 }

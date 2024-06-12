@@ -234,7 +234,8 @@ export class ExpenseRepository {
                facturationDate,
                status
         FROM expense
-        WHERE date_format(facturationDate, '%M') = ?;
+        WHERE date_format(facturationDate, '%M') = ?
+        AND date_format(facturationDate, '%Y') = ?;
       `,
       [monthName, year],
     );
@@ -252,7 +253,8 @@ export class ExpenseRepository {
                status
         FROM expense
         WHERE id_owner = ?
-        AND date_format(facturationDate, '%M') = ? AND date_format(facturationDate, '%Y') = ?;
+        AND date_format(facturationDate, '%M') = ? 
+        AND date_format(facturationDate, '%Y') = ?;
       `,
       [user_id, monthName, year],
     );

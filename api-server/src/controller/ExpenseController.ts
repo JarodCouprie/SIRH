@@ -43,21 +43,21 @@ router.get(
 );
 
 router.get(
-  "/amount-date-and-status-by-month/:user_id",
+  "/amount-date-and-status-by-date/:user_id",
   verifyToken,
   async (req: Request, res: Response) => {
     const { code, message, data } =
-      await ExpenseService.getExpensesAmountDateAndStatusByUserIdAndMonth(req);
+      await ExpenseService.getExpensesAmountDateAndStatusByUserIdAndDate(req);
     res.status(code).json({ message, data });
   },
 );
 
 router.get(
-  "/amount-date-and-status-by-month",
+  "/amount-date-and-status-by-date",
   verifyToken,
   async (req: Request, res: Response) => {
     const { code, message, data } =
-      await ExpenseService.getExpensesAmountDateAndStatusByMonth(req);
+      await ExpenseService.getExpensesAmountDateAndStatusByDate(req);
     res.status(code).json({ message, data });
   },
 );

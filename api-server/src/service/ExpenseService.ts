@@ -236,7 +236,7 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesAmountDateAndStatusByMonth(req: Request) {
+  public static async getExpensesAmountDateAndStatusByDate(req: Request) {
     try {
       const selectedDate =
         req.query.date?.toString() || new Date().toDateString();
@@ -244,7 +244,7 @@ export class ExpenseService {
         month: "long",
       });
       const year = new Date(selectedDate).getFullYear().toString();
-
+      console.log(monthName, selectedDate);
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesAmountDateAndStatusByDate(
           monthName,
@@ -269,7 +269,7 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesAmountDateAndStatusByUserIdAndMonth(
+  public static async getExpensesAmountDateAndStatusByUserIdAndDate(
     req: Request,
   ) {
     try {
