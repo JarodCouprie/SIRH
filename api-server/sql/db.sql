@@ -1,5 +1,17 @@
 DROP TABLE IF EXISTS belong_team_service, belong_service, belong_team, equipment, location_contract, agency, insurance_contract, insurance_company, address, service, team, document, logs, expense, absence, demand, localisation, users;
 
+CREATE TABLE address
+(
+    id           BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    street       VARCHAR(50),
+    streetNumber VARCHAR(50),
+    locality     VARCHAR(50),
+    zipcode      VARCHAR(50),
+    lat          DECIMAL(15, 10),
+    lng          DECIMAL(15, 10),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE users
 (
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -7,11 +19,12 @@ CREATE TABLE users
     password    VARCHAR(255),
     firstname   VARCHAR(50),
     lastname    VARCHAR(50),
-    address     VARCHAR(50),
+    id_address  BIGINT        NOT NULL,
     nationality VARCHAR(50),
     role        VARCHAR(50),
     iban        VARCHAR(50),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_address) REFERENCES address (id)
 );
 
 CREATE TABLE demand
@@ -115,18 +128,6 @@ CREATE TABLE service
     FOREIGN KEY (id_user_lead_service) REFERENCES users (id)
 );
 
-CREATE TABLE address
-(
-    id                          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    street                      VARCHAR(50),
-    streetNumber                VARCHAR(50),
-    locality                    VARCHAR(50),
-    zipcode                     VARCHAR(50),
-    lat                         DECIMAL(15, 2),
-    lng                         DECIMAL(15, 2),
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE insurance_company
 (
     id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -149,7 +150,6 @@ CREATE TABLE insurance_contract
 CREATE TABLE agency
 (
     id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    address                          VARCHAR(50),
     name                             VARCHAR(50),
     organisation                     VARCHAR(50),
     id_insurance_contract_own_agency BIGINT        NOT NULL,
@@ -213,8 +213,12 @@ CREATE TABLE belong_team_service
     FOREIGN KEY (id_service) REFERENCES service (id)
 );
 
-INSERT INTO users(firstName, lastName, email, password, address, nationality, role, iban)
+INSERT INTO address(street, streetNumber, locality, zipcode, lat, lng)
+VALUES ("Rue des Loges", "65", "Montigny-lès-Metz", "57950", 49.099960, 6.158020),
+       ("Rue des Roses", "65", "Montigny-lès-Metz", "57950", 49.114390, 6.229430);
+
+INSERT INTO users(firstName, lastName, email, password, id_address, nationality, role, iban)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban"),
+        1, "admin nationaly", "ROLE_ADMIN", "admin iban"),
        ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        "user address", "user nationaly", "ROLE_USER", "user iban");
+        2, "user nationaly", "ROLE_USER", "user iban");

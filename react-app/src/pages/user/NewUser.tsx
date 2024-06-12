@@ -29,10 +29,23 @@ export function NewUser() {
           </CardHeader>
           <CardContent>
             <form>
-              <Label className="text-xl" htmlFor="name">
-                Nom
-              </Label>
-              <Input type="text" id="name" placeholder="Nom" name="name" />
+              <div className="flex">
+                <Label className="text-xl" htmlFor="name">
+                  Nom
+                </Label>
+                <Input type="text" id="name" placeholder="Nom" name="name" />
+              </div>
+              <div className="flex">
+                <Label className="text-xl" htmlFor="email">
+                  Email
+                </Label>
+                <Input
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  name="email"
+                />
+              </div>
             </form>
           </CardContent>
         </Card>
