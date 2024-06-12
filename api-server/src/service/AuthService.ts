@@ -33,13 +33,21 @@ export class AuthService {
     const { email, password } = req.body;
     const [user] = await Promise.all([UserRepository.getUserByEmail(email)]);
     if (!user) {
-      return new ControllerResponse(401, "Utilisateur inconnu");
+      const fakePassword = Date.now().toString();
+      await bcrypt.hash(fakePassword, 10);
+      return new ControllerResponse(
+        401,
+        "Utilisateur ou mot de passe incorrect",
+      );
     }
     const [passwordMatch] = await Promise.all([
       bcrypt.compare(password, user.password),
     ]);
     if (!passwordMatch) {
-      return new ControllerResponse(401, "Mot de passe incorrect");
+      return new ControllerResponse(
+        401,
+        "Utilisateur ou mot de passe incorrect",
+      );
     }
     return user;
   }

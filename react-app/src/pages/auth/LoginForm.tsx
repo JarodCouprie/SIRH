@@ -35,22 +35,28 @@ export function LoginForm() {
     }
   };
   return (
-    <>
+    <div className="flex h-dvh w-dvw flex-col items-center justify-center gap-12 bg-gray-100 text-gray-950 dark:bg-gray-900 dark:text-gray-100">
+      <h1 className="bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-5xl text-transparent">
+        Bienvenue sur SIRH
+      </h1>
       <form
-        className="flex flex-col items-center gap-4"
+        className="flex flex-col items-center gap-6"
         onSubmit={handleClickSummitButton}
       >
-        <h1>Connexion SIRH</h1>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="email">Email</Label>
+          <Label className="text-xl" htmlFor="email">
+            Email
+          </Label>
           <Input type="email" id="email" placeholder="Email" name="email" />
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="password">Mot de passe</Label>
+          <Label className="text-xl" htmlFor="password">
+            Mot de passe
+          </Label>
           <Input
             type="password"
             id="password"
-            placeholder="Mot de passe"
+            placeholder="Password"
             name="password"
           />
         </div>
@@ -59,6 +65,6 @@ export function LoginForm() {
           <PaperPlaneIcon className="ml-2 h-4 w-4" />
         </Button>
       </form>
-    </>
+    </div>
   );
 }

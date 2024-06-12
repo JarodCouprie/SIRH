@@ -2,6 +2,7 @@ import { UserRepository } from "../repository/UserRepository";
 import { User, UserDTO } from "../model/User";
 import { logger } from "../helper/Logger";
 import { ControllerResponse } from "../helper/ControllerResponse";
+import { Request } from "express";
 
 export class UserService {
   public static async getUsers() {
@@ -12,6 +13,32 @@ export class UserService {
     } catch (error) {
       logger.error(`Failed to get users. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get users");
+    }
+  }
+
+  public static async getUserList(req: Request) {
+    try {
+      const pageSize = req.query.pageSize || "0";
+      const pageNumber = req.query.pageNumber || "10";
+      const isPageSizeAnInteger = Number.isInteger(+pageSize);
+      const isPageNumberAnInteger = Number.isInteger(+pageNumber);
+      if (!isPageSizeAnInteger && !isPageNumberAnInteger) {
+        return new ControllerResponse(400, "Les paramètres sont incorrects");
+      }
+      const limit = +pageSize;
+      const offset = (+pageNumber - 1) * +pageSize;
+      const userCount = await UserRepository.getUsersCount();
+      const userList = await UserRepository.listUsers(limit, offset);
+      return new ControllerResponse(200, "", {
+        totalData: userCount,
+        list: userList,
+      });
+    } catch (error) {
+      logger.error(`Failed to get user list. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer la liste des utilisateurs",
+      );
     }
   }
 
