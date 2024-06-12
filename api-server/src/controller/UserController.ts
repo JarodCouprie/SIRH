@@ -11,6 +11,11 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
+router.get("/list", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await UserService.getUserList(req);
+  res.status(code).json({ message, data });
+});
+
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await UserService.getUserById(+req.params.id);
   res.status(code).json({ message, data });

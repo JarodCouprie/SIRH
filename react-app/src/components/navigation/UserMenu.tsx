@@ -37,15 +37,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
-  // const navigate = useNavigate();
-  // const { setToken } = useAuth() as AuthTokens;
-  // const handleLogOut = () => {
-  //   setToken("", "");
-  //   navigate(`/login`);
-  // };
+  const { user } = useCurrentUser();
   const handleDarkTheme = () => {
     setDarkTheme();
   };
@@ -67,7 +63,9 @@ export function UserMenu() {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Jarod Couprie</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {user.firstname} {user.lastname}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
