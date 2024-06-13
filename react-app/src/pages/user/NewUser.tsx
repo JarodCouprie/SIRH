@@ -16,58 +16,74 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 
 export function NewUser() {
   const navigate = useNavigate();
-  const [userInfosDisplayed, setUserInfosDisplayed] = useState(true);
-  const [userAddressDisplayed, setUserAddressDisplayed] = useState(false);
-  const [userBankInfosDisplayed, setUserBankInfosDisplayed] = useState(false);
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [country, setCountry] = useState("");
-  const [streetNumber, setStreetNumber] = useState("");
-  const [street, setStreet] = useState("");
-  const [zipcode, setZipcode] = useState("");
-  const [locality, setLocality] = useState("");
-  const [iban, setIban] = useState("");
-  const [bic, setBic] = useState("");
+  const [userFormData, setUserFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    country: "",
+    street: "",
+    streetNumber: "",
+    zipcode: "",
+    locality: "",
+    iban: "",
+    bic: "",
+  });
+  const [userInfosDisplayed, setUserInfosDisplayed] = useState({
+    infos: true,
+    address: false,
+    bankInfos: false,
+  });
+  const [formNavigationDisabled, setFormNavigationDisabled] = useState({
+    infos: false,
+    address: true,
+    bankInfos: true,
+  });
+
   const handleGoBackToList = () => {
     navigate("/user");
   };
-  const handleUserAddressDisplayed = () => {
-    setUserInfosDisplayed(false);
-    setUserAddressDisplayed(true);
-    setUserBankInfosDisplayed(false);
+  const handleUserInfosDisplayed = () => {
+    setUserInfosDisplayed({
+      infos: true,
+      address: false,
+      bankInfos: false,
+    });
   };
 
-  const handleUserInfosDisplayed = () => {
-    setUserInfosDisplayed(true);
-    setUserAddressDisplayed(false);
-    setUserBankInfosDisplayed(false);
+  const handleUserAddressDisplayed = () => {
+    setUserInfosDisplayed({
+      infos: false,
+      address: true,
+      bankInfos: false,
+    });
   };
 
   const handleUserBankInfos = () => {
-    setUserInfosDisplayed(false);
-    setUserAddressDisplayed(false);
-    setUserBankInfosDisplayed(true);
+    setUserInfosDisplayed({
+      infos: false,
+      address: false,
+      bankInfos: true,
+    });
   };
 
   const handleSubmit = async () => {
     const newUser = {
-      firstname,
-      lastname,
-      email,
-      phone,
-      nationality,
-      country,
+      firstname: userFormData.firstname,
+      lastname: userFormData.lastname,
+      email: userFormData.email,
+      phone: userFormData.phone,
+      nationality: userFormData.nationality,
+      country: userFormData.country,
       address: {
-        street,
-        streetNumber,
-        zipcode,
-        locality,
+        street: userFormData.street,
+        streetNumber: userFormData.streetNumber,
+        zipcode: userFormData.zipcode,
+        locality: userFormData.locality,
       },
-      iban,
-      bic,
+      iban: userFormData.iban,
+      bic: userFormData.bic,
     };
 
     const config = {
@@ -76,6 +92,26 @@ export function NewUser() {
     };
 
     await customFetcher("http://localhost:5000/api/user", config);
+  };
+
+  const handleNextToAddress = () => {
+    if (userFormData.firstname === "") {
+      console.log("firstname is empty");
+      return;
+    }
+    handleUserAddressDisplayed();
+    setFormNavigationDisabled({
+      infos: false,
+      address: false,
+      bankInfos: false,
+    });
+  };
+
+  const handleUserFormDataChange = (e: any) => {
+    setUserFormData({
+      ...userFormData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const userInfos = (
@@ -89,9 +125,8 @@ export function NewUser() {
           id="firstname"
           placeholder="Prénom"
           name="firstname"
-          value={firstname}
-          onChange={(e) => setFirstname(e.target.value)}
-          required
+          value={userFormData.firstname}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -101,9 +136,8 @@ export function NewUser() {
           id="lastname"
           placeholder="Nom"
           name="lastname"
-          value={lastname}
-          onChange={(e) => setLastname(e.target.value)}
-          required
+          value={userFormData.lastname}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -113,9 +147,8 @@ export function NewUser() {
           id="email"
           placeholder="Adresse email"
           name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          value={userFormData.email}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -125,9 +158,8 @@ export function NewUser() {
           id="phone"
           placeholder="Numéro de téléphone"
           name="phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
+          value={userFormData.phone}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -137,10 +169,14 @@ export function NewUser() {
           id="nationality"
           placeholder="Nationalité"
           name="nationality"
-          value={nationality}
-          onChange={(e) => setNationality(e.target.value)}
-          required
+          value={userFormData.nationality}
+          onChange={handleUserFormDataChange}
         />
+      </div>
+      <div className="flex justify-end p-4 py-8">
+        <Button variant="callToAction" onClick={handleNextToAddress}>
+          Suivant
+        </Button>
       </div>
     </div>
   );
@@ -156,9 +192,8 @@ export function NewUser() {
           id="country"
           placeholder="Pays"
           name="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          required
+          value={userFormData.country}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -168,9 +203,8 @@ export function NewUser() {
           id="streetNumber"
           placeholder="Numéro de rue"
           name="streetNumber"
-          value={streetNumber}
-          onChange={(e) => setStreetNumber(e.target.value)}
-          required
+          value={userFormData.streetNumber}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -180,9 +214,8 @@ export function NewUser() {
           id="street"
           placeholder="Nom de la rue"
           name="street"
-          value={street}
-          onChange={(e) => setStreet(e.target.value)}
-          required
+          value={userFormData.street}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -192,9 +225,8 @@ export function NewUser() {
           id="zipcode"
           placeholder="Code postal"
           name="zipcode"
-          value={zipcode}
-          onChange={(e) => setZipcode(e.target.value)}
-          required
+          value={userFormData.zipcode}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -204,9 +236,8 @@ export function NewUser() {
           id="locality"
           placeholder="Ville"
           name="locality"
-          value={locality}
-          onChange={(e) => setLocality(e.target.value)}
-          required
+          value={userFormData.locality}
+          onChange={handleUserFormDataChange}
         />
       </div>
     </div>
@@ -223,9 +254,8 @@ export function NewUser() {
           id="iban"
           placeholder="IBAN"
           name="iban"
-          value={iban}
-          onChange={(e) => setIban(e.target.value)}
-          required
+          value={userFormData.iban}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -235,9 +265,8 @@ export function NewUser() {
           id="bic"
           placeholder="BIC"
           name="bic"
-          value={bic}
-          onChange={(e) => setBic(e.target.value)}
-          required
+          value={userFormData.bic}
+          onChange={handleUserFormDataChange}
         />
       </div>
       <div className="flex justify-end gap-4">
@@ -254,23 +283,26 @@ export function NewUser() {
   const formNavigation = (
     <div className="flex flex-col gap-2">
       <Button
-        variant={userInfosDisplayed ? "defaultLeft" : "linkLeft"}
+        variant={userInfosDisplayed.infos ? "defaultLeft" : "linkLeft"}
         onClick={handleUserInfosDisplayed}
         type="submit"
+        disabled={formNavigationDisabled.infos}
       >
         Informations générales
       </Button>
       <Button
-        variant={userAddressDisplayed ? "defaultLeft" : "linkLeft"}
+        variant={userInfosDisplayed.address ? "defaultLeft" : "linkLeft"}
         onClick={handleUserAddressDisplayed}
         type="submit"
+        disabled={formNavigationDisabled.address}
       >
         Adresse
       </Button>
       <Button
-        variant={userBankInfosDisplayed ? "defaultLeft" : "linkLeft"}
+        variant={userInfosDisplayed.bankInfos ? "defaultLeft" : "linkLeft"}
         onClick={handleUserBankInfos}
         type="submit"
+        disabled={formNavigationDisabled.bankInfos}
       >
         Informations bancaires
       </Button>
@@ -298,9 +330,9 @@ export function NewUser() {
             <form className="py-4" onSubmit={(event) => event.preventDefault()}>
               <div className="flex justify-start gap-8">
                 {formNavigation}
-                {userInfosDisplayed && userInfos}
-                {userAddressDisplayed && userAddress}
-                {userBankInfosDisplayed && userBankInfos}
+                {userInfosDisplayed.infos && userInfos}
+                {userInfosDisplayed.address && userAddress}
+                {userInfosDisplayed.bankInfos && userBankInfos}
               </div>
             </form>
           </CardContent>
