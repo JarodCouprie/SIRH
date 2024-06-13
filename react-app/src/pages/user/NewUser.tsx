@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { useState } from "react";
+import { customFetcher } from "@/helper/fetchInstance.ts";
 
 export function NewUser() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export function NewUser() {
     setUserBankInfosDisplayed(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newUser = {
       firstname,
       lastname,
@@ -68,7 +69,13 @@ export function NewUser() {
       iban,
       bic,
     };
-    console.log(newUser);
+
+    const config = {
+      method: "POST",
+      body: JSON.stringify(newUser),
+    };
+
+    await customFetcher("http://localhost:5000/api/user", config);
   };
 
   const userInfos = (
