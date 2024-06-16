@@ -59,10 +59,21 @@ export class UserRepository {
   public static async createUser(user: CreateUser) {
     const [result] = await this.pool.query(
       `
-          INSERT INTO users (firstname, lastname, email, password)
-          VALUES (?, ?, ?, ?)
+          INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic, role)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
-      [user.firstname, user.lastname, user.email, user.password],
+      [
+        user.firstname,
+        user.lastname,
+        user.email,
+        user.id_address,
+        user.nationality,
+        user.iban,
+        user.country,
+        user.phone,
+        user.bic,
+        user.role,
+      ],
     );
     return result;
   }

@@ -1,3 +1,5 @@
+import { RoleEnum } from "../enum/RoleEnum";
+
 export class User {
   id: number;
   firstname: string;
@@ -30,18 +32,36 @@ export class CreateUser {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
+  id_address: number;
+  nationality: string;
+  role: string;
+  iban: string;
+  country: string;
+  phone: string;
+  bic: string;
 
   constructor(
     firstname: string,
     lastname: string,
     email: string,
-    password: string,
+    phone: string,
+    id_address: number,
+    nationality: string,
+    country: string,
+    iban: string,
+    bic: string,
+    role?: string,
   ) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
-    this.password = password;
+    this.phone = phone;
+    this.id_address = id_address;
+    this.nationality = nationality;
+    this.country = country;
+    this.iban = iban;
+    this.bic = bic;
+    this.role = role || RoleEnum.USER;
   }
 }
 

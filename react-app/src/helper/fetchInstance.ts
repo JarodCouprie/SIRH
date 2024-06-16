@@ -24,7 +24,7 @@ async function originalRequest(url: string, config: any = {}) {
 export async function customFetcher(url: string, config: any = {}) {
   let { response, data }: any = await originalRequest(url, config);
 
-  if (response.status === 401 || response.status !== 200) {
+  if (response.status === 401) {
     await getRefreshToken();
 
     config["headers"] = {

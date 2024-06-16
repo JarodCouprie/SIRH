@@ -17,12 +17,15 @@ CREATE TABLE users
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     email       VARCHAR(50),
     password    VARCHAR(255),
+    country     VARCHAR(255),
+    phone       VARCHAR(50),
     firstname   VARCHAR(50),
     lastname    VARCHAR(50),
-    id_address  BIGINT        NOT NULL,
+    id_address  BIGINT,
     nationality VARCHAR(50),
     role        VARCHAR(50),
     iban        VARCHAR(50),
+    bic         VARCHAR(50),
     PRIMARY KEY (id),
     FOREIGN KEY (id_address) REFERENCES address (id)
 );
@@ -217,8 +220,8 @@ INSERT INTO address(street, streetNumber, locality, zipcode, lat, lng)
 VALUES ("Rue des Loges", "65", "Montigny-lès-Metz", "57950", 49.099960, 6.158020),
        ("Rue des Roses", "65", "Montigny-lès-Metz", "57950", 49.114390, 6.229430);
 
-INSERT INTO users(firstName, lastName, email, password, id_address, nationality, role, iban)
+INSERT INTO users(firstname, lastname, email, password, id_address, nationality, role, iban, country, phone, bic)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        1, "admin nationaly", "ROLE_ADMIN", "admin iban"),
+        1, "admin nationaly", "ROLE_ADMIN", "admin iban", "France", "45678908097", "bic admin"),
        ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        2, "user nationaly", "ROLE_USER", "user iban");
+        2, "user nationaly", "ROLE_USER", "user iban", "France", "45678908097", "bic user");

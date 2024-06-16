@@ -11,8 +11,9 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.ts";
+import { toast } from "sonner";
 
 export function NewUser() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export function NewUser() {
     });
   };
 
-  const handleUserBankInfos = () => {
+  const handleUserBankInfosDisplayed = () => {
     setUserInfosDisplayed({
       infos: false,
       address: false,
@@ -68,7 +69,16 @@ export function NewUser() {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (
+      !userInfosValidated() ||
+      !userAddressValidated() ||
+      !userBankInfosValidated()
+    ) {
+      return toast.error("Des informations sont incorrectes");
+    }
+
     const newUser = {
       firstname: userFormData.firstname,
       lastname: userFormData.lastname,
@@ -90,22 +100,110 @@ export function NewUser() {
       method: "POST",
       body: JSON.stringify(newUser),
     };
+    const newUserFetch = await customFetcher(
+      "http://localhost:5000/api/user",
+      config,
+    );
 
-    await customFetcher("http://localhost:5000/api/user", config);
+    if (newUserFetch.response.status === 201) {
+      toast.message(
+        `Nouvel utilisateur ${userFormData.firstname} ${userFormData.lastname} créé`,
+      );
+      return navigate("/user");
+    }
+    toast.error("Erreur lors de la création de l'utilisateur");
   };
 
   const handleNextToAddress = () => {
-    if (userFormData.firstname === "") {
-      console.log("firstname is empty");
-      return;
+    if (userInfosValidated()) {
+      handleUserAddressDisplayed();
+      return setFormNavigationDisabled({
+        infos: false,
+        address: false,
+        bankInfos: true,
+      });
     }
-    handleUserAddressDisplayed();
-    setFormNavigationDisabled({
-      infos: false,
-      address: false,
-      bankInfos: false,
-    });
+    return setUserInfosValidatedDisplay(true);
   };
+
+  const handleNextToBankInfos = () => {
+    if (userAddressValidated()) {
+      handleUserBankInfosDisplayed();
+      return setFormNavigationDisabled({
+        infos: false,
+        address: false,
+        bankInfos: false,
+      });
+    }
+    return setUserAddressValidatedDisplay(true);
+  };
+
+  useEffect(() => {
+    if (userInfosValidated()) {
+      setUserInfosValidatedDisplay(false);
+    } else {
+      setUserInfosValidatedDisplay(true);
+    }
+
+    if (userAddressValidated()) {
+      setUserAddressValidatedDisplay(false);
+    } else {
+      setUserAddressValidatedDisplay(true);
+    }
+
+    if (userBankInfosValidated()) {
+      setUserBankInfosValidatedDisplay(false);
+    } else {
+      setUserBankInfosValidatedDisplay(true);
+    }
+  }, [userFormData]);
+
+  const userInfosValidated = () => {
+    const emailRegExp =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const firstnameNotEmpty = userFormData.firstname.trim() !== "";
+    const lastnameNotEmpty = userFormData.lastname.trim() !== "";
+    const emailNotEmpty = userFormData.email.trim() !== "";
+    const emailValid = emailRegExp.test(userFormData.email);
+    const phoneNotEmpty = userFormData.phone.trim() !== "";
+    const nationalityNotEmpty = userFormData.nationality.trim() !== "";
+    return (
+      firstnameNotEmpty &&
+      lastnameNotEmpty &&
+      emailNotEmpty &&
+      emailValid &&
+      phoneNotEmpty &&
+      nationalityNotEmpty
+    );
+  };
+
+  const userAddressValidated = () => {
+    const countryNotEmpty = userFormData.country.trim() !== "";
+    const streetNumberNotEmpty = userFormData.streetNumber.trim() !== "";
+    const streetNotEmpty = userFormData.street.trim() !== "";
+    const zipcodeNotEmpty = userFormData.zipcode.trim() !== "";
+    const localityNotEmpty = userFormData.locality.trim() !== "";
+    return (
+      countryNotEmpty &&
+      streetNumberNotEmpty &&
+      streetNotEmpty &&
+      zipcodeNotEmpty &&
+      localityNotEmpty
+    );
+  };
+
+  const userBankInfosValidated = () => {
+    const ibanNotEmpty = userFormData.iban.trim() !== "";
+    const bicNotEmpty = userFormData.bic.trim() !== "";
+    return ibanNotEmpty && bicNotEmpty;
+  };
+
+  const [userInfosValidatedDisplay, setUserInfosValidatedDisplay] =
+    useState(false);
+  const [userAddressValidatedDisplay, setUserAddressValidatedDisplay] =
+    useState(false);
+  const [userBankInfosValidatedDisplay, setUserBankInfosValidatedDisplay] =
+    useState(false);
 
   const handleUserFormDataChange = (e: any) => {
     setUserFormData({
@@ -173,8 +271,17 @@ export function NewUser() {
           onChange={handleUserFormDataChange}
         />
       </div>
-      <div className="flex justify-end p-4 py-8">
-        <Button variant="callToAction" onClick={handleNextToAddress}>
+      {userInfosValidatedDisplay && (
+        <div className="text-sm text-red-800">
+          * Tous les champs doivent être complétés
+        </div>
+      )}
+      <div className="flex justify-end pt-8">
+        <Button
+          variant="callToAction"
+          onClick={handleNextToAddress}
+          type="button"
+        >
           Suivant
         </Button>
       </div>
@@ -208,11 +315,11 @@ export function NewUser() {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="street">Nom de la rue</Label>
+        <Label htmlFor="street">Nom de rue</Label>
         <Input
           type="text"
           id="street"
-          placeholder="Nom de la rue"
+          placeholder="Nom de rue"
           name="street"
           value={userFormData.street}
           onChange={handleUserFormDataChange}
@@ -239,6 +346,16 @@ export function NewUser() {
           value={userFormData.locality}
           onChange={handleUserFormDataChange}
         />
+      </div>
+      {userAddressValidatedDisplay && (
+        <div className="text-sm text-red-800">
+          * Tous les champs doivent être complétés
+        </div>
+      )}
+      <div className="flex justify-end pt-8">
+        <Button variant="callToAction" onClick={handleNextToBankInfos}>
+          Suivant
+        </Button>
       </div>
     </div>
   );
@@ -269,11 +386,16 @@ export function NewUser() {
           onChange={handleUserFormDataChange}
         />
       </div>
+      {userBankInfosValidatedDisplay && (
+        <div className="text-sm text-red-800">
+          * Tous les champs doivent être complétés
+        </div>
+      )}
       <div className="flex justify-end gap-4">
         <Button variant="ghost" type="button" onClick={handleGoBackToList}>
           Annuler
         </Button>
-        <Button variant="callToAction" type="submit" onClick={handleSubmit}>
+        <Button variant="callToAction" type="submit">
           Créer
         </Button>
       </div>
@@ -285,7 +407,7 @@ export function NewUser() {
       <Button
         variant={userInfosDisplayed.infos ? "defaultLeft" : "linkLeft"}
         onClick={handleUserInfosDisplayed}
-        type="submit"
+        type="button"
         disabled={formNavigationDisabled.infos}
       >
         Informations générales
@@ -293,15 +415,15 @@ export function NewUser() {
       <Button
         variant={userInfosDisplayed.address ? "defaultLeft" : "linkLeft"}
         onClick={handleUserAddressDisplayed}
-        type="submit"
+        type="button"
         disabled={formNavigationDisabled.address}
       >
         Adresse
       </Button>
       <Button
         variant={userInfosDisplayed.bankInfos ? "defaultLeft" : "linkLeft"}
-        onClick={handleUserBankInfos}
-        type="submit"
+        onClick={handleUserBankInfosDisplayed}
+        type="button"
         disabled={formNavigationDisabled.bankInfos}
       >
         Informations bancaires
@@ -327,7 +449,7 @@ export function NewUser() {
           </CardHeader>
           <CardContent>
             <Separator />
-            <form className="py-4" onSubmit={(event) => event.preventDefault()}>
+            <form className="pt-4" onSubmit={handleSubmit}>
               <div className="flex justify-start gap-8">
                 {formNavigation}
                 {userInfosDisplayed.infos && userInfos}

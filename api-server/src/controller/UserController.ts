@@ -22,8 +22,8 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
-  console.log(req.body);
-  res.status(200).json("ça marche");
+  const { code, message } = await UserService.createUser(req);
+  res.status(code).json(message);
 });
 
 export default router;

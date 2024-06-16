@@ -1,8 +1,11 @@
 import { UserRepository } from "../repository/UserRepository";
-import { User, UserDTO } from "../model/User";
+import { CreateUser, User, UserDTO } from "../model/User";
 import { logger } from "../helper/Logger";
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { Request } from "express";
+import { add } from "winston";
+import { AddressRepository } from "../repository/AddressRepository";
+import { CreateAddress } from "../model/Address";
 
 export class UserService {
   public static async getUsers() {
@@ -12,7 +15,10 @@ export class UserService {
       return new ControllerResponse<UserDTO[]>(200, "", usersDto);
     } catch (error) {
       logger.error(`Failed to get users. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get users");
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer la liste des utilisateurs",
+      );
     }
   }
 
@@ -28,10 +34,10 @@ export class UserService {
       const limit = +pageSize;
       const offset = (+pageNumber - 1) * +pageSize;
       const userCount = await UserRepository.getUsersCount();
-      const userList = await UserRepository.listUsers(limit, offset);
+      const userList: any = await UserRepository.listUsers(limit, offset);
       return new ControllerResponse(200, "", {
         totalData: userCount,
-        list: userList,
+        list: userList.map((user: User) => new UserDTO(user)),
       });
     } catch (error) {
       logger.error(`Failed to get user list. Error: ${error}`);
@@ -46,12 +52,81 @@ export class UserService {
     try {
       const user: any = await UserRepository.getUserById(+id);
       if (!user) {
-        return new ControllerResponse(401, "User doesn't exist");
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
       return new ControllerResponse<UserDTO>(200, "", new UserDTO(user));
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get user");
+      return new ControllerResponse(500, "Impossible de créer l'utilisateur");
+    }
+  }
+
+  public static async createUser(req: Request) {
+    try {
+      const address = req.body.address;
+      const streetNumber = address.streetNumber;
+      const street = address.street;
+      const locality = address.locality;
+      const zipcode = address.zipcode;
+      const addressInfosFetched = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${streetNumber}+${street}+${locality}+${zipcode}`,
+      );
+      const addressInfos = await addressInfosFetched.json();
+
+      if (!addressInfos.features.length) {
+        return new ControllerResponse(400, "Adresse invalide");
+      }
+
+      const longitude = addressInfos.features[0].geometry.coordinates[0];
+      const latitude = addressInfos.features[0].geometry.coordinates[1];
+
+      const newAddress = new CreateAddress(
+        street,
+        streetNumber,
+        locality,
+        zipcode,
+        latitude,
+        longitude,
+      );
+
+      const createdAddress = await AddressRepository.createAddress(newAddress);
+
+      let userAddressId: number;
+
+      if ("insertId" in createdAddress) {
+        userAddressId = createdAddress.insertId;
+      } else {
+        return new ControllerResponse(
+          400,
+          "Impossible d'enregistrer l'adresse de l'utilisateur",
+        );
+      }
+
+      const newUser = new CreateUser(
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email,
+        req.body.phone,
+        userAddressId,
+        req.body.nationality,
+        req.body.country,
+        req.body.iban,
+        req.body.bic,
+      );
+
+      const createdUser = await UserRepository.createUser(newUser);
+
+      if ("insertId" in createdUser) {
+        return new ControllerResponse(201, "Utilisateur créé avec succès");
+      } else {
+        return new ControllerResponse(
+          400,
+          "Impossible d'enregistrer l'utilisateur",
+        );
+      }
+    } catch (error) {
+      logger.error(`Failed to create user. Error: ${error}`);
+      return new ControllerResponse(500, "Impossible de créer l'utilisateur");
     }
   }
 }
