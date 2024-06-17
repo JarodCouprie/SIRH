@@ -3,8 +3,6 @@ import { FaArrowLeft } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DemandDTO } from "@/models/DemandModel.ts";
-import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
 import {
   Card,
   CardContent,
@@ -13,34 +11,28 @@ import {
 } from "@/components/ui/card.tsx";
 
 import { Pencil1Icon } from "@radix-ui/react-icons";
+import { customFetcher } from "@/helper/fetchInstance.ts";
 
 export function DemandDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [demand, setDemand] = useState<DemandDTO>({
-    id: 0,
     motivation: "",
     startDate: new Date(),
     endDate: new Date(),
-    createdAt: new Date(),
-    status: "",
     type: DemandType.CA,
-    number_day: 1,
   });
-  const { token } = useAuth() as AuthTokens;
+
   const handleClick = () => {
     navigate("/demand");
   };
 
   const fetchDemand = async () => {
-    await fetch(`http://localhost:5000/api/demand/${id}`, {
-      headers: { Authorization: `Bearer ${token.accessToken}` },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setDemand(data.data);
-        console.log(data);
-      });
+    await customFetcher(`http://localhost:5000/api/demand/${id}`).then(
+      (data) => {
+        setDemand(data.data.data);
+      },
+    );
   };
 
   useEffect(() => {

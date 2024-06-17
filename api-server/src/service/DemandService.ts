@@ -84,15 +84,24 @@ export class DemandService {
 
   public static async createDemand(body: CreateDemand) {
     try {
+      let number_day = 0;
+      if (body.startDate && body.endDate) {
+        const start = new Date(body.startDate);
+        const end = new Date(body.endDate);
+        const differenceMs = end.getTime() - start.getTime();
+        number_day = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+      }
+
       const newDemand = new CreateDemand(
         body.startDate,
         body.endDate,
         body.motivation,
-        body.status,
+        "WAITING",
         body.type,
-        body.number_day,
-        body.idOwner,
+        number_day,
+        1,
       );
+
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
     } catch (error) {

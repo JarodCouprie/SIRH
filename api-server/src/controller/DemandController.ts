@@ -1,8 +1,29 @@
 import { Request, Response, Router } from "express";
 import { verifyToken } from "../middleware/AuthMiddleware";
 import { DemandService } from "../service/DemandService";
+import { z, ZodError } from "zod";
 
 const router = Router();
+
+const demandSchema = z.object({
+  type: z.string(),
+  motivation: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+});
+const validate = (schema: z.ZodSchema) => (req: Request, res: Response) => {
+  try {
+    console.log(schema.parse(req.body));
+    schema.parse(req.body);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return res.status(400).json({
+        errors: err.errors.map((e) => ({ path: e.path, message: e.message })),
+      });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await DemandService.getDemand(req);
@@ -36,10 +57,14 @@ router.delete(
 );
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
+  //const { type, description, startDate, endDate } = req.body;
+  console.log(req.body);
   const { code, message, data } = await DemandService.createDemand(req.body);
-  res.status(code).json({ message, data });
+  res.status(code).json({
+    message,
+    data,
+  });
   // console.log(req.body);
   // res.status(200).json("gg");
 });
-
 export default router;
