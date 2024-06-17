@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover.tsx";
 import { Calendar } from "@/components/ui/calendar.tsx";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 export function CreateExpense() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export function CreateExpense() {
                   }
                   defaultValue={selectedTypeEnum.TRAVEL}
                 >
-                  <SelectTrigger className="my-1 h-fit w-full">
+                  <SelectTrigger className="my-1 h-fit w-full border-gray-400">
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -85,7 +86,7 @@ export function CreateExpense() {
                   id="desc"
                   placeholder="Description"
                   name="desc"
-                  className="p-4"
+                  className="border-gray-400 p-4"
                 />
               </div>
               <div className="flex flex-col">
@@ -97,7 +98,7 @@ export function CreateExpense() {
                   id="amount"
                   placeholder="0€"
                   name="amount"
-                  className="p-4"
+                  className="border-gray-400 p-4"
                 />
               </div>
               <div className="flex flex-col">
@@ -108,7 +109,7 @@ export function CreateExpense() {
                   <PopoverTrigger asChild>
                     <Button
                       variant={"outline"}
-                      className="justify-start text-left"
+                      className="justify-start border-gray-400 text-left"
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {displayDate()}
@@ -123,6 +124,32 @@ export function CreateExpense() {
                     />
                   </PopoverContent>
                 </Popover>
+              </div>
+              <div className="my-4 flex h-20 w-full items-center justify-center gap-4 rounded border border-dashed border-gray-400 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-900">
+                <MdOutlineFileUpload className="size-14 rounded-full bg-white p-1 dark:bg-gray-950" />
+                <div>
+                  <div className="flex font-medium">
+                    <div className=" cursor-pointer text-blue-700 underline dark:text-blue-500">
+                      Cliquer pour envoyer votre image
+                    </div>
+                    &nbsp;ou glisser-déposez votre photo ici
+                  </div>
+                  <div className="font-normal text-gray-500">
+                    (SVG, JPG ou PNG)
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-8">
+                <Button className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400">
+                  Envoyer
+                </Button>
+                <Button
+                  onClick={handleGoBackToList}
+                  variant="link"
+                  className="rounded p-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-900"
+                >
+                  Annuler
+                </Button>
               </div>
             </form>
           </CardContent>
