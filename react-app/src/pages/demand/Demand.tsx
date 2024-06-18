@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { DemandDTO } from "@/models/DemandModel.ts";
+import { DemandAll } from "@/models/DemandModel.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
 import {
@@ -36,9 +35,10 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { DemandCard } from "@/components/demand/demandCard.tsx";
 
 export function Demand() {
-  const [demandList, setDemandList] = useState<DemandDTO[]>([]);
+  const [demandList, setDemandList] = useState<DemandAll[]>([]);
   const [filter, setFilter] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
@@ -158,40 +158,7 @@ export function Demand() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="flex ">
-          <CardHeader className="flex flex-row">
-            <TbCalendarClock className="size-14 text-indigo-500 opacity-75" />
-          </CardHeader>
-
-          <CardTitle className="p-4">
-            <span className="text-base">Solde de congés</span>
-            <div className="text-4xl">30</div>
-          </CardTitle>
-        </Card>
-
-        <Card className="flex ">
-          <CardHeader className="flex flex-row">
-            <TbCalendarRepeat className="size-14 text-red-500 opacity-75" />
-          </CardHeader>
-
-          <CardTitle className="p-4">
-            <span className="text-base">Solde de RTT</span>
-            <div className="text-4xl">30</div>
-          </CardTitle>
-        </Card>
-
-        <Card className="flex ">
-          <CardHeader className="flex flex-row">
-            <MdOutlineLaptop className="size-14 text-orange-500 opacity-75" />
-          </CardHeader>
-
-          <CardTitle className="p-4">
-            <span className="text-base">Solde de télétravail</span>
-            <div className="text-4xl">30</div>
-          </CardTitle>
-        </Card>
-      </div>
+      <DemandCard />
 
       <div className="border-b border-b-gray-400 pt-4">
         <Breadcrumb>
@@ -263,7 +230,7 @@ export function Demand() {
                 </TableCell>
               </TableRow>
             ) : (
-              demandList.map((demand: DemandDTO) => (
+              demandList.map((demand: DemandAll) => (
                 <TableRow
                   key={demand.id}
                   className="hover:cursor-pointer"

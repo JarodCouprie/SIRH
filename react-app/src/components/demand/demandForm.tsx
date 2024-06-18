@@ -21,7 +21,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { customFetcher } from "@/helper/fetchInstance";
 import { DemandDTO, DemandType } from "@/models/DemandModel";
-import { Card, CardContent, CardHeader } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
 
 interface DemandFormProps {
   initialData?: DemandDTO;
@@ -37,9 +42,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
 }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [start_date, setStartDate] = useState<Date>(new Date());
-  console.log(start_date);
-  const [end_date, setEndDate] = useState<Date>(new Date());
+  const [start_date, setStartDate] = useState<Date>();
+  const [end_date, setEndDate] = useState<Date>();
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
 
@@ -57,8 +61,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
   ) => {
     event.preventDefault();
     const motivation = event.currentTarget.description.value;
-    const startDate = start_date.toLocaleDateString("fr-CA");
-    const endDate = end_date.toLocaleDateString("fr-CA");
+    const startDate = start_date?.toLocaleDateString("fr-CA");
+    const endDate = end_date?.toLocaleDateString("fr-CA");
 
     const demandeData = {
       startDate,
@@ -85,8 +89,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
     setMotivation(e.target.value);
   };
 
-  const handleSelectChange = (value: React.SetStateAction<DemandType>) => {
-    setSelectedType(value);
+  const handleSelectChange = (value: string) => {
+    setSelectedType(value as DemandType);
   };
 
   const handleTitle = () => {
@@ -107,7 +111,9 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
   return (
     <Card>
-      <CardHeader>{handleTitle()}</CardHeader>
+      <CardTitle className="flex items-center justify-between gap-4 text-xl">
+        {handleTitle()}
+      </CardTitle>
       <CardContent>
         <form
           onSubmit={handleClickSubmitButton}
