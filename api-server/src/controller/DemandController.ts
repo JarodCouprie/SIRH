@@ -57,13 +57,16 @@ router.delete(
 );
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
-  //const { type, description, startDate, endDate } = req.body;
-  console.log(req.body);
-  const { code, message, data } = await DemandService.createDemand(req.body);
+  let userId = req.token.userId;
+  const { code, message, data } = await DemandService.createDemand(
+    req.body,
+    userId,
+  );
   res.status(code).json({
     message,
     data,
   });
+  //const { type, description, startDate, endDate } = req.body;
   // console.log(req.body);
   // res.status(200).json("gg");
 });

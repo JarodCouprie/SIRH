@@ -82,7 +82,7 @@ export class DemandService {
     }
   }
 
-  public static async createDemand(body: CreateDemand) {
+  public static async createDemand(body: CreateDemand, id: number) {
     try {
       let number_day = 0;
       if (body.startDate && body.endDate) {
@@ -99,7 +99,7 @@ export class DemandService {
         "WAITING",
         body.type,
         number_day,
-        1,
+        id,
       );
 
       const demand: any = await DemandRepository.createDemand(newDemand);
