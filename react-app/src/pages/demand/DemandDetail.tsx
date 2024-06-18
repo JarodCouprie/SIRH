@@ -9,9 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { customFetcher } from "@/helper/fetchInstance.ts";
+import { MdOutlineDelete } from "react-icons/md";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.tsx";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -93,13 +104,17 @@ export function Detail({ demand }: any) {
           <CardHeader className="text-gray-900 dark:text-gray-300">
             <CardTitle className="flex items-center justify-between gap-4 text-xl">
               <span>Informations de la demande</span>
-              <Button
-                variant="callToAction"
-                onClick={() => handleEditClick(demand.id)}
-              >
-                <Pencil1Icon className="mr-2 size-4" />
-                Modifier
-              </Button>
+              <div>
+                <Button
+                  variant="callToAction"
+                  onClick={() => handleEditClick(demand.id)}
+                  className="mx-2"
+                >
+                  <Pencil1Icon className="mr-2 size-5" />
+                  Modifier
+                </Button>
+                <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
@@ -128,6 +143,45 @@ export function Detail({ demand }: any) {
         </Card>
       </div>
     </>
+  );
+}
+
+export function ConfirmDeleteItem({ demandId, navigate }: any) {
+  const fetchDemand = async () => {
+    const response = await customFetcher(
+      `http://localhost:5000/api/demand/${demandId}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (response.response.status === 200) {
+      navigate("/demand", { replace: true });
+    }
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" onClick={ConfirmDeleteItem}>
+          <MdOutlineDelete className="mr-2 size-5" />
+          Supprimer
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Êtes vous vraiment sur?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Vous êtes sur le point de supprimer de manière definitif la demande
+            sélectionner, cette action est irréversible.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogAction onClick={fetchDemand}>Supprimer</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
