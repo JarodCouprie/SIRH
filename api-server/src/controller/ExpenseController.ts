@@ -114,4 +114,11 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
+router.post("/", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await ExpenseService.createExpenseDemand(
+    req.body,
+  );
+  res.status(code).json({ message, data });
+});
+
 export default router;

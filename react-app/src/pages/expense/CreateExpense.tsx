@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { selectedTypeEnum } from "@/models/ExpenseModel.ts";
+import { ExpenseStatus, selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import {
   Popover,
   PopoverContent,
@@ -25,15 +25,48 @@ import { MdOutlineFileUpload } from "react-icons/md";
 
 export function CreateExpense() {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
-  const [date, setDate] = useState<Date>();
   const handleGoBackToList = () => {
     navigate("/expense");
   };
+  const [createdExpense, setCreatedExpense] = useState({
+    type: "",
+    amount: "",
+    motivation: "",
+    facturationDate: new Date(),
+    ownerId: "",
+  });
+
+  const handlerExpenseFormDataChange = (e: any) => {
+    setCreatedExpense({
+      ...createdExpense,
+      [e.target.name]: e.target.value || e.target.selected,
+    });
+    console.log(e.target.value);
+  };
+
+  const handlerExpenseTypeChange = (value: string) => {
+    setCreatedExpense({
+      ...createdExpense,
+      ["type"]: convertFromStringToSelectedTypeEnum(value),
+    });
+    console.log(value);
+  };
+
+  const handlerExpenseFacturationDateChange = (value: Date | undefined) => {
+    setCreatedExpense({
+      ...createdExpense,
+      ["facturationDate"]: value,
+    });
+    console.log(value);
+  };
 
   const displayDate = () => {
-    if (date == undefined) return <span> Sélectionner une date </span>;
-    else return <span> {date.toLocaleDateString()} </span>;
+    if (createdExpense.facturationDate == undefined)
+      return <span> Sélectionner une date </span>;
+    else
+      return (
+        <span> {createdExpense.facturationDate.toLocaleDateString()} </span>
+      );
   };
   const convertFromStringToSelectedTypeEnum = (
     stringToConvert: string,
@@ -59,10 +92,10 @@ export function CreateExpense() {
                   Type
                 </Label>
                 <Select
-                  onValueChange={(value) =>
-                    setSelectedType(convertFromStringToSelectedTypeEnum(value))
-                  }
+                  onValueChange={(value) => handlerExpenseTypeChange(value)}
                   defaultValue={selectedTypeEnum.TRAVEL}
+                  value={createdExpense.type}
+                  name="type"
                 >
                   <SelectTrigger className="my-1 h-fit w-full border-gray-400">
                     <SelectValue placeholder="Type" />
@@ -83,10 +116,12 @@ export function CreateExpense() {
                 </Label>
                 <Input
                   type="text"
-                  id="desc"
+                  id="motivation"
                   placeholder="Description"
-                  name="desc"
+                  name="motivation"
                   className="border-gray-400 p-4"
+                  value={createdExpense.motivation}
+                  onChange={handlerExpenseFormDataChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -99,6 +134,8 @@ export function CreateExpense() {
                   placeholder="0€"
                   name="amount"
                   className="border-gray-400 p-4"
+                  value={createdExpense.amount}
+                  onChange={handlerExpenseFormDataChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -118,8 +155,10 @@ export function CreateExpense() {
                   <PopoverContent className=" w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={date}
-                      onSelect={setDate}
+                      selected={createdExpense.facturationDate}
+                      onSelect={(value) =>
+                        handlerExpenseFacturationDateChange(value)
+                      }
                       initialFocus
                     />
                   </PopoverContent>
