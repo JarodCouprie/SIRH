@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { toast } from "sonner";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -156,6 +157,7 @@ export function ConfirmDeleteItem({ demandId, navigate }: any) {
     );
 
     if (response.response.status === 200) {
+      toast.message(`Demande numéro ${demandId} supprimé`);
       navigate("/demand", { replace: true });
     }
   };

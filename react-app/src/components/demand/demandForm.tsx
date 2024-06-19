@@ -32,7 +32,6 @@ interface DemandFormProps {
   initialData?: DemandDTO;
   submitUrl: string;
   method: "POST" | "PUT";
-  navigateUrl: string;
 }
 
 const DemandForm: React.FC<DemandFormProps> = ({
@@ -46,6 +45,11 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const [end_date, setEndDate] = useState<Date>();
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
+  const [errors, setErrors] = useState<{
+    startDate?: string;
+    endDate?: string;
+    type?: string;
+  }>({});
 
   useEffect(() => {
     if (initialData) {
@@ -60,29 +64,54 @@ const DemandForm: React.FC<DemandFormProps> = ({
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-    const motivation = event.currentTarget.description.value;
-    const startDate = start_date?.toLocaleDateString("fr-CA");
-    const endDate = end_date?.toLocaleDateString("fr-CA");
 
-    const demandeData = {
-      startDate,
-      endDate,
-      motivation,
-      type: selectedType,
-    };
+    if (formDemandValid()) {
+      const motivation = event.currentTarget.description.value;
+      const startDate = start_date?.toLocaleDateString("fr-CA");
+      const endDate = end_date?.toLocaleDateString("fr-CA");
 
-    const response = await customFetcher(submitUrl, {
-      method: method,
-      body: JSON.stringify(demandeData),
-    });
+      const demandeData = {
+        startDate,
+        endDate,
+        motivation,
+        type: selectedType,
+      };
 
-    if (response.response.status === 201 && method === "POST") {
-      navigate("/demand", { replace: true });
-    } else if (response.response.status === 200 && method === "PUT") {
-      navigate(`/demand/detail/${id}`, { replace: true });
-    } else {
-      toast.error(`${response.response.message}`);
+      const response = await customFetcher(submitUrl, {
+        method: method,
+        body: JSON.stringify(demandeData),
+      });
+
+      if (response.response.status === 201 && method === "POST") {
+        toast.message(`Nouvel demande de ${demandeData.type} créé`);
+        navigate("/demand", { replace: true });
+      } else if (response.response.status === 200 && method === "PUT") {
+        toast.message(`Demande de ${demandeData.type} modifié`);
+        navigate(`/demand/detail/${id}`, { replace: true });
+      } else {
+        toast.error(`${response.response.message}`);
+      }
     }
+  };
+
+  const formDemandValid = () => {
+    const newErrors: { startDate?: string; endDate?: string; type?: string } =
+      {};
+
+    if (!selectedType.trim()) {
+      newErrors.type = "Le type de demande est requis";
+    }
+
+    if (!start_date) {
+      newErrors.startDate = "La date de début est requise";
+    }
+
+    if (!end_date) {
+      newErrors.endDate = "La date de fin est requise";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +163,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 <SelectItem value="TT">Télétravail</SelectItem>
               </SelectContent>
             </Select>
+            {errors.type && <p className="text-red-500">{errors.type}</p>}
           </div>
 
           <Input
@@ -173,7 +203,6 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 />
               </PopoverContent>
             </Popover>
-
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -200,6 +229,19 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          <div className="flex justify-around">
+            <div>
+              {errors.startDate && (
+                <p className="text-red-500">{errors.startDate}</p>
+              )}
+            </div>
+            <div>
+              {errors.endDate && (
+                <p className="text-red-500">{errors.endDate}</p>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-items-center gap-3">

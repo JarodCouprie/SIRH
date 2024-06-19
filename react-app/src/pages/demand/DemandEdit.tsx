@@ -32,7 +32,6 @@ export function DemandEdit() {
         initialData={demand}
         submitUrl={`http://localhost:5000/api/demand/${id}`}
         method="PUT"
-        navigateUrl={`/demand/detail/${id}`}
       />
     </>
   );

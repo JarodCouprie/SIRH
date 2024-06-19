@@ -22,11 +22,7 @@ export function DemandCreate() {
 
       <DemandCard />
 
-      <DemandForm
-        submitUrl="http://localhost:5000/api/demand"
-        method="POST"
-        navigateUrl="/demand"
-      />
+      <DemandForm submitUrl="http://localhost:5000/api/demand" method="POST" />
     </div>
   );
 }

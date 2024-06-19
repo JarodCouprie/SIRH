@@ -6,6 +6,7 @@ import { DemandDTO } from "../dto/demand/DemandDTO";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 import { Request } from "express";
+import { CustomRequest } from "../helper/CustomRequest";
 
 export class DemandService {
   public static async getDemand(req: Request) {
