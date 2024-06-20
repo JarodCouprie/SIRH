@@ -29,7 +29,6 @@ export function CurrentUserProvider({ children }: any) {
         return;
       }
       setUser(response.data.data);
-      console.log(response.data.data);
     });
   };
 

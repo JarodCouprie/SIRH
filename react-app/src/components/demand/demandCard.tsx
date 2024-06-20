@@ -1,10 +1,29 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
-import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
+
+import { useEffect, useState } from "react";
+import { customFetcher } from "@/helper/fetchInstance.ts";
 
 export function DemandCard() {
-  const { user } = useCurrentUser();
+  const [users, setUser] = useState({
+    ca: 0,
+    tt: 0,
+    rtt: 0,
+  });
+
+  const fetchUser = async () => {
+    await customFetcher(`http://localhost:5000/api/me`).then((response) => {
+      if (response.response.status !== 200) {
+        return;
+      }
+      setUser(response.data.data);
+    });
+  };
+
+  useEffect(() => {
+    fetchUser().then();
+  }, []);
 
   return (
     <>
@@ -16,7 +35,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de congés</span>
-            <div className="text-4xl">{user.ca}</div>
+            <div className="text-4xl">{users.ca}</div>
           </CardTitle>
         </Card>
 
@@ -27,7 +46,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de RTT</span>
-            <div className="text-4xl">{user.rtt}</div>
+            <div className="text-4xl">{users.rtt}</div>
           </CardTitle>
         </Card>
 
@@ -38,7 +57,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de télétravail</span>
-            <div className="text-4xl">{user.tt}</div>
+            <div className="text-4xl">{users.tt}</div>
           </CardTitle>
         </Card>
       </div>

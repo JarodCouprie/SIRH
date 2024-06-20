@@ -68,7 +68,11 @@ const DemandForm: React.FC<DemandFormProps> = ({
     if (formDemandValid()) {
       const motivation = event.currentTarget.description.value;
       const startDate = start_date?.toLocaleDateString("fr-CA");
-      const endDate = end_date?.toLocaleDateString("fr-CA");
+      let endDate = end_date?.toLocaleDateString("fr-CA");
+
+      if (!endDate) {
+        endDate = startDate;
+      }
 
       const demandeData = {
         startDate,
@@ -81,6 +85,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
         method: method,
         body: JSON.stringify(demandeData),
       });
+
+      console.log(response);
 
       if (response.response.status === 201 && method === "POST") {
         toast.message(`Nouvel demande de ${demandeData.type} créé`);
@@ -106,7 +112,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
       newErrors.startDate = "La date de début est requise";
     }
 
-    if (!end_date) {
+    if (!end_date && selectedType !== DemandType.TT) {
       newErrors.endDate = "La date de fin est requise";
     }
 

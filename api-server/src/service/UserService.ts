@@ -54,4 +54,32 @@ export class UserService {
       return new ControllerResponse(500, "Failed to get user");
     }
   }
+
+  public static async updateUserDays(
+    id: number,
+    rtt: number,
+    ca: number,
+    tt: number,
+  ) {
+    try {
+      const user = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(404, "User not found");
+      }
+
+      user.rtt = rtt;
+      user.ca = ca;
+      user.tt = tt;
+
+      await UserRepository.updateUserDays(id, rtt, ca, tt);
+      return new ControllerResponse(
+        200,
+        "User days updated",
+        new UserDTO(user),
+      );
+    } catch (error) {
+      logger.error(`Failed to update user days. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to update user days");
+    }
+  }
 }

@@ -38,6 +38,9 @@ export function User() {
     email: "",
     createdAt: new Date(),
     active: false,
+    ca: 0,
+    rtt: 0,
+    tt: 0,
   });
 
   const fetchUser = async () => {

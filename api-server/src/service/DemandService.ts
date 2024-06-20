@@ -6,7 +6,10 @@ import { DemandDTO } from "../dto/demand/DemandDTO";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 import { Request } from "express";
+import { UserService } from "./UserService";
 import { CustomRequest } from "../helper/CustomRequest";
+import userController from "../controller/UserController";
+import { User, UserDTO } from "../model/User";
 
 export class DemandService {
   public static async getDemand(req: Request) {
@@ -86,11 +89,51 @@ export class DemandService {
   public static async createDemand(body: CreateDemand, id: number) {
     try {
       let number_day = 0;
+      const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+      if (body.endDate === body.startDate) {
+        const start = new Date(body.startDate);
+        body.endDate = new Date(start.getTime() + ONE_DAY_IN_MS);
+      }
+
       if (body.startDate && body.endDate) {
         const start = new Date(body.startDate);
         const end = new Date(body.endDate);
         const differenceMs = end.getTime() - start.getTime();
         number_day = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+      }
+
+      const userResponse: any = await UserService.getUserById(id);
+      if (userResponse.code !== 200) {
+        return new ControllerResponse(404, "User not found");
+      }
+
+      const user = userResponse.data;
+
+      switch (body.type) {
+        case DemandType.RTT: {
+          if (user.rtt < number_day) {
+            return new ControllerResponse(400, "Not enough RTT days");
+          }
+          user.rtt -= number_day;
+          break;
+        }
+        case DemandType.CA: {
+          if (user.ca < number_day) {
+            return new ControllerResponse(400, "Not enough CA days");
+          }
+          user.ca -= number_day;
+          break;
+        }
+        case DemandType.TT: {
+          if (user.tt < number_day) {
+            return new ControllerResponse(400, "Not enough TT days");
+          }
+          user.tt -= number_day;
+          break;
+        }
+        default:
+          return new ControllerResponse(400, "Invalid type");
       }
 
       const newDemand = new CreateDemand(
@@ -102,7 +145,7 @@ export class DemandService {
         number_day,
         id,
       );
-
+      await UserService.updateUserDays(id, user.rtt, user.ca, user.tt);
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
     } catch (error) {
