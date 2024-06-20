@@ -122,60 +122,43 @@ const DemandForm: React.FC<DemandFormProps> = ({
     setSelectedType(value as DemandType);
   };
 
-  const handleTitle = () => {
-    if (method === "POST") {
+  const dateChanger = () => {
+    if (selectedType === "TT") {
       return (
         <>
-          <CardHeader>Nouvelle demande</CardHeader>
-        </>
-      );
-    } else if (method === "PUT") {
-      return (
-        <>
-          <CardHeader>Modification de la demande</CardHeader>
-        </>
-      );
-    }
-  };
-
-  return (
-    <Card>
-      <CardTitle className="flex items-center justify-between gap-4 text-xl">
-        {handleTitle()}
-      </CardTitle>
-      <CardContent>
-        <form
-          onSubmit={handleClickSubmitButton}
-          className="flex flex-col gap-3"
-        >
-          <div className="flex justify-center">
-            <Select
-              name="type"
-              value={selectedType}
-              onValueChange={handleSelectChange}
-            >
-              <SelectTrigger className="p-6 outline outline-1">
-                <SelectValue placeholder="Type de demande..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CA">Congé annuel</SelectItem>
-                <SelectItem value="RTT">RTT</SelectItem>
-                <SelectItem value="TT">Télétravail</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.type && <p className="text-red-500">{errors.type}</p>}
+          <div className="flex justify-between justify-items-center gap-3">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start p-6 text-left font-normal outline outline-1",
+                    !start_date && "text-muted-foreground",
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {start_date ? (
+                    format(start_date, "PPP")
+                  ) : (
+                    <span>Date de votre télétravail</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={start_date}
+                  onSelect={setStartDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
-
-          <Input
-            className="p-6"
-            type="text"
-            id="description"
-            placeholder="Description"
-            name="description"
-            value={motivation}
-            onChange={handleChange}
-          />
-
+        </>
+      );
+    } else {
+      return (
+        <>
           <div className="flex justify-between justify-items-center gap-3">
             <Popover>
               <PopoverTrigger asChild>
@@ -230,6 +213,94 @@ const DemandForm: React.FC<DemandFormProps> = ({
               </PopoverContent>
             </Popover>
           </div>
+        </>
+      );
+    }
+  };
+
+  const returnButton = () => {
+    if (method === "POST") {
+      return (
+        <>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={() => navigate("/demand")}
+          >
+            Annuler
+          </Button>
+        </>
+      );
+    } else if (method === "PUT") {
+      return (
+        <>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={() => navigate(`/demand/detail/${id}`)}
+          >
+            Annuler
+          </Button>
+        </>
+      );
+    }
+  };
+
+  const handleTitle = () => {
+    if (method === "POST") {
+      return (
+        <>
+          <CardHeader>Nouvelle demande</CardHeader>
+        </>
+      );
+    } else if (method === "PUT") {
+      return (
+        <>
+          <CardHeader>Modification de la demande</CardHeader>
+        </>
+      );
+    }
+  };
+
+  return (
+    <Card>
+      <CardTitle className="flex items-center justify-between gap-4 text-xl">
+        {handleTitle()}
+      </CardTitle>
+      <CardContent>
+        <form
+          onSubmit={handleClickSubmitButton}
+          className="flex flex-col gap-3"
+        >
+          <div className="flex justify-center">
+            <Select
+              name="type"
+              value={selectedType}
+              onValueChange={handleSelectChange}
+            >
+              <SelectTrigger className="p-6 outline outline-1">
+                <SelectValue placeholder="Type de demande..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="CA">Congé annuel</SelectItem>
+                <SelectItem value="RTT">RTT</SelectItem>
+                <SelectItem value="TT">Télétravail</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.type && <p className="text-red-500">{errors.type}</p>}
+          </div>
+
+          <Input
+            className="p-6"
+            type="text"
+            id="description"
+            placeholder="Description"
+            name="description"
+            value={motivation}
+            onChange={handleChange}
+          />
+
+          {dateChanger()}
 
           <div className="flex justify-around">
             <div>
@@ -244,42 +315,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-items-center gap-3">
-            <Select name="momentDayStart">
-              <div className="flex w-full justify-center">
-                <SelectTrigger className="p-6 outline outline-1">
-                  <SelectValue placeholder="Moment de la journée..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="AM">Matin</SelectItem>
-                  <SelectItem value="PM">Après-midi</SelectItem>
-                  <SelectItem value="ALL">Toute la journée</SelectItem>
-                </SelectContent>
-              </div>
-            </Select>
-
-            <Select name="momentDayEnd">
-              <div className="flex w-full justify-center">
-                <SelectTrigger className="p-6 outline outline-1">
-                  <SelectValue placeholder="Moment de la journée..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="AM">Matin</SelectItem>
-                  <SelectItem value="PM">Après-midi</SelectItem>
-                  <SelectItem value="ALL">Toute la journée</SelectItem>
-                </SelectContent>
-              </div>
-            </Select>
-          </div>
-
           <div className="flex justify-end gap-2 pt-6">
-            <Button
-              variant="ghost"
-              type="button"
-              onClick={() => navigate("/demand")}
-            >
-              Annuler
-            </Button>
+            {returnButton()}
             <Button variant="callToAction" type="submit">
               Enregistrer
             </Button>

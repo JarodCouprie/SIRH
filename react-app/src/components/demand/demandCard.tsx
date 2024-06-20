@@ -1,8 +1,11 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
+import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
 
 export function DemandCard() {
+  const { user } = useCurrentUser();
+
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
@@ -13,7 +16,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de congés</span>
-            <div className="text-4xl">30</div>
+            <div className="text-4xl">{user.ca}</div>
           </CardTitle>
         </Card>
 
@@ -24,7 +27,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de RTT</span>
-            <div className="text-4xl">30</div>
+            <div className="text-4xl">{user.rtt}</div>
           </CardTitle>
         </Card>
 
@@ -35,7 +38,7 @@ export function DemandCard() {
 
           <CardTitle className="p-4">
             <span className="text-base">Solde de télétravail</span>
-            <div className="text-4xl">30</div>
+            <div className="text-4xl">{user.tt}</div>
           </CardTitle>
         </Card>
       </div>

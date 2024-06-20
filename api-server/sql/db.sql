@@ -11,6 +11,10 @@ CREATE TABLE users
     nationality VARCHAR(50),
     role        VARCHAR(50),
     iban        VARCHAR(50),
+    ca  INT,
+    tt INT,
+    rtt INT,
+
     PRIMARY KEY (id)
 );
 

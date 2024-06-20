@@ -1,7 +1,85 @@
 import { Request, Response, NextFunction } from "express";
-import { z, ZodError } from "zod";
+import {
+  baseObjectInputType,
+  baseObjectOutputType,
+  objectUtil,
+  z,
+  ZodEffects,
+  ZodError,
+  ZodObject,
+  ZodString,
+  ZodTypeAny,
+} from "zod";
 
-export function validateData(schema: z.ZodObject<any, any>) {
+export function validateData(
+  schema: ZodEffects<
+    ZodObject<
+      {
+        endDate: ZodString;
+        type: ZodString;
+        startDate: ZodString;
+      },
+      "strip",
+      ZodTypeAny,
+      {
+        [k in keyof objectUtil.addQuestionMarks<
+          baseObjectOutputType<{
+            endDate: ZodString;
+            type: ZodString;
+            startDate: ZodString;
+          }>,
+          any
+        >]: objectUtil.addQuestionMarks<
+          baseObjectOutputType<{
+            endDate: ZodString;
+            type: ZodString;
+            startDate: ZodString;
+          }>,
+          any
+        >[k];
+      },
+      {
+        [k_1 in keyof baseObjectInputType<{
+          endDate: ZodString;
+          type: ZodString;
+          startDate: ZodString;
+        }>]: baseObjectInputType<{
+          endDate: ZodString;
+          type: ZodString;
+          startDate: ZodString;
+        }>[k_1];
+      }
+    >,
+    {
+      [k in keyof objectUtil.addQuestionMarks<
+        baseObjectOutputType<{
+          endDate: ZodString;
+          type: ZodString;
+          startDate: ZodString;
+        }>,
+        any
+      >]: objectUtil.addQuestionMarks<
+        baseObjectOutputType<{
+          endDate: ZodString;
+          type: ZodString;
+          startDate: ZodString;
+        }>,
+        any
+      >[k];
+    },
+    {
+      [k_1 in keyof baseObjectInputType<{
+        endDate: ZodString;
+        type: ZodString;
+        startDate: ZodString;
+      }>]: baseObjectInputType<{
+        endDate: ZodString;
+        type: ZodString;
+        startDate: ZodString;
+      }>[k_1];
+    }
+  >,
+) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse(req.body);
