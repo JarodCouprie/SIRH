@@ -12,6 +12,7 @@ export function DemandEdit() {
     startDate: new Date(),
     endDate: new Date(),
     type: DemandType.CA,
+    status: "",
   });
 
   const fetchDemand = async () => {
