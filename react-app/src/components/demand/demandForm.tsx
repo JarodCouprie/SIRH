@@ -89,13 +89,19 @@ const DemandForm: React.FC<DemandFormProps> = ({
       console.log(response);
 
       if (response.response.status === 201 && method === "POST") {
-        toast.message(`Nouvel demande de ${demandeData.type} créé`);
+        toast.message(
+          `Nouvel demande de ${demandeData.type} a la date du ${demandeData.startDate} a bien été créé`,
+        );
         navigate("/demand", { replace: true });
       } else if (response.response.status === 200 && method === "PUT") {
-        toast.message(`Demande de ${demandeData.type} modifié`);
+        toast.message(
+          `Demande de ${demandeData.type} a la date du ${demandeData.startDate} modifié`,
+        );
         navigate(`/demand/detail/${id}`, { replace: true });
+      } else if (response.data.details && response.data.details.length > 0) {
+        toast.error(`${response.data.details[0].message}`);
       } else {
-        toast.error(`${response.response.message}`);
+        toast.error(`${response.data.message}`);
       }
     }
   };
