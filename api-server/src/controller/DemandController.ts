@@ -20,13 +20,20 @@ router.get("/:id_demand", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.put("/:id_demand", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await DemandService.editDemand(
-    req.params.id_demand,
-    req.body,
-  );
-  res.status(code).json({ message, data });
-});
+router.put(
+  "/:id_demand",
+  verifyToken,
+  validateData(demandCreateSchema),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+    const { code, message, data } = await DemandService.editDemand(
+      req.params.id_demand,
+      req.body,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 router.delete(
   "/:id_demand",
@@ -49,6 +56,7 @@ router.post(
       req.body,
       userId,
     );
+
     res.status(code).json({
       message,
       data,
