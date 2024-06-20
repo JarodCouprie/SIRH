@@ -33,7 +33,10 @@ export function DemandDetail() {
     startDate: new Date(),
     endDate: new Date(),
     type: DemandType.CA,
+    status: "WAITING",
   });
+
+  console.log(demand);
 
   const handleClick = () => {
     navigate("/demand");
@@ -98,6 +101,28 @@ export function Detail({ demand }: any) {
     navigate(`/demand/edit/${id}`);
   };
 
+  const handleButton = () => {
+    if (demand.status !== "WAITING") {
+      return;
+    } else {
+      return (
+        <>
+          <div>
+            <Button
+              variant="callToAction"
+              onClick={() => handleEditClick(demand.id)}
+              className="mx-2"
+            >
+              <Pencil1Icon className="mr-2 size-5" />
+              Modifier
+            </Button>
+            <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
+          </div>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <div className="w-full">
@@ -105,17 +130,7 @@ export function Detail({ demand }: any) {
           <CardHeader className="text-gray-900 dark:text-gray-300">
             <CardTitle className="flex items-center justify-between gap-4 text-xl">
               <span>Informations de la demande</span>
-              <div>
-                <Button
-                  variant="callToAction"
-                  onClick={() => handleEditClick(demand.id)}
-                  className="mx-2"
-                >
-                  <Pencil1Icon className="mr-2 size-5" />
-                  Modifier
-                </Button>
-                <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
-              </div>
+              {handleButton()}
             </CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
