@@ -11,7 +11,7 @@ import { GrGroup } from "react-icons/gr";
 
 export function NavBar() {
   return (
-    <aside className="flex w-80 max-w-80 flex-col justify-between gap-4 bg-gray-900">
+    <aside className="flex w-80 max-w-80 flex-col justify-between gap-4 bg-gray-800">
       <div className="flex flex-col">
         <h1 className="border-b border-slate-700 p-4 text-center text-lg font-bold text-gray-100">
           SIRH

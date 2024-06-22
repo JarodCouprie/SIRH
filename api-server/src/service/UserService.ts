@@ -1,5 +1,5 @@
 import { UserRepository } from "../repository/UserRepository";
-import { CreateUser, User, UserDTO } from "../model/User";
+import { CreateUser, User, UserDTO, UserListDTO } from "../model/User";
 import { logger } from "../helper/Logger";
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { Request } from "express";
@@ -37,7 +37,7 @@ export class UserService {
       const userList: any = await UserRepository.listUsers(limit, offset);
       return new ControllerResponse(200, "", {
         totalData: userCount,
-        list: userList.map((user: User) => new UserDTO(user)),
+        list: userList.map((user: User) => new UserListDTO(user)),
       });
     } catch (error) {
       logger.error(`Failed to get user list. Error: ${error}`);

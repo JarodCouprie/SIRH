@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export class Address {
   id: number;
   street: string;
@@ -48,5 +50,23 @@ export class CreateAddress {
     this.zipcode = zipcode;
     this.lat = lat;
     this.lng = lng;
+  }
+}
+
+export class UserAddress {
+  street: string;
+  streetNumber: string;
+  locality: string;
+  zipcode: string;
+  lat: number;
+  lng: number;
+
+  constructor(user: User) {
+    this.street = user.street;
+    this.streetNumber = user.streetNumber;
+    this.locality = user.locality;
+    this.zipcode = user.zipcode;
+    this.lat = user.lat;
+    this.lng = user.lng;
   }
 }

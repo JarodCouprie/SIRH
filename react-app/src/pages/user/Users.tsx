@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UserModel } from "@/models/UserModel.ts";
+import { UserListModel } from "@/models/User.model.ts";
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -10,12 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button.tsx";
-import {
-  CaretLeftIcon,
-  CaretRightIcon,
-  CaretSortIcon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
+import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -30,7 +25,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Users() {
-  const [users, setUsers] = useState<UserModel[]>([]);
+  const [users, setUsers] = useState<UserListModel[]>([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState(5);
@@ -92,28 +87,14 @@ export function Users() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Collaborateur
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Ville
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Numéro de téléphone
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
+              <TableHead>Collaborateur</TableHead>
+              <TableHead>Ville</TableHead>
+              <TableHead>Téléphone</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users?.length ? (
-              users?.map((user: UserModel) => (
+              users?.map((user: UserListModel) => (
                 <TableRow
                   key={`${user.id}`}
                   className="hover:cursor-pointer"
@@ -138,8 +119,8 @@ export function Users() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>{user.address.locality}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
                 </TableRow>
               ))
             ) : (

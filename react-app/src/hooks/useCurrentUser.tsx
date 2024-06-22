@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { UserModel } from "@/models/UserModel.ts";
+import { UserModel } from "@/models/User.model.ts";
 
 const CurrentUserContext = createContext({
-  user: new UserModel(0, "", "", "", new Date(), false),
+  user: new UserModel(0, "", "", "", "", new Date(), false, ""),
 });
 
 export function useCurrentUser() {
@@ -16,10 +16,11 @@ export function CurrentUserProvider({ children }: any) {
     firstname: "",
     lastname: "",
     email: "",
-    createdAt: new Date(),
+    phone: "",
+    created_at: new Date(),
     active: false,
+    locality: "",
   });
-
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/me`).then((response) => {
       if (response.response.status !== 200) {

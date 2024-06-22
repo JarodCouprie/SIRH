@@ -1,30 +1,67 @@
 import { RoleEnum } from "../enum/RoleEnum";
+import { Address, UserAddress } from "./Address";
 
 export class User {
   id: number;
   firstname: string;
   lastname: string;
   email: string;
+  phone: string;
   password: string;
-  createdAt: Date;
+  created_at: Date;
   active: boolean;
+  street: string;
+  streetNumber: string;
+  locality: string;
+  zipcode: string;
+  lat: number;
+  lng: number;
+  country: string;
+  nationality: string;
+  role: RoleEnum;
+  iban: string;
+  bic: string;
 
   constructor(
     id: number,
     firstname: string,
     lastname: string,
     email: string,
+    phone: string,
     password: string,
-    createdAt: Date,
+    created_at: Date,
     active: boolean,
+    street: string,
+    streetNumber: string,
+    locality: string,
+    zipcode: string,
+    lat: number,
+    lng: number,
+    country: string,
+    nationality: string,
+    role: RoleEnum,
+    iban: string,
+    bic: string,
   ) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
+    this.phone = phone;
     this.password = password;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.active = active;
+    this.street = street;
+    this.streetNumber = streetNumber;
+    this.locality = locality;
+    this.zipcode = zipcode;
+    this.lat = lat;
+    this.lng = lng;
+    this.country = country;
+    this.nationality = nationality;
+    this.role = role;
+    this.iban = iban;
+    this.bic = bic;
   }
 }
 
@@ -80,15 +117,47 @@ export class UserDTO {
   firstname: string;
   lastname: string;
   email: string;
-  createdAt: Date;
+  phone: string;
+  created_at: Date;
   active: boolean;
+  address: UserAddress;
+  country: string;
+  nationality: string;
+  role: RoleEnum;
+  iban: string;
+  bic: string;
 
   constructor(user: User) {
     this.id = user.id;
     this.firstname = user.firstname;
     this.lastname = user.lastname;
     this.email = user.email;
-    this.createdAt = user.createdAt;
+    this.phone = user.phone;
+    this.created_at = new Date(`${user.created_at} UTC`);
     this.active = user.active;
+    this.address = new UserAddress(user);
+    this.country = user.country;
+    this.nationality = user.nationality;
+    this.role = user.role;
+    this.iban = user.iban;
+    this.bic = user.bic;
+  }
+}
+
+export class UserListDTO {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: UserAddress;
+
+  constructor(user: User) {
+    this.id = user.id;
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
+    this.email = user.email;
+    this.phone = user.phone;
+    this.address = new UserAddress(user);
   }
 }

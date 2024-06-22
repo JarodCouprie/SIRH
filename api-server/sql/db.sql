@@ -26,6 +26,8 @@ CREATE TABLE users
     role        VARCHAR(50),
     iban        VARCHAR(50),
     bic         VARCHAR(50),
+    active      BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (id_address) REFERENCES address (id)
 );

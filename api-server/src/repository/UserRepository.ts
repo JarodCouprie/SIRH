@@ -22,8 +22,26 @@ export class UserRepository {
   public static async listUsers(limit = 10, offset = 0) {
     const [rows] = await this.pool.query(
       `
-          SELECT *
+          SELECT users.id as id,
+                 email,
+                 country,
+                 nationality,
+                 role,
+                 iban,
+                 bic,
+                 firstname,
+                 lastname,
+                 email,
+                 phone,
+                 locality,
+                 street,
+                 streetNumber,
+                 lat,
+                 lng,
+                 zipcode,
+                 created_at
           FROM users
+                   LEFT JOIN address ON users.id_address = address.id
           ORDER BY firstname
           LIMIT ? OFFSET ?
       `,
@@ -35,9 +53,27 @@ export class UserRepository {
   public static async getUserById(id: number) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT users.id as id,
+                 email,
+                 country,
+                 nationality,
+                 role,
+                 iban,
+                 bic,
+                 firstname,
+                 lastname,
+                 email,
+                 phone,
+                 locality,
+                 street,
+                 streetNumber,
+                 lat,
+                 lng,
+                 zipcode,
+                 created_at
           FROM users
-          WHERE id = ?
+                   LEFT JOIN address ON users.id_address = address.id
+          WHERE users.id = ?
       `,
       [id],
     );
