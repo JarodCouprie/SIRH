@@ -54,6 +54,7 @@ export class UserListModel {
   email: string;
   phone: string;
   address: AddressModel;
+  active: boolean;
 
   constructor(
     id: number,
@@ -62,6 +63,7 @@ export class UserListModel {
     email: string,
     phone: string,
     address: AddressModel,
+    active: boolean,
   ) {
     this.id = id;
     this.firstname = firstname;
@@ -69,6 +71,7 @@ export class UserListModel {
     this.email = email;
     this.phone = phone;
     this.address = address;
+    this.active = active;
   }
 }
 

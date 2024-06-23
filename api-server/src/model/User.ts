@@ -151,6 +151,7 @@ export class UserListDTO {
   email: string;
   phone: string;
   address: UserAddress;
+  active: boolean;
 
   constructor(user: User) {
     this.id = user.id;
@@ -159,5 +160,6 @@ export class UserListDTO {
     this.email = user.email;
     this.phone = user.phone;
     this.address = new UserAddress(user);
+    this.active = user.active;
   }
 }

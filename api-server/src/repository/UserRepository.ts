@@ -39,7 +39,8 @@ export class UserRepository {
                  lat,
                  lng,
                  zipcode,
-                 created_at
+                 created_at,
+                 active
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
           ORDER BY firstname
@@ -70,7 +71,8 @@ export class UserRepository {
                  lat,
                  lng,
                  zipcode,
-                 created_at
+                 created_at,
+                 active
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
           WHERE users.id = ?

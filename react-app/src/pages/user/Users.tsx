@@ -10,7 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button.tsx";
-import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  CheckCircledIcon,
+  CrossCircledIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -23,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export function Users() {
   const [users, setUsers] = useState<UserListModel[]>([]);
@@ -90,6 +97,7 @@ export function Users() {
               <TableHead>Collaborateur</TableHead>
               <TableHead>Ville</TableHead>
               <TableHead>Téléphone</TableHead>
+              <TableHead>Actif</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -121,6 +129,19 @@ export function Users() {
                   </TableCell>
                   <TableCell>{user.address.locality}</TableCell>
                   <TableCell>{user.phone}</TableCell>
+                  <TableCell>
+                    {user?.active ? (
+                      <Badge variant="outline">
+                        <CheckCircledIcon className="mr-2 size-4 text-green-600" />
+                        Actif
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline">
+                        <CrossCircledIcon className="mr-2 size-4 text-orange-600" />
+                        Inactif
+                      </Badge>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

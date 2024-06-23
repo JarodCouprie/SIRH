@@ -224,6 +224,6 @@ VALUES ("Rue des Loges", "65", "Montigny-lès-Metz", "57950", 49.099960, 6.15802
 
 INSERT INTO users(firstname, lastname, email, password, id_address, nationality, role, iban, country, phone, bic)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        1, "admin nationaly", "ROLE_ADMIN", "admin iban", "France", "45678908097", "bic admin"),
+        1, "admin nationaly", "ADMIN", "admin iban", "France", "45678908097", "bic admin"),
        ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        2, "user nationaly", "ROLE_USER", "user iban", "France", "45678908097", "bic user");
+        2, "user nationaly", "USER", "user iban", "France", "45678908097", "bic user");
