@@ -71,6 +71,7 @@ export function User() {
     iban: "",
     bic: "",
   });
+  const [userRole, setUserRole] = useState(user.role.toString());
 
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/user/${id}`).then(
@@ -175,7 +176,24 @@ export function User() {
     </div>
   );
 
-  const userRole = (
+  const handleSubmitRole = async () => {
+    const config = {
+      method: "POST",
+      body: JSON.stringify({ role: userRole }),
+    };
+    await customFetcher(
+      `http://localhost:5000/api/user/set-role/${id}`,
+      config,
+    ).then((response) => {
+      if (response.response.status !== 200) {
+        return;
+      }
+      setUserLoaded(true);
+      setUser(response.data.data);
+    });
+  };
+
+  const userRoleContent = (
     <Card>
       <CardHeader className="text-gray-900 dark:text-gray-300">
         <CardTitle className="flex items-center gap-4 text-xl">
@@ -184,7 +202,10 @@ export function User() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <RadioGroup defaultValue={user.role}>
+        <RadioGroup
+          defaultValue={user.role}
+          onValueChange={(value) => setUserRole(value)}
+        >
           {Object.keys(RoleEnum).map((key) => {
             return (
               <div key={key} className="flex items-center space-x-2 text-xl">
@@ -204,7 +225,9 @@ export function User() {
         </RadioGroup>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button variant="callToAction">Modifier</Button>
+        <Button variant="callToAction" onClick={handleSubmitRole}>
+          Modifier
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -254,7 +277,7 @@ export function User() {
             <TabsTrigger value="stuff">Matériel</TabsTrigger>
           </TabsList>
           <TabsContent value="infos">{userInfos}</TabsContent>
-          <TabsContent value="role">{userRole}</TabsContent>
+          <TabsContent value="role">{userRoleContent}</TabsContent>
           <TabsContent value="demand">{userInfos}</TabsContent>
           <TabsContent value="expense">{userInfos}</TabsContent>
           <TabsContent value="document">{userInfos}</TabsContent>

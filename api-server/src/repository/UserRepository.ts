@@ -1,5 +1,6 @@
 import { CreateUser, ResetUserPassword } from "../model/User";
 import { DatabaseClient } from "../helper/DatabaseClient";
+import { RoleEnum } from "../enum/RoleEnum";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -112,6 +113,16 @@ export class UserRepository {
         user.bic,
         user.role,
       ],
+    );
+    return result;
+  }
+
+  public static async setUserNewRole(role: RoleEnum, id: number) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET role = ?
+       WHERE id = ?`,
+      [role, id],
     );
     return result;
   }

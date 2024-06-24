@@ -6,6 +6,7 @@ import { Request } from "express";
 import { add } from "winston";
 import { AddressRepository } from "../repository/AddressRepository";
 import { CreateAddress } from "../model/Address";
+import { RoleEnum } from "../enum/RoleEnum";
 
 export class UserService {
   public static async getUsers() {
@@ -50,7 +51,7 @@ export class UserService {
 
   public static async getUserById(id: number) {
     try {
-      const user: any = await UserRepository.getUserById(+id);
+      const user: any = await UserRepository.getUserById(id);
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
@@ -58,6 +59,25 @@ export class UserService {
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
       return new ControllerResponse(500, "Impossible de créer l'utilisateur");
+    }
+  }
+
+  public static async setNewRole(req: Request, id: number) {
+    try {
+      const newRole: RoleEnum = req.body.role;
+      await UserRepository.setUserNewRole(newRole, id);
+
+      const user: any = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user));
+    } catch (error) {
+      logger.error(`Failed to set user role. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier le rôle de l'utilisateur",
+      );
     }
   }
 

@@ -26,4 +26,16 @@ router.post("/", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json(message);
 });
 
+router.post(
+  "/set-role/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.setNewRole(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
 export default router;
