@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", auth);
 app.use("/api/user", users);
-app.use("/api/demand",demand );
+app.use("/api/demand", demand);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");
@@ -29,3 +29,5 @@ app.get("/", verifyToken, (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`[server]: Serveur running at http://localhost:${port}`);
 });
+
+export default app;

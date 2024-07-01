@@ -16,7 +16,6 @@ async function originalRequest(url: string, config: any = {}) {
     Authorization: `Bearer ${localStorage.accessToken}`,
     "Content-Type": "application/json",
   };
-  console.log(config);
   const response = await fetch(url, config);
   const data = await response.json();
   return { response, data };
