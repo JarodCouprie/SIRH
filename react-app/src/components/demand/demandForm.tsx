@@ -69,33 +69,43 @@ const DemandForm: React.FC<DemandFormProps> = ({
       const motivation = event.currentTarget.description.value;
       const startDate = start_date?.toLocaleDateString("fr-CA");
       let endDate = end_date?.toLocaleDateString("fr-CA");
+      let demandeData;
 
       if (!endDate) {
         endDate = startDate;
       }
 
-      const demandeData = {
-        startDate,
-        endDate,
-        motivation,
-        type: selectedType,
-      };
+      if (method === "PUT") {
+        demandeData = {
+          startDate,
+          endDate,
+          motivation,
+          type: selectedType,
+          status: initialData?.status,
+        };
+      }
+      if (method === "POST") {
+        demandeData = {
+          startDate,
+          endDate,
+          motivation,
+          type: selectedType,
+        };
+      }
 
       const response = await customFetcher(submitUrl, {
         method: method,
         body: JSON.stringify(demandeData),
       });
 
-      console.log(response);
-
       if (response.response.status === 201 && method === "POST") {
         toast.message(
-          `Nouvel demande de ${demandeData.type} a la date du ${demandeData.startDate} a bien été créé`,
+          `Nouvel demande de ${demandeData?.type} a la date du ${demandeData?.startDate} a bien été créé`,
         );
         navigate("/demand", { replace: true });
       } else if (response.response.status === 200 && method === "PUT") {
         toast.message(
-          `Demande de ${demandeData.type} a la date du ${demandeData.startDate} modifié`,
+          `Demande de ${demandeData?.type} a la date du ${demandeData?.startDate} modifié`,
         );
         navigate(`/demand/detail/${id}`, { replace: true });
       } else if (response.data.details && response.data.details.length > 0) {

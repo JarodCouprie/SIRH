@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { toast } from "sonner";
+import { LuSend } from "react-icons/lu";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -35,8 +36,6 @@ export function DemandDetail() {
     type: DemandType.CA,
     status: "WAITING",
   });
-
-  console.log(demand);
 
   const handleClick = () => {
     navigate("/demand");
@@ -101,15 +100,48 @@ export function Detail({ demand }: any) {
     navigate(`/demand/edit/${id}`);
   };
 
+  const handleConfirmClick = async (id: number, demand: DemandDTO) => {
+    const formatDate = ({ date }: { date: any }) => {
+      const d = new Date(date);
+      return d.toISOString().split("T")[0];
+    };
+
+    const demandeData = {
+      startDate: formatDate({ date: demand.startDate }),
+      endDate: formatDate({ date: demand.endDate }),
+      motivation: demand.motivation,
+      type: demand.type,
+      status: "WAITING",
+    };
+
+    const response = await customFetcher(
+      `http://localhost:5000/api/demand/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(demandeData),
+      },
+    );
+
+    if (response.response.status === 200) {
+      toast.message(`Demande de ${demand.type} numéro ${id} envoyé`);
+      navigate("/demand", { replace: true });
+    }
+  };
+
   const handleButton = () => {
-    if (demand.status !== "WAITING") {
-      return;
-    } else {
+    if (demand.status === "DRAFT") {
       return (
         <>
           <div>
             <Button
               variant="callToAction"
+              onClick={() => handleConfirmClick(demand.id, demand)}
+            >
+              <LuSend className="mr-2 size-5" />
+              Envoyer la demande
+            </Button>
+            <Button
+              variant="secondary"
               onClick={() => handleEditClick(demand.id)}
               className="mx-2"
             >

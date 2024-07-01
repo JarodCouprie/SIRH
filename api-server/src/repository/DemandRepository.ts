@@ -66,12 +66,20 @@ export class DemandRepository {
           SET startDate=?,
               endDate    = ?,
               motivation = ?,
-              type       = ?
+              type       = ?,
+              status     = ?
           WHERE id = ?
           LIMIT 1;
 
       `,
-      [demand.startDate, demand.endDate, demand.motivation, demand.type, id],
+      [
+        demand.startDate,
+        demand.endDate,
+        demand.motivation,
+        demand.type,
+        demand.status,
+        id,
+      ],
     );
     return rows[0];
   }

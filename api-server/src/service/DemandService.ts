@@ -40,6 +40,7 @@ function updateUserDays(
         user.ca += numberOfDays;
       } else {
         if (user.ca < numberOfDays) {
+          console.log(user.ca);
           return "Pas assez de jour de Congé";
         }
         user.ca -= numberOfDays;
@@ -111,63 +112,70 @@ export class DemandService {
     body: EditDemandDTO,
     userId: number,
   ) {
-    try {
-      let number_day = 0;
-      const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
+    if (body.status !== "DRAFT") {
+      return new ControllerResponse(400, "Not allowed");
+    } else {
+      try {
+        let number_day = 0;
+        const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-      if (body.endDate === body.startDate) {
-        const start = new Date(body.startDate);
-        body.endDate = new Date(start.getTime() + ONE_DAY_IN_MS);
-      }
-
-      if (body.startDate && body.endDate) {
-        number_day = calculateNumberOfDays(body.startDate, body.endDate);
-      }
-
-      const userResponse: any = await UserService.getUserById(userId);
-      if (userResponse.code !== 200) {
-        return new ControllerResponse(404, "User not found");
-      }
-
-      const user = userResponse.data;
-
-      const demand: any = await DemandRepository.getDemandById(+id);
-      if (!demand) {
-        return new ControllerResponse(401, "Demand doesn't exist");
-      }
-
-      const originalEndDate = demand.endDate;
-      const originalNumberOfDays = calculateNumberOfDays(
-        demand.startDate,
-        originalEndDate,
-      );
-      const isReducingDays = new Date(body.endDate) < new Date(originalEndDate);
-
-      if (isReducingDays) {
-        const daysToRecover = originalNumberOfDays - number_day;
-        updateUserDays(user, body.type, daysToRecover, true);
-      } else {
-        const daysToLose = number_day - originalNumberOfDays;
-        const error = updateUserDays(user, body.type, daysToLose);
-        if (error) {
-          return new ControllerResponse(400, error);
+        if (body.endDate === body.startDate) {
+          const start = new Date(body.startDate);
+          body.endDate = new Date(start.getTime() + ONE_DAY_IN_MS);
         }
+
+        if (body.startDate && body.endDate) {
+          number_day = calculateNumberOfDays(body.startDate, body.endDate);
+        }
+
+        const userResponse: any = await UserService.getUserById(userId);
+        if (userResponse.code !== 200) {
+          return new ControllerResponse(404, "User not found");
+        }
+
+        const user = userResponse.data;
+
+        const demand: any = await DemandRepository.getDemandById(+id);
+        if (!demand) {
+          return new ControllerResponse(401, "Demand doesn't exist");
+        }
+
+        const originalEndDate = demand.endDate;
+        const originalNumberOfDays = calculateNumberOfDays(
+          demand.startDate,
+          originalEndDate,
+        );
+        const isReducingDays =
+          new Date(body.endDate) < new Date(originalEndDate);
+
+        if (isReducingDays) {
+          const daysToRecover = originalNumberOfDays - number_day;
+          updateUserDays(user, body.type, daysToRecover, true);
+        } else {
+          const daysToLose = number_day - originalNumberOfDays;
+          const error = updateUserDays(user, body.type, daysToLose);
+          if (error) {
+            return new ControllerResponse(400, error);
+          }
+        }
+
+        const editDemand = new EditDemandDTO(
+          body.startDate,
+          body.endDate,
+          body.motivation,
+          body.type,
+          number_day,
+          body.status,
+        );
+
+        await DemandRepository.editDemand(+id, editDemand);
+        await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
+
+        return new ControllerResponse(200, "", editDemand);
+      } catch (error) {
+        logger.error(`Failed to edit the demand. Error: ${error}`);
+        return new ControllerResponse(500, "Failed to edit the demand");
       }
-
-      const editDemand = new EditDemandDTO(
-        body.startDate,
-        body.endDate,
-        body.motivation,
-        body.type,
-        number_day,
-      );
-      await DemandRepository.editDemand(+id, editDemand);
-      await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
-
-      return new ControllerResponse(200, "", editDemand);
-    } catch (error) {
-      logger.error(`Failed to edit the demand. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to edit the demand");
     }
   }
 
@@ -211,11 +219,14 @@ export class DemandService {
         body.startDate,
         body.endDate,
         body.motivation,
-        "WAITING",
+        "DRAFT",
         body.type,
         number_day,
         id,
       );
+
+      console.log(newDemand);
+
       await UserService.updateUserDays(id, user.rtt, user.ca, user.tt);
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
