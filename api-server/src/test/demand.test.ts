@@ -55,7 +55,9 @@ describe("getDemand", () => {
     (DemandRepository.getDemandCountWithType as jest.Mock).mockResolvedValue(
       demandCount,
     );
-    (DemandRepository.getDemandWithType as jest.Mock).mockResolvedValue(demand);
+    (DemandRepository.getDemandWithType as jest.Mock).mockResolvedValue(
+      demands,
+    );
 
     const response = await DemandService.getDemand(req as Request);
 
