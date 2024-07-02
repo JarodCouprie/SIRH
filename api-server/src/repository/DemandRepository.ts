@@ -85,7 +85,6 @@ export class DemandRepository {
   }
 
   public static async deleteDemand(id: number) {
-    console.log(id);
     const [rows]: any = await this.pool.query(
       `
           DELETE

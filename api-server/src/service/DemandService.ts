@@ -8,7 +8,7 @@ import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 import { Request } from "express";
 import { UserService } from "./UserService";
 
-function calculateNumberOfDays(startDate: Date, endDate: Date): number {
+export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
   const start = new Date(startDate);
@@ -18,7 +18,7 @@ function calculateNumberOfDays(startDate: Date, endDate: Date): number {
   return Math.ceil(differenceMs / ONE_DAY_IN_MS);
 }
 
-function updateUserDays(
+export function updateUserDays(
   user: any,
   type: DemandType,
   numberOfDays: number,
@@ -235,3 +235,5 @@ export class DemandService {
     }
   }
 }
+
+export default DemandService;

@@ -26,8 +26,10 @@ app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Serveur running at http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    console.log(`[server]: Serveur running at http://localhost:${port}`);
+  });
+}
 
 export default app;
