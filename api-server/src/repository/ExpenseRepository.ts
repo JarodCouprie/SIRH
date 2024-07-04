@@ -133,7 +133,7 @@ export class ExpenseRepository {
         expense.amount,
         expense.motivation,
         expense.status,
-        expense.ownerId,
+        expense.id_owner,
         expense.facturationDate,
       ],
     );

@@ -1,7 +1,4 @@
-import {
-  ExpenseCard,
-  ExpenseCardType,
-} from "@/components/expense/ExpenseCard.tsx";
+import { ExpenseCard, ExpenseCardType } from "@/pages/expense/ExpenseCard.tsx";
 import { useEffect, useState } from "react";
 import {
   ExpenseAmountDateAndStatus,
@@ -31,7 +28,7 @@ export function MonthlyExpenseDetails() {
 
   const fetchExpensesAmountDateAndStatus = async () => {
     await customFetcher(
-      "http://localhost:5000/api/expense/amount-date-and-status-by-month?" +
+      "http://localhost:5000/api/expense/amount-date-and-status-by-date?" +
         new URLSearchParams({
           date: new Date().toString(),
         }).toString(),

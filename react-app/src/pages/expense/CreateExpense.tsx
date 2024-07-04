@@ -1,7 +1,7 @@
 import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetails.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ArrowLeftIcon, CalendarIcon } from "@radix-ui/react-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { ExpenseStatus, selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import {
   Popover,
@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/popover.tsx";
 import { Calendar } from "@/components/ui/calendar.tsx";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { customFetcher } from "@/helper/fetchInstance.ts";
+import { toast } from "sonner";
 
 export function CreateExpense() {
   const navigate = useNavigate();
@@ -35,6 +37,38 @@ export function CreateExpense() {
     facturationDate: new Date(),
     ownerId: "",
   });
+  const { id } = useParams();
+
+  let method: string;
+
+  const getTargetExpense = async () => {
+    await customFetcher("http://localhost:5000/api/expense/" + id).then(
+      (response) => {
+        if (response.response.status !== 200) {
+          toast.error("Accès refusé");
+          return;
+        }
+        console.log(response.data.data);
+        const date: Date = new Date(
+          response.data.data.facturationDate.split("T")[0],
+        );
+        setCreatedExpense({
+          type: response.data.data.type,
+          amount: response.data.data.amount,
+          motivation: response.data.data.motivation,
+          facturationDate: date,
+          ownerId: response.data.data.ownerId,
+        });
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (id != undefined) {
+      method = "PUT";
+      getTargetExpense();
+    } else method = "POST";
+  }, []);
 
   const handlerExpenseFormDataChange = (e: any) => {
     setCreatedExpense({
@@ -57,7 +91,8 @@ export function CreateExpense() {
       ...createdExpense,
       ["facturationDate"]: value,
     });
-    console.log(value);
+    value?.setHours(3);
+    console.log(value?.toISOString().split("T")[0]);
   };
 
   const displayDate = () => {
@@ -72,6 +107,35 @@ export function CreateExpense() {
     stringToConvert: string,
   ): selectedTypeEnum => {
     return selectedTypeEnum[stringToConvert as keyof typeof selectedTypeEnum];
+  };
+
+  const handleFormSubmit = async (
+    e: MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    createdExpense.facturationDate.setHours(3);
+    const date = createdExpense.facturationDate.toISOString().split("T")[0];
+
+    const body = {
+      type: createdExpense.type,
+      amount: createdExpense.amount,
+      motivation: createdExpense.motivation,
+      facturationDate: date,
+      ownerId: "",
+    };
+
+    await customFetcher("http://localhost:5000/api/expense/", {
+      method: method,
+      body: JSON.stringify(body),
+    }).then((response) => {
+      if (response.response.status !== 200) {
+        toast.error(`Echec de l'opération`);
+        return;
+      }
+      toast.message(
+        `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créé.`,
+      );
+    });
   };
 
   return (
@@ -186,7 +250,10 @@ export function CreateExpense() {
                 >
                   Annuler
                 </Button>
-                <Button className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400">
+                <Button
+                  className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400"
+                  onClick={(e) => handleFormSubmit(e)}
+                >
                   Envoyer
                 </Button>
               </div>

@@ -8,11 +8,13 @@ import { MdOutlineEuroSymbol } from "react-icons/md";
 import { FaBed, FaCar, FaUtensils } from "react-icons/fa";
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import { useNavigate } from "react-router-dom";
 
 export function ExpenseListCard(props: any) {
   const expense: ExpenseList =
     props.expense ||
     new ExpenseList(
+      "0",
       ExpenseType.COMPENSATION,
       100,
       "placeholder",
@@ -31,6 +33,9 @@ export function ExpenseListCard(props: any) {
     month: "long",
     day: "numeric",
   };
+
+  const navigate = useNavigate();
+
   switch (type) {
     case ExpenseType.COMPENSATION:
       icon = (
@@ -64,8 +69,15 @@ export function ExpenseListCard(props: any) {
       break;
   }
 
+  const handleDetailsDisplay = () => {
+    navigate("details/" + expense.id);
+  };
+
   return (
-    <TableRow className="rounded-md">
+    <TableRow
+      className="cursor-pointer rounded-md"
+      onClick={handleDetailsDisplay}
+    >
       <TableCell className="mx-4 w-10">{icon}</TableCell>
       <TableCell>
         <div>{typeText}</div>

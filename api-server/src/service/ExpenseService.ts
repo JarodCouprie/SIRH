@@ -5,9 +5,10 @@ import { ControllerResponse } from "../helper/ControllerResponse";
 import { logger } from "../helper/Logger";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "../dto/expense/ExpenseAmountDateAndStatusDTO";
+import { CustomRequest } from "../helper/CustomRequest";
 
 export class ExpenseService {
-  public static async getExpensesValuesByUserId(req: Request) {
+  public static async getExpensesValuesByUserId(req: Request, userId: number) {
     try {
       const offset = req.query.offset || "0";
       const limit = req.query.limit || "10";
@@ -16,7 +17,7 @@ export class ExpenseService {
       if (type != null) {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByUserIdAndType(
-            req.params.user_id,
+            userId.toString(),
             +offset,
             +limit,
             type.toString(),
@@ -32,7 +33,7 @@ export class ExpenseService {
       }
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesValuesByUserId(
-          req.params.user_id,
+          userId.toString(),
           +offset,
           +limit,
         );
@@ -82,10 +83,12 @@ export class ExpenseService {
     }
   }
 
-  public static async createExpenseDemand(expense: Expense) {
+  public static async createExpenseDemand(expense: Expense, userId: number) {
     try {
+      expense.id_owner = userId;
       //expense.facturationDate = new Date(expense.facturationDate.getDate());
       expense.status = ExpenseStatus.WAITING;
+      console.log(expense);
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {
@@ -94,8 +97,17 @@ export class ExpenseService {
     }
   }
 
-  public static async editExpenseDemand(id: string, expense: Expense) {
+  public static async editExpenseDemand(
+    id: string,
+    expense: Expense,
+    userId: string,
+  ) {
     try {
+      const targetExpense: Expense =
+        await ExpenseRepository.getExpenseDemand(id);
+      if (targetExpense.id_owner.toString() != userId)
+        return new ControllerResponse(403, "Access unauthorized");
+
       const result: any = await ExpenseRepository.updateExpenseDemand(
         id,
         expense,
@@ -107,7 +119,7 @@ export class ExpenseService {
     }
   }
 
-  public static async delExpenseDemand(id: string) {
+  public static async delExpenseDemand(id: string, userId: number) {
     try {
       const result: any = await ExpenseRepository.delExpenseDemand(id);
       return new ControllerResponse(200, "Operation was a success");
@@ -117,9 +129,13 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpenseDemand(id: string) {
+  public static async getExpenseDemand(id: string, userId: number) {
     try {
+      console.log(userId);
       const expense: any = await ExpenseRepository.getExpenseDemand(id);
+      if (expense.id_owner != userId)
+        return new ControllerResponse(403, "Access denied");
+
       return new ControllerResponse<ExpenseListDTO>(200, "", expense);
     } catch (error) {
       logger.error(`Failed to get expense. Error: ${error}`);
@@ -130,7 +146,7 @@ export class ExpenseService {
     }
   }
 
-  public static async confirmExpenseDemand(req: Request) {
+  public static async confirmExpenseDemand(req: Request, userId: number) {
     try {
       const status = req.body.ExpenseStatus;
       const validatorId = req.body.ValidatorId;
@@ -165,10 +181,10 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesCountByUserId(req: Request) {
+  public static async getExpensesCountByUserId(req: Request, userId: number) {
     try {
       const type = req.query.type?.toString() || "ALL";
-      const id_owner = req.params.user_id;
+      const id_owner = userId.toString();
       let count;
       if (type == null || type == "ALL") {
         const result: any =
@@ -212,9 +228,12 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesAmountDateAndStatusByUserId(req: Request) {
+  public static async getExpensesAmountDateAndStatusByUserId(
+    req: Request,
+    userId: number,
+  ) {
     try {
-      const user_id = req.params.user_id;
+      const user_id = userId.toString();
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesAmountDateAndStatusByUserId(user_id);
 
@@ -271,9 +290,10 @@ export class ExpenseService {
 
   public static async getExpensesAmountDateAndStatusByUserIdAndDate(
     req: Request,
+    userId: number,
   ) {
     try {
-      const user_id = req.params.user_id;
+      const user_id = userId.toString();
       const selectedDate: string =
         req.query.date?.toString() || new Date().toDateString();
       const monthName = new Date(selectedDate).toLocaleDateString("eng", {

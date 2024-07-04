@@ -1,4 +1,5 @@
 export class ExpenseList {
+  id: string;
   type: ExpenseType;
   amount: number;
   motivation: string;
@@ -6,6 +7,7 @@ export class ExpenseList {
   facturationDate: Date;
   status: ExpenseStatus;
   constructor(
+    id: string,
     type: ExpenseType,
     amount: number,
     motivation: string,
@@ -13,6 +15,7 @@ export class ExpenseList {
     facturationDate: Date,
     status: ExpenseStatus,
   ) {
+    this.id = id;
     this.type = type;
     this.amount = amount;
     this.motivation = motivation;
