@@ -237,8 +237,9 @@ VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
        ("FOOD", 102, "Repas pro", "WAITING", 1, null, '2024-04-15'),
        ("HOUSING", 149, "Hotel", "WAITING", 1, null, '2024-04-01'),("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
        ("COMPENSATION", 89, "Prime", "REFUNDED", 2, 1, '2023-12-13'),
-       ("FOOD", 20.99, "Restauration en déplacement", "NOT REFUNDED", 1, null, '2024-04-15'),
+       ("FOOD", 20.99, "Restauration en déplacement", "NOT_REFUNDED", 1, null, '2024-04-15'),
        ("HOUSING", 149, "Hotel", "WAITING", 1, null, '2024-05-01'),("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
        ("COMPENSATION", 50, "Indemnisation", "REFUNDED", 2, 1, '2023-05-13'),
        ("FOOD", 34.99, "Repas d'affaire", "WAITING", 1, null, '2024-04-15'),
-       ("HOUSING", 99, "AirBNB", "NOT REFUNDED", 1, null, '2024-05-01');
+       ("FOOD", 34.99, "Repas de test", "REFUNDED", 1, null, '2024-04-15'),
+       ("HOUSING", 99, "AirBNB", "NOT_REFUNDED", 1, null, '2024-05-01');
