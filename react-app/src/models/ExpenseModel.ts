@@ -34,7 +34,7 @@ export enum ExpenseType {
 
 export enum ExpenseStatus {
   REFUNDED = "REFUNDED",
-  NOT_REFUNDED = "NOT REFUNDED",
+  NOT_REFUNDED = "NOT_REFUNDED",
   WAITING = "WAITING",
 }
 

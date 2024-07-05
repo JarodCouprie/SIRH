@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetails.tsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Expense() {
   const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
@@ -46,6 +47,7 @@ export function Expense() {
           }).toString(),
       ).then((response) => {
         if (response.response.status !== 200) {
+          toast.error("Une erreur est survenue");
           return;
         }
         setExpenses(response.data.data);
@@ -60,6 +62,7 @@ export function Expense() {
           }).toString(),
       ).then((response) => {
         if (response.response.status !== 200) {
+          toast.error("Une erreur est survenue");
           return;
         }
         setExpenses(response.data.data);
@@ -75,6 +78,7 @@ export function Expense() {
         }).toString(),
     ).then((response) => {
       if (response.response.status !== 200) {
+        toast.error("Une erreur est survenue");
         return;
       }
       setExpensesCount(response.data.data);

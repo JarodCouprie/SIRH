@@ -39,35 +39,38 @@ export function CreateExpense() {
   });
   const { id } = useParams();
 
-  let method: string;
+  const [method, setMethod] = useState("");
 
   const getTargetExpense = async () => {
-    await customFetcher("http://localhost:5000/api/expense/" + id).then(
-      (response) => {
-        if (response.response.status !== 200) {
-          toast.error("Accès refusé");
-          return;
-        }
-        console.log(response.data.data);
-        const date: Date = new Date(
-          response.data.data.facturationDate.split("T")[0],
-        );
-        setCreatedExpense({
-          type: response.data.data.type,
-          amount: response.data.data.amount,
-          motivation: response.data.data.motivation,
-          facturationDate: date,
-          ownerId: response.data.data.ownerId,
-        });
-      },
-    );
+    try {
+      await customFetcher("http://localhost:5000/api/expense/" + id).then(
+        (response) => {
+          if (response.response.status !== 200) {
+            toast.error("Accès refusé");
+            return;
+          }
+          const date: Date = new Date(
+            response.data.data.facturationDate.split("T")[0],
+          );
+          setCreatedExpense({
+            type: response.data.data.type,
+            amount: response.data.data.amount,
+            motivation: response.data.data.motivation,
+            facturationDate: date,
+            ownerId: response.data.data.ownerId,
+          });
+        },
+      );
+    } catch {
+      toast.error(`Echec de la récupération de la demande de frais`);
+    }
   };
 
   useEffect(() => {
     if (id != undefined) {
-      method = "PUT";
+      setMethod("PUT");
       getTargetExpense();
-    } else method = "POST";
+    } else setMethod("POST");
   }, []);
 
   const handlerExpenseFormDataChange = (e: any) => {
@@ -75,7 +78,6 @@ export function CreateExpense() {
       ...createdExpense,
       [e.target.name]: e.target.value || e.target.selected,
     });
-    console.log(e.target.value);
   };
 
   const handlerExpenseTypeChange = (value: string) => {
@@ -83,7 +85,6 @@ export function CreateExpense() {
       ...createdExpense,
       ["type"]: convertFromStringToSelectedTypeEnum(value),
     });
-    console.log(value);
   };
 
   const handlerExpenseFacturationDateChange = (value: Date | undefined) => {
@@ -92,7 +93,6 @@ export function CreateExpense() {
       ["facturationDate"]: value,
     });
     value?.setHours(3);
-    console.log(value?.toISOString().split("T")[0]);
   };
 
   const displayDate = () => {
@@ -123,19 +123,31 @@ export function CreateExpense() {
       facturationDate: date,
       ownerId: "",
     };
-
-    await customFetcher("http://localhost:5000/api/expense/", {
-      method: method,
-      body: JSON.stringify(body),
-    }).then((response) => {
-      if (response.response.status !== 200) {
-        toast.error(`Echec de l'opération`);
-        return;
-      }
-      toast.message(
-        `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créé.`,
-      );
-    });
+    try {
+      let fetchUrl = "http://localhost:5000/api/expense/";
+      if (id != undefined) fetchUrl = "http://localhost:5000/api/expense/" + id;
+      await customFetcher(fetchUrl, {
+        method: method,
+        body: JSON.stringify(body),
+      }).then((response) => {
+        if (response.response.status !== 200) {
+          toast.error(`Echec de l'opération`);
+          return;
+        } else {
+          if (method == "POST")
+            toast.message(
+              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créé.`,
+            );
+          else
+            toast.message(
+              `La demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été modifiée.`,
+            );
+          navigate("/expense");
+        }
+      });
+    } catch {
+      toast.error(`Echec de l'opération`);
+    }
   };
 
   return (

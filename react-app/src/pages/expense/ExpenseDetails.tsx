@@ -4,14 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 
 import { useEffect, useState } from "react";
-import {
-  ExpenseStatus,
-  ExpenseType,
-  selectedTypeEnum,
-} from "@/models/ExpenseModel.ts";
+import { ExpenseStatus, ExpenseType } from "@/models/ExpenseModel.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { undefined } from "zod";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { Badge } from "@/components/ui/badge.tsx";
+import { toast } from "sonner";
 
 export function ExpenseDetails() {
   const navigate = useNavigate();
@@ -28,21 +25,22 @@ export function ExpenseDetails() {
     status: ExpenseStatus.WAITING,
   });
   const { id } = useParams();
-
-  let method: string;
+  const [triedToDelete, setTriedToDelete] = useState(false);
+  const [deleteButtonText, setDeleteButtonText] = useState("Supprimer");
 
   const convertFromStringToExpenseStatusEnum = (target: string) => {
     return ExpenseStatus[target as keyof typeof ExpenseStatus];
   };
 
   const convertFromStringToExpenseTypeEnum = (target: string) => {
-    return selectedTypeEnum[target as keyof typeof selectedTypeEnum];
+    return ExpenseType[target as keyof typeof ExpenseType];
   };
 
   const getTargetExpense = async () => {
     await customFetcher("http://localhost:5000/api/expense/" + id).then(
       (response) => {
         if (response.response.status !== 200) {
+          toast.error("Une erreur est survenue");
           return;
         }
         const facturationDate: Date = new Date(
@@ -67,14 +65,77 @@ export function ExpenseDetails() {
   };
 
   useEffect(() => {
-    if (id != undefined) {
-      method = "PUT";
-      getTargetExpense();
-    } else method = "POST";
+    getTargetExpense();
   }, []);
 
   const handleEdit = () => {
     navigate("/expense/edit/" + expense.id);
+  };
+
+  const translateAndDisplayExpenseTypeEnum = (enumToTranslate: ExpenseType) => {
+    switch (enumToTranslate) {
+      case ExpenseType.COMPENSATION:
+        return "Indemnités";
+      case ExpenseType.TRAVEL:
+        return "Déplacement";
+      case ExpenseType.HOUSING:
+        return "Hébergement";
+      case ExpenseType.FOOD:
+        return "Restauration";
+    }
+  };
+
+  const translateAndDisplayExpenseStatusEnum = (
+    enumToTranslate: ExpenseStatus,
+  ) => {
+    console.log(enumToTranslate);
+    switch (enumToTranslate) {
+      case ExpenseStatus.WAITING:
+        return (
+          <Badge variant="waiting" className="text-xl">
+            {" "}
+            En attente{" "}
+          </Badge>
+        );
+      case ExpenseStatus.REFUNDED:
+        return (
+          <Badge variant="accepted" className="text-xl">
+            {" "}
+            Remboursé{" "}
+          </Badge>
+        );
+      case ExpenseStatus.NOT_REFUNDED:
+        return (
+          <Badge variant="denied" className="text-xl">
+            {" "}
+            Non remboursé{" "}
+          </Badge>
+        );
+    }
+  };
+
+  const handleDelete = async () => {
+    console.log(triedToDelete);
+    if (!triedToDelete) {
+      setTriedToDelete(true);
+      setDeleteButtonText("Appuyez pour confirmer");
+    } else {
+      try {
+        await customFetcher("http://localhost:5000/api/expense/" + id, {
+          method: "DELETE",
+        }).then((response) => {
+          if (response.response.status !== 200) {
+            toast.error("Echec de l'opération");
+            return;
+          } else {
+            toast.message("Suppression effectuée");
+            navigate("/expense");
+          }
+        });
+      } catch {
+        toast.error(`Echec de l'opération`);
+      }
+    }
   };
 
   return (
@@ -91,7 +152,9 @@ export function ExpenseDetails() {
           <CardContent className="flex flex-col p-4">
             <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Type</div>
-              <div className="text-xl">{expense.type}</div>
+              <div className="text-xl">
+                {translateAndDisplayExpenseTypeEnum(expense.type)}
+              </div>
             </div>
             <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Montant</div>
@@ -115,14 +178,15 @@ export function ExpenseDetails() {
             </div>
             <div className="rounded border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Status</div>
-              <div className="text-xl">{expense.status}</div>
+              <div className="text-xl">
+                {translateAndDisplayExpenseStatusEnum(expense.status)}
+              </div>
             </div>
           </CardContent>
         </Card>
         <div className="flex flex-row justify-end gap-5">
-          <Button variant={"ghost"} className="text-lg">
-            {" "}
-            Supprimer{" "}
+          <Button variant={"ghost"} className="text-lg" onClick={handleDelete}>
+            {deleteButtonText}
           </Button>
           <Button
             variant={"callToAction"}

@@ -100,12 +100,12 @@ export class ExpenseService {
   public static async editExpenseDemand(
     id: string,
     expense: Expense,
-    userId: string,
+    userId: number,
   ) {
     try {
       const targetExpense: Expense =
         await ExpenseRepository.getExpenseDemand(id);
-      if (targetExpense.id_owner.toString() != userId)
+      if (targetExpense.id_owner != userId)
         return new ControllerResponse(403, "Access unauthorized");
 
       const result: any = await ExpenseRepository.updateExpenseDemand(
@@ -121,6 +121,11 @@ export class ExpenseService {
 
   public static async delExpenseDemand(id: string, userId: number) {
     try {
+      const targetExpense: Expense =
+        await ExpenseRepository.getExpenseDemand(id);
+      if (targetExpense.id_owner != userId)
+        return new ControllerResponse(403, "Access unauthorized");
+
       const result: any = await ExpenseRepository.delExpenseDemand(id);
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {
