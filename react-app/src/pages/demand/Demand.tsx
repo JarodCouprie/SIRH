@@ -110,7 +110,7 @@ export function Demand() {
       case "DENIED":
         return <Badge variant="denied">Refusée</Badge>;
       case "DRAFT":
-        return <Badge variant="denied">Brouillon</Badge>;
+        return <Badge variant="draft">A confirmer</Badge>;
       default:
         return <Badge variant="outline">Erreur</Badge>;
     }

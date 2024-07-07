@@ -100,12 +100,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
       if (response.response.status === 201 && method === "POST") {
         toast.message(
-          `Nouvel demande de ${demandeData?.type} a la date du ${demandeData?.startDate} a bien été créé`,
+          `Nouvelle demande de ${demandeData?.type} à la date du ${demandeData?.startDate} a bien été créée`,
         );
         navigate("/demand", { replace: true });
       } else if (response.response.status === 200 && method === "PUT") {
         toast.message(
-          `Demande de ${demandeData?.type} a la date du ${demandeData?.startDate} modifié`,
+          `Demande de ${demandeData?.type} a la date du ${demandeData?.startDate} modifiée`,
         );
         navigate(`/demand/detail/${id}`, { replace: true });
       } else if (response.data.details && response.data.details.length > 0) {
@@ -128,7 +128,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
       newErrors.startDate = "La date de début est requise";
     }
 
-    if (!end_date && selectedType !== DemandType.TT) {
+    if (!end_date) {
       newErrors.endDate = "La date de fin est requise";
     }
 
@@ -145,99 +145,60 @@ const DemandForm: React.FC<DemandFormProps> = ({
   };
 
   const dateChanger = () => {
-    if (selectedType === "TT") {
-      return (
-        <>
-          <div className="flex justify-between justify-items-center gap-3">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start p-6 text-left font-normal outline outline-1",
-                    !start_date && "text-muted-foreground",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {start_date ? (
-                    format(start_date, "PPP")
-                  ) : (
-                    <span>Date de votre télétravail</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={start_date}
-                  onSelect={setStartDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <div className="flex justify-between justify-items-center gap-3">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start p-6 text-left font-normal outline outline-1",
-                    !start_date && "text-muted-foreground",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {start_date ? (
-                    format(start_date, "PPP")
-                  ) : (
-                    <span>Date de début</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={start_date}
-                  onSelect={setStartDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start p-6 text-left font-normal outline outline-1",
-                    !end_date && "text-muted-foreground",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {end_date ? (
-                    format(end_date, "PPP")
-                  ) : (
-                    <span>Date de fin</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={end_date}
-                  onSelect={setEndDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-        </>
-      );
-    }
+    return (
+      <>
+        <div className="flex justify-between justify-items-center gap-3">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start p-6 text-left font-normal outline outline-1",
+                  !start_date && "text-muted-foreground",
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {start_date ? (
+                  format(start_date, "PPP")
+                ) : (
+                  <span>Date de début</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={start_date}
+                onSelect={setStartDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start p-6 text-left font-normal outline outline-1",
+                  !end_date && "text-muted-foreground",
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {end_date ? format(end_date, "PPP") : <span>Date de fin</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={end_date}
+                onSelect={setEndDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </>
+    );
   };
 
   const returnButton = () => {

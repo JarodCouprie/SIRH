@@ -24,7 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { toast } from "sonner";
-import { LuSend } from "react-icons/lu";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export function DemandDetail() {
     startDate: new Date(),
     endDate: new Date(),
     type: DemandType.CA,
-    status: "WAITING",
+    status: "",
   });
 
   const handleClick = () => {
@@ -102,8 +102,8 @@ export function Detail({ demand }: any) {
 
   const handleConfirmClick = async (id: number, demand: DemandDTO) => {
     const formatDate = ({ date }: { date: any }) => {
-      const d = new Date(date);
-      return d.toISOString().split("T")[0];
+      let date_ = new Date(date).toLocaleDateString("fr-CA");
+      return date_;
     };
 
     const demandeData = {
@@ -123,7 +123,7 @@ export function Detail({ demand }: any) {
     );
 
     if (response.response.status === 200) {
-      toast.message(`Demande de ${demand.type} numéro ${id} envoyé`);
+      toast.message(`Demande de ${demand.type} numéro ${id} envoyée`);
       navigate("/demand", { replace: true });
     }
   };
@@ -133,13 +133,7 @@ export function Detail({ demand }: any) {
       return (
         <>
           <div>
-            <Button
-              variant="callToAction"
-              onClick={() => handleConfirmClick(demand.id, demand)}
-            >
-              <LuSend className="mr-2 size-5" />
-              Envoyer la demande
-            </Button>
+            <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
             <Button
               variant="secondary"
               onClick={() => handleEditClick(demand.id)}
@@ -148,7 +142,13 @@ export function Detail({ demand }: any) {
               <Pencil1Icon className="mr-2 size-5" />
               Modifier
             </Button>
-            <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
+            <Button
+              variant="callToAction"
+              onClick={() => handleConfirmClick(demand.id, demand)}
+            >
+              <CheckIcon className="mr-2 size-5" />
+              Confirmer la demande
+            </Button>
           </div>
         </>
       );
@@ -167,6 +167,7 @@ export function Detail({ demand }: any) {
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
             <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
+            <UserInfoRow title="Status">{demand.status}</UserInfoRow>
             <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
             <UserInfoRow title="Date de création">
               {new Date(demand?.createdAt?.toString()).toLocaleDateString(
@@ -204,7 +205,7 @@ export function ConfirmDeleteItem({ demandId, navigate }: any) {
     );
 
     if (response.response.status === 200) {
-      toast.message(`Demande numéro ${demandId} supprimé`);
+      toast.message(`Demande numéro ${demandId} supprimée`);
       navigate("/demand", { replace: true });
     }
   };
@@ -212,17 +213,17 @@ export function ConfirmDeleteItem({ demandId, navigate }: any) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" onClick={ConfirmDeleteItem}>
-          <MdOutlineDelete className="mr-2 size-5" />
-          Supprimer
+        <Button variant="ghost" onClick={ConfirmDeleteItem}>
+          <MdOutlineDelete className="mr-2 size-5 text-red-600" />
+          <span className="text-red-600">Supprimer</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Êtes vous vraiment sur?</AlertDialogTitle>
           <AlertDialogDescription>
-            Vous êtes sur le point de supprimer de manière definitif la demande
-            sélectionner, cette action est irréversible.
+            Vous êtes sur le point de supprimer de manière definitive la demande
+            sélectionnée, cette action est irréversible.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
