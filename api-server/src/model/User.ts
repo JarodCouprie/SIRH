@@ -153,6 +153,9 @@ export class UserDTO {
     this.role = user.role;
     this.iban = user.iban;
     this.bic = user.bic;
+    this.ca = user.ca;
+    this.tt = user.tt;
+    this.rtt = user.rtt;
   }
 }
 
@@ -164,6 +167,9 @@ export class UserListDTO {
   phone: string;
   address: UserAddress;
   active: boolean;
+  ca: number;
+  rtt: number;
+  tt: number;
 
   constructor(user: User) {
     this.id = user.id;

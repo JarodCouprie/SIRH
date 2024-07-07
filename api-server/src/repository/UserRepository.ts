@@ -73,7 +73,10 @@ export class UserRepository {
                  lng,
                  zipcode,
                  created_at,
-                 active
+                 active,
+                 ca,
+                 tt,
+                 rtt
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
           WHERE users.id = ?

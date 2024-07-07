@@ -15,6 +15,9 @@ export class UserModel {
   role: RoleEnum;
   iban: string;
   bic: string;
+  ca: number;
+  tt: number;
+  rtt: number;
 
   constructor(
     id: number = 0,
@@ -30,6 +33,9 @@ export class UserModel {
     role: RoleEnum = RoleEnum.USER,
     iban: string = "",
     bic: string = "",
+    ca: number = 0,
+    tt: number = 0,
+    rtt: number = 0,
   ) {
     this.id = id;
     this.firstname = firstname;
@@ -44,6 +50,9 @@ export class UserModel {
     this.role = role;
     this.iban = iban;
     this.bic = bic;
+    this.ca = ca;
+    this.tt = tt;
+    this.rtt = rtt;
   }
 }
 

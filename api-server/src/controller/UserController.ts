@@ -2,6 +2,7 @@ import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { Request, Response, Router } from "express";
 import { UserService } from "../service/UserService.js";
 import * as Minio from "minio";
+import { CustomRequest } from "../helper/CustomRequest.js";
 
 const router = Router();
 

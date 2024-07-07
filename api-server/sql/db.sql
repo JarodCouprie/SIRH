@@ -28,9 +28,9 @@ CREATE TABLE users
     bic         VARCHAR(50),
     active      BOOLEAN       NOT NULL DEFAULT TRUE,
     created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ca  INT,
-    tt INT,
-    rtt INT,
+    ca          INT,
+    tt          INT,
+    rtt         INT,
     PRIMARY KEY (id),
     FOREIGN KEY (id_address) REFERENCES address (id)
 );
@@ -221,5 +221,3 @@ CREATE TABLE belong_team_service
     FOREIGN KEY (id_team) REFERENCES team (id),
     FOREIGN KEY (id_service) REFERENCES service (id)
 );
-
-

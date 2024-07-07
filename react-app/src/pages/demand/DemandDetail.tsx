@@ -102,7 +102,7 @@ export function Detail({ demand }: any) {
 
   const handleConfirmClick = async (id: number, demand: DemandDTO) => {
     const formatDate = ({ date }: { date: any }) => {
-      let date_ = new Date(date).toLocaleDateString("fr-CA");
+      let date_ = new Date(date).toLocaleDateString("fr-FR");
       return date_;
     };
 

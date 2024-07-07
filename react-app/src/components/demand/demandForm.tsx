@@ -67,8 +67,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
     if (formDemandValid()) {
       const motivation = event.currentTarget.description.value;
-      const startDate = start_date?.toLocaleDateString("fr-CA");
-      let endDate = end_date?.toLocaleDateString("fr-CA");
+      const startDate = start_date?.toLocaleDateString("fr-FR");
+      let endDate = end_date?.toLocaleDateString("fr-FR");
       let demandeData;
 
       if (!endDate) {

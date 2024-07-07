@@ -99,7 +99,7 @@ export class DemandService {
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse(200, "", demand);
+      return new ControllerResponse<DemandDTO>(200, "", new DemandDTO(demand));
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");
