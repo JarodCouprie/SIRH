@@ -10,6 +10,9 @@ export class User {
   password: string;
   created_at: Date;
   active: boolean;
+  ca: number;
+  tt: number;
+  rtt: number;
   street: string;
   streetNumber: string;
   locality: string;
@@ -31,6 +34,9 @@ export class User {
     password: string,
     created_at: Date,
     active: boolean,
+    ca: number,
+    tt: number,
+    rtt: number,
     street: string,
     streetNumber: string,
     locality: string,
@@ -51,6 +57,9 @@ export class User {
     this.password = password;
     this.created_at = created_at;
     this.active = active;
+    this.ca = ca;
+    this.tt = tt;
+    this.rtt = rtt;
     this.street = street;
     this.streetNumber = streetNumber;
     this.locality = locality;
@@ -120,6 +129,9 @@ export class UserDTO {
   phone: string;
   created_at: Date;
   active: boolean;
+  ca: number;
+  tt: number;
+  rtt: number;
   address: UserAddress;
   country: string;
   nationality: string;
@@ -161,5 +173,8 @@ export class UserListDTO {
     this.phone = user.phone;
     this.address = new UserAddress(user);
     this.active = user.active;
+    this.ca = user.ca;
+    this.rtt = user.rtt;
+    this.tt = user.tt;
   }
 }

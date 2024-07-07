@@ -138,4 +138,21 @@ export class UserRepository {
     );
     return result;
   }
+
+  public static async updateUserDays(
+    id: number,
+    rtt: number,
+    ca: number,
+    tt: number,
+  ) {
+    const [result] = await this.pool.query(
+      `
+          UPDATE users
+          SET rtt = ?, ca = ?, tt = ?
+          WHERE id = ?
+      `,
+      [rtt, ca, tt, id],
+    );
+    return result;
+  }
 }

@@ -28,6 +28,9 @@ CREATE TABLE users
     bic         VARCHAR(50),
     active      BOOLEAN       NOT NULL DEFAULT TRUE,
     created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ca  INT,
+    tt INT,
+    rtt INT,
     PRIMARY KEY (id),
     FOREIGN KEY (id_address) REFERENCES address (id)
 );
@@ -38,11 +41,12 @@ CREATE TABLE demand
     startDate               DATE,
     endDate                 DATE,
     motivation              VARCHAR(50),
-    createdAt               DATE,
+    createdAt               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
+    number_day              INT,
     id_user_create_demand   BIGINT        NOT NULL,
-    id_user_validate_demand BIGINT        NOT NULL,
+    id_user_validate_demand BIGINT        NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
     FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
@@ -218,12 +222,4 @@ CREATE TABLE belong_team_service
     FOREIGN KEY (id_service) REFERENCES service (id)
 );
 
-INSERT INTO address(street, streetNumber, locality, zipcode, lat, lng)
-VALUES ("Rue des Loges", "65", "Montigny-lès-Metz", "57950", 49.099960, 6.158020),
-       ("Rue des Roses", "65", "Montigny-lès-Metz", "57950", 49.114390, 6.229430);
 
-INSERT INTO users(firstname, lastname, email, password, id_address, nationality, role, iban, country, phone, bic)
-VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        1, "admin nationaly", "ADMIN", "admin iban", "France", "45678908097", "bic admin"),
-       ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
-        2, "user nationaly", "USER", "user iban", "France", "45678908097", "bic user");
