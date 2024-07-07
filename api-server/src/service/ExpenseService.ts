@@ -88,7 +88,6 @@ export class ExpenseService {
       expense.id_owner = userId;
       //expense.facturationDate = new Date(expense.facturationDate.getDate());
       expense.status = ExpenseStatus.WAITING;
-      console.log(expense);
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {

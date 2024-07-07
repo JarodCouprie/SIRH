@@ -136,7 +136,7 @@ export function CreateExpense() {
         } else {
           if (method == "POST")
             toast.message(
-              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créé.`,
+              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créée.`,
             );
           else
             toast.message(

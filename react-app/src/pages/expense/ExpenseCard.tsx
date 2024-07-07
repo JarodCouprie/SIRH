@@ -14,25 +14,25 @@ export function ExpenseCard(props: any) {
   else invoiceText = "facture";
 
   let icon;
-  let CardDesc: string = "";
+  let cardDesc: string = "";
 
   switch (type) {
     case ExpenseCardType.EXPENSE:
-      CardDesc = "Total du mois";
+      cardDesc = "Total du mois";
       icon = <MdOutlineEuroSymbol className="size-10" />;
       break;
     case ExpenseCardType.WAITING:
-      CardDesc = "En Attente";
+      cardDesc = "En Attente";
       icon = (
         <FaHourglassStart className="size-9 text-yellow-500 dark:text-yellow-200" />
       );
       break;
     case ExpenseCardType.REFUNDED:
-      CardDesc = "Remboursés";
+      cardDesc = "Remboursés";
       icon = <FaRegCheckCircle className="size-10 text-green-500" />;
       break;
     case ExpenseCardType.NON_REFUNDED:
-      CardDesc = "Non Remboursés";
+      cardDesc = "Non Remboursés";
       icon = <MdOutlineCancel className="size-10 text-red-600" />;
       break;
   }
@@ -41,7 +41,7 @@ export function ExpenseCard(props: any) {
       <CardContent className="flex w-fit flex-row px-4 py-1">
         <div className="p-2">{icon}</div>
         <div className="p-2">
-          <CardDescription className=""> {CardDesc} </CardDescription>
+          <CardDescription className=""> {cardDesc} </CardDescription>
           <div className="text-xl font-bold">{totalMoney.toFixed(2)}€</div>
           <div className="text-xs">
             {invoiceNumber} {invoiceText}

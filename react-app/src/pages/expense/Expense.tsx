@@ -105,8 +105,7 @@ export function Expense() {
       <div className="flex justify-between py-4">
         <div className="max-[300px]:text-xl min-[300px]:text-2xl"> Frais</div>
         <Button variant="callToAction" onClick={handleRedirection}>
-          {" "}
-          Demande de remboursement{" "}
+          Demande de remboursement
         </Button>
       </div>
       <MonthlyExpenseDetails />

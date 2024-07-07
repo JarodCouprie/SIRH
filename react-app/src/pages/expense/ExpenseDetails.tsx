@@ -93,22 +93,19 @@ export function ExpenseDetails() {
       case ExpenseStatus.WAITING:
         return (
           <Badge variant="waiting" className="text-xl">
-            {" "}
-            En attente{" "}
+            En attente
           </Badge>
         );
       case ExpenseStatus.REFUNDED:
         return (
           <Badge variant="accepted" className="text-xl">
-            {" "}
-            Remboursé{" "}
+            Remboursé
           </Badge>
         );
       case ExpenseStatus.NOT_REFUNDED:
         return (
           <Badge variant="denied" className="text-xl">
-            {" "}
-            Non remboursé{" "}
+            Non remboursé
           </Badge>
         );
     }
@@ -193,8 +190,7 @@ export function ExpenseDetails() {
             className="text-lg"
             onClick={handleEdit}
           >
-            {" "}
-            Modifier{" "}
+            Modifier
           </Button>
         </div>
       </div>
