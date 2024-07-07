@@ -3,7 +3,7 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { UserModel } from "@/models/UserModel.ts";
 
 const CurrentUserContext = createContext({
-  user: new UserModel(0, "", "", "", new Date(), false),
+  user: new UserModel(0, "", "", "", new Date(), false, 0, 0, 0),
 });
 
 export function useCurrentUser() {
@@ -18,6 +18,9 @@ export function CurrentUserProvider({ children }: any) {
     email: "",
     createdAt: new Date(),
     active: false,
+    ca: 0,
+    tt: 0,
+    rtt: 0,
   });
 
   const fetchUser = async () => {

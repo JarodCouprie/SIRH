@@ -14,6 +14,7 @@ async function getRefreshToken() {
 async function originalRequest(url: string, config: any = {}) {
   config["headers"] = {
     Authorization: `Bearer ${localStorage.accessToken}`,
+    "Content-Type": "application/json",
   };
   const response = await fetch(url, config);
   const data = await response.json();
@@ -23,11 +24,12 @@ async function originalRequest(url: string, config: any = {}) {
 export async function customFetcher(url: string, config: any = {}) {
   let { response, data }: any = await originalRequest(url, config);
 
-  if (response.status === 401 || response.status !== 200) {
+  if (response.status === 401) {
     await getRefreshToken();
 
     config["headers"] = {
       Authorization: `Bearer ${localStorage.accessToken}`,
+      "Content-Type": "application/json",
     };
 
     const newResponse = await originalRequest(url, config);
