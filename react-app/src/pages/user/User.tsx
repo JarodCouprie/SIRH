@@ -49,28 +49,7 @@ export function User() {
   if (!id) {
     return noUser;
   }
-  const [user, setUser] = useState<UserModel>({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    created_at: new Date(),
-    address: {
-      street: "",
-      streetNumber: "",
-      locality: "",
-      zipcode: "",
-      lat: 0,
-      lng: 0,
-    },
-    active: true,
-    country: "",
-    nationality: "",
-    role: RoleEnum.USER,
-    iban: "",
-    bic: "",
-  });
+  const [user, setUser] = useState<UserModel>(new UserModel());
   const [userRole, setUserRole] = useState(user.role.toString());
 
   const fetchUser = async () => {

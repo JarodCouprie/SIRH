@@ -3,7 +3,7 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { UserModel } from "@/models/User.model.ts";
 
 const CurrentUserContext = createContext({
-  user: new UserModel(0, "", "", "", "", new Date(), false, ""),
+  user: new UserModel(),
 });
 
 export function useCurrentUser() {
@@ -11,16 +11,7 @@ export function useCurrentUser() {
 }
 
 export function CurrentUserProvider({ children }: any) {
-  const [user, setUser] = useState<UserModel>({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    created_at: new Date(),
-    active: false,
-    locality: "",
-  });
+  const [user, setUser] = useState<UserModel>(new UserModel());
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/me`).then((response) => {
       if (response.response.status !== 200) {
