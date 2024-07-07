@@ -18,6 +18,7 @@ export class UserModel {
   ca: number;
   tt: number;
   rtt: number;
+  avatar_url: string;
 
   constructor(
     id: number = 0,
@@ -36,6 +37,7 @@ export class UserModel {
     ca: number = 0,
     tt: number = 0,
     rtt: number = 0,
+    avatar_url: string = "",
   ) {
     this.id = id;
     this.firstname = firstname;
@@ -53,6 +55,7 @@ export class UserModel {
     this.ca = ca;
     this.tt = tt;
     this.rtt = rtt;
+    this.avatar_url = avatar_url;
   }
 }
 
@@ -64,6 +67,7 @@ export class UserListModel {
   phone: string;
   address: AddressModel;
   active: boolean;
+  avatar_url: string;
 
   constructor(
     id: number,
@@ -73,6 +77,7 @@ export class UserListModel {
     phone: string,
     address: AddressModel,
     active: boolean,
+    avatar_url: string,
   ) {
     this.id = id;
     this.firstname = firstname;
@@ -81,6 +86,7 @@ export class UserListModel {
     this.phone = phone;
     this.address = address;
     this.active = active;
+    this.avatar_url = avatar_url;
   }
 }
 

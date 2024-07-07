@@ -7,7 +7,6 @@ export class User {
   lastname: string;
   email: string;
   phone: string;
-  password: string;
   created_at: Date;
   active: boolean;
   ca: number;
@@ -24,6 +23,7 @@ export class User {
   role: RoleEnum;
   iban: string;
   bic: string;
+  image_key: string;
 
   constructor(
     id: number,
@@ -31,7 +31,6 @@ export class User {
     lastname: string,
     email: string,
     phone: string,
-    password: string,
     created_at: Date,
     active: boolean,
     ca: number,
@@ -48,13 +47,13 @@ export class User {
     role: RoleEnum,
     iban: string,
     bic: string,
+    image_key: string,
   ) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
     this.phone = phone;
-    this.password = password;
     this.created_at = created_at;
     this.active = active;
     this.ca = ca;
@@ -71,6 +70,7 @@ export class User {
     this.role = role;
     this.iban = iban;
     this.bic = bic;
+    this.image_key = image_key;
   }
 }
 
@@ -85,6 +85,7 @@ export class CreateUser {
   country: string;
   phone: string;
   bic: string;
+  image_key: string;
 
   constructor(
     firstname: string,
@@ -96,6 +97,7 @@ export class CreateUser {
     country: string,
     iban: string,
     bic: string,
+    image_key?: string,
     role?: string,
   ) {
     this.firstname = firstname;
@@ -107,6 +109,7 @@ export class CreateUser {
     this.country = country;
     this.iban = iban;
     this.bic = bic;
+    this.image_key = image_key || "";
     this.role = role || RoleEnum.USER;
   }
 }
@@ -138,8 +141,9 @@ export class UserDTO {
   role: RoleEnum;
   iban: string;
   bic: string;
+  avatar_url: string;
 
-  constructor(user: User) {
+  constructor(user: User, avatar_url?: string) {
     this.id = user.id;
     this.firstname = user.firstname;
     this.lastname = user.lastname;
@@ -156,6 +160,7 @@ export class UserDTO {
     this.ca = user.ca;
     this.tt = user.tt;
     this.rtt = user.rtt;
+    this.avatar_url = avatar_url || "";
   }
 }
 
@@ -170,8 +175,9 @@ export class UserListDTO {
   ca: number;
   rtt: number;
   tt: number;
+  avatar_url: string;
 
-  constructor(user: User) {
+  constructor(user: User, avatar_url?: string) {
     this.id = user.id;
     this.firstname = user.firstname;
     this.lastname = user.lastname;
@@ -182,5 +188,6 @@ export class UserListDTO {
     this.ca = user.ca;
     this.rtt = user.rtt;
     this.tt = user.tt;
+    this.avatar_url = avatar_url || "";
   }
 }

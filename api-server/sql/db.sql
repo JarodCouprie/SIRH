@@ -31,6 +31,7 @@ CREATE TABLE users
     ca          INT,
     tt          INT,
     rtt         INT,
+    image_key   VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (id_address) REFERENCES address (id)
 );

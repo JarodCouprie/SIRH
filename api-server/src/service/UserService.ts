@@ -6,12 +6,26 @@ import { Request } from "express";
 import { AddressRepository } from "../repository/AddressRepository.js";
 import { CreateAddress } from "../model/Address.js";
 import { RoleEnum } from "../enum/RoleEnum.js";
+import { MinioClient } from "../helper/MinioClient.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class UserService {
   public static async getUsers() {
     try {
       const users: any = await UserRepository.getUsers();
-      const usersDto: UserDTO[] = users.map((user: User) => new UserDTO(user));
+      const usersDto: UserDTO[] = users.map(async (user: User) => {
+        const bucket = process.env.MINIO_BUCKET;
+        if (!bucket) {
+          return new ControllerResponse(
+            500,
+            "Impossible de récupérer la liste des utilisateurs",
+          );
+        }
+        const url = await MinioClient.getSignedUrl(bucket, user.image_key);
+        return new UserDTO(user, url);
+      });
       return new ControllerResponse<UserDTO[]>(200, "", usersDto);
     } catch (error) {
       logger.error(`Failed to get users. Error: ${error}`);
@@ -35,9 +49,22 @@ export class UserService {
       const offset = (+pageNumber - 1) * +pageSize;
       const userCount = await UserRepository.getUsersCount();
       const userList: any = await UserRepository.listUsers(limit, offset);
+      const bucket = process.env.MINIO_BUCKET;
+      if (!bucket) {
+        return new ControllerResponse(
+          500,
+          "Impossible de récupérer la liste des utilisateurs",
+        );
+      }
+      const userListMapped: UserListDTO[] = await Promise.all(
+        userList.map(async (user: User) => {
+          const url = await MinioClient.getSignedUrl(bucket, user.image_key);
+          return new UserListDTO(user, url);
+        }),
+      );
       return new ControllerResponse(200, "", {
         totalData: userCount,
-        list: userList.map((user: User) => new UserListDTO(user)),
+        list: userListMapped,
       });
     } catch (error) {
       logger.error(`Failed to get user list. Error: ${error}`);
@@ -54,7 +81,15 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user));
+      const bucket = process.env.MINIO_BUCKET;
+      if (!bucket) {
+        return new ControllerResponse(
+          500,
+          "Impossible de récupérer l'utilisateurs",
+        );
+      }
+      const url = await MinioClient.getSignedUrl(bucket, user.image_key);
+      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
       return new ControllerResponse(500, "Impossible de créer l'utilisateur");

@@ -41,7 +41,11 @@ export class UserRepository {
                  lng,
                  zipcode,
                  created_at,
-                 active
+                 active,
+                 ca,
+                 tt,
+                 rtt,
+                 image_key
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
           ORDER BY firstname
@@ -76,7 +80,8 @@ export class UserRepository {
                  active,
                  ca,
                  tt,
-                 rtt
+                 rtt,
+                 image_key
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
           WHERE users.id = ?

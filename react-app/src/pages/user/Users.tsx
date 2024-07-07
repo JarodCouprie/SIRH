@@ -104,31 +104,29 @@ export function Users() {
             {users?.length ? (
               users?.map((user: UserListModel) => (
                 <TableRow
-                  key={`${user.id}`}
+                  key={`${user?.id}`}
                   className="hover:cursor-pointer"
-                  onClick={() => handleClick(user.id)}
+                  onClick={() => handleClick(user?.id)}
                 >
                   <TableCell className="flex gap-2 font-medium">
                     <Avatar>
-                      <AvatarImage
-                        src={`https://api.dicebear.com/8.x/adventurer-neutral/svg?seed=${user.id}`}
-                      />
+                      <AvatarImage src={user?.avatar_url} />
                       <AvatarFallback>
-                        {user.firstname.charAt(0)}
-                        {user.lastname.charAt(0)}
+                        {user.firstname?.charAt(0)}
+                        {user.lastname?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <div>
-                        {user.firstname} {user.lastname}
+                        {user?.firstname} {user?.lastname}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {user.email}
+                        {user?.email}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{user.address.locality}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.address?.locality}</TableCell>
+                  <TableCell>{user?.phone}</TableCell>
                   <TableCell>
                     {user?.active ? (
                       <Badge variant="outline">

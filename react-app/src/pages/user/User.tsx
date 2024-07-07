@@ -216,9 +216,7 @@ export function User() {
       <div className="flex flex-wrap justify-between gap-2 py-4">
         <div className="flex gap-2">
           <Avatar className="size-14">
-            <AvatarImage
-              src={`https://api.dicebear.com/8.x/adventurer-neutral/svg?seed=${user.id}`}
-            />
+            <AvatarImage src={user?.avatar_url} />
             <AvatarFallback>
               {user.firstname.charAt(0)}
               {user.lastname.charAt(0)}
