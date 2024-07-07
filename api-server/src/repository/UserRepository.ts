@@ -1,5 +1,5 @@
-import { CreateUser, ResetUserPassword } from "../model/User";
-import { DatabaseClient } from "../helper/DatabaseClient";
+import { CreateUser, ResetUserPassword } from "../model/User.js";
+import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { RoleEnum } from "../enum/RoleEnum";
 
 export class UserRepository {

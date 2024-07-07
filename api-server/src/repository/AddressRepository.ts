@@ -1,5 +1,5 @@
-import { DatabaseClient } from "../helper/DatabaseClient";
-import { CreateAddress } from "../model/Address";
+import { DatabaseClient } from "../helper/DatabaseClient.js";
+import { CreateAddress } from "../model/Address.js";
 
 export class AddressRepository {
   private static pool = DatabaseClient.mysqlPool;

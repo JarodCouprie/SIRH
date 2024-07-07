@@ -17,19 +17,19 @@ export class UserModel {
   bic: string;
 
   constructor(
-    id: number,
-    firstname: string,
-    lastname: string,
-    email: string,
-    phone: string,
-    created_at: Date,
-    address: AddressModel,
-    active: boolean,
-    country: string,
-    nationality: string,
-    role: RoleEnum,
-    iban: string,
-    bic: string,
+    id: number = 0,
+    firstname: string = "",
+    lastname: string = "",
+    email: string = "",
+    phone: string = "",
+    created_at: Date = new Date(),
+    address: AddressModel = new AddressModel(),
+    active: boolean = false,
+    country: string = "",
+    nationality: string = "",
+    role: RoleEnum = RoleEnum.USER,
+    iban: string = "",
+    bic: string = "",
   ) {
     this.id = id;
     this.firstname = firstname;

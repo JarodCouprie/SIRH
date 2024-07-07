@@ -1,32 +1,17 @@
 import { Request } from "express";
-import { UserRepository } from "../repository/UserRepository";
-import { CreateUser, ResetUserPassword, User } from "../model/User";
+import { UserRepository } from "../repository/UserRepository.js";
+import { CreateUser, ResetUserPassword, User } from "../model/User.js";
 import bcrypt from "bcrypt";
-import { logger } from "../helper/Logger";
-import { ControllerResponse } from "../helper/ControllerResponse";
+import { logger } from "../helper/Logger.js";
+import { ControllerResponse } from "../helper/ControllerResponse.js";
 import {
   generateAccessToken,
   generateRefreshToken,
   generateNewAccessToken,
-} from "../helper/Token";
-import { CustomRequest } from "../helper/CustomRequest";
+} from "../helper/Token.js";
+import { CustomRequest } from "../helper/CustomRequest.js";
 
 export class AuthService {
-  public static async createUser(
-    req: Request,
-  ): Promise<ControllerResponse<any>> {
-    try {
-      const { firstname, lastname, email, password } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new CreateUser(firstname, lastname, email, hashedPassword);
-      await UserRepository.createUser(user);
-      return new ControllerResponse(201, "User registered successfully");
-    } catch (error) {
-      logger.error(`Registration failed. Error: ${error}`);
-      return new ControllerResponse(500, "Registration failed");
-    }
-  }
-
   private static async checkUserPassword(
     req: Request,
   ): Promise<ControllerResponse<any> | User> {

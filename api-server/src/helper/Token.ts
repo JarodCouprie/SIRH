@@ -1,8 +1,8 @@
-import { User } from "../model/User";
+import { User } from "../model/User.js";
 import jwt from "jsonwebtoken";
 import { Request } from "express";
-import { ControllerResponse } from "./ControllerResponse";
-import { UserRepository } from "../repository/UserRepository";
+import { ControllerResponse } from "./ControllerResponse.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
 export function generateAccessToken(user: User) {
   return jwt.sign(

@@ -1,12 +1,11 @@
-import { UserRepository } from "../repository/UserRepository";
-import { CreateUser, User, UserDTO, UserListDTO } from "../model/User";
-import { logger } from "../helper/Logger";
-import { ControllerResponse } from "../helper/ControllerResponse";
+import { UserRepository } from "../repository/UserRepository.js";
+import { CreateUser, User, UserDTO, UserListDTO } from "../model/User.js";
+import { logger } from "../helper/Logger.js";
+import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
-import { add } from "winston";
-import { AddressRepository } from "../repository/AddressRepository";
-import { CreateAddress } from "../model/Address";
-import { RoleEnum } from "../enum/RoleEnum";
+import { AddressRepository } from "../repository/AddressRepository.js";
+import { CreateAddress } from "../model/Address.js";
+import { RoleEnum } from "../enum/RoleEnum.js";
 
 export class UserService {
   public static async getUsers() {

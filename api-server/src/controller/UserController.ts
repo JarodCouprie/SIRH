@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import { verifyToken } from "../middleware/AuthMiddleware";
+import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { Request, Response, Router } from "express";
-import { UserService } from "../service/UserService";
+import { UserService } from "../service/UserService.js";
 import * as Minio from "minio";
 
 dotenv.config();

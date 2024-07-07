@@ -1,5 +1,5 @@
-import { RoleEnum } from "../enum/RoleEnum";
-import { Address, UserAddress } from "./Address";
+import { RoleEnum } from "../enum/RoleEnum.js";
+import { Address, UserAddress } from "./Address.js";
 
 export class User {
   id: number;

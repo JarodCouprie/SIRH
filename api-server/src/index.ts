@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import auth from "./controller/AuthController";
-import users from "./controller/UserController";
-import { verifyToken } from "./middleware/AuthMiddleware";
+import auth from "./controller/AuthController.js";
+import users from "./controller/UserController.js";
+import { verifyToken } from "./middleware/AuthMiddleware.js";
 import cors from "cors";
 
 dotenv.config();
