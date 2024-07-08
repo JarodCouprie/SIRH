@@ -9,6 +9,17 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge.tsx";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.tsx";
 
 export function ExpenseDetails() {
   const navigate = useNavigate();
@@ -25,8 +36,6 @@ export function ExpenseDetails() {
     status: ExpenseStatus.WAITING,
   });
   const { id } = useParams();
-  const [triedToDelete, setTriedToDelete] = useState(false);
-  const [deleteButtonText, setDeleteButtonText] = useState("Supprimer");
 
   const convertFromStringToExpenseStatusEnum = (target: string) => {
     return ExpenseStatus[target as keyof typeof ExpenseStatus];
@@ -112,26 +121,20 @@ export function ExpenseDetails() {
   };
 
   const handleDelete = async () => {
-    console.log(triedToDelete);
-    if (!triedToDelete) {
-      setTriedToDelete(true);
-      setDeleteButtonText("Appuyez pour confirmer");
-    } else {
-      try {
-        await customFetcher("http://localhost:5000/api/expense/" + id, {
-          method: "DELETE",
-        }).then((response) => {
-          if (response.response.status !== 200) {
-            toast.error("Echec de l'opération");
-            return;
-          } else {
-            toast.message("Suppression effectuée");
-            navigate("/expense");
-          }
-        });
-      } catch {
-        toast.error(`Echec de l'opération`);
-      }
+    try {
+      await customFetcher("http://localhost:5000/api/expense/" + id, {
+        method: "DELETE",
+      }).then((response) => {
+        if (response.response.status !== 200) {
+          toast.error("Echec de l'opération");
+          return;
+        } else {
+          toast.message("Suppression effectuée");
+          navigate("/expense");
+        }
+      });
+    } catch {
+      toast.error(`Echec de l'opération`);
     }
   };
 
@@ -182,9 +185,26 @@ export function ExpenseDetails() {
           </CardContent>
         </Card>
         <div className="flex flex-row justify-end gap-5">
-          <Button variant={"ghost"} className="text-lg" onClick={handleDelete}>
-            {deleteButtonText}
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Êtes-vous sûr de vouloir supprimer cette demande ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action est irrévesrible, les données supprimée ne
+                  pourront pas être restaurée.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Confirmer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             variant={"callToAction"}
             className="text-lg"
