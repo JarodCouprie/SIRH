@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  DotsVerticalIcon,
   ExitIcon,
   Half2Icon,
   MixerVerticalIcon,
@@ -38,6 +37,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
@@ -56,9 +56,18 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="border-t border-gray-700 p-2">
-          <Button variant="navNotActive" className="w-full justify-between">
-            Options avancées
-            <DotsVerticalIcon />
+          <Button variant="navNotActive" className="flex w-full gap-2">
+            <Avatar className="size-8">
+              <AvatarImage src={user?.avatar_url} />
+              <AvatarFallback>
+                {user.firstname.charAt(0)}
+                {user.lastname.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="max-md:hidden">
+              {user.firstname} {user.lastname}
+            </span>
+            <MixerVerticalIcon className="max-md:hidden" />
           </Button>
         </div>
       </DropdownMenuTrigger>

@@ -52,6 +52,15 @@ export function User() {
   const [user, setUser] = useState<UserModel>(new UserModel());
   const [userRole, setUserRole] = useState(user.role.toString());
 
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/user/${id}`).then(
       (response) => {
@@ -77,8 +86,8 @@ export function User() {
       <div className="col-span-1 flex flex-col gap-4 max-2xl:col-span-3">
         <Card>
           <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex justify-between gap-2 text-xl">
-              <div className="flex items-center gap-4">
+            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
+              <div className="flex flex-wrap items-center gap-4">
                 <BsFillInfoSquareFill />
                 <span>Informations personnelles</span>
               </div>
@@ -93,13 +102,13 @@ export function User() {
             <UserInfoRow title="Téléphone">{user.phone}</UserInfoRow>
             <UserInfoRow title="Nationalité">{user.nationality}</UserInfoRow>
             <UserInfoRow title="Date de création">
-              {new Date(user.created_at).toLocaleString("fr-FR")}
+              {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
             </UserInfoRow>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex items-center gap-4 text-xl">
+            <CardTitle className="flex flex-wrap items-center gap-4 text-xl">
               <MdOutlineSecurity className="text-red-600" />
               <span>Sécurité</span>
             </CardTitle>
@@ -117,8 +126,8 @@ export function User() {
       <div className="col-span-2 flex flex-col gap-4 max-2xl:col-span-3">
         <Card>
           <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex justify-between gap-2 text-xl">
-              <div className="flex items-center gap-4">
+            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
+              <div className="flex flex-wrap items-center gap-4">
                 <FaLocationDot />
                 <span>Adresse</span>
               </div>
@@ -138,8 +147,8 @@ export function User() {
         </Card>
         <Card>
           <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex justify-between gap-2 text-xl">
-              <div className="flex items-center gap-4">
+            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
+              <div className="flex flex-wrap items-center gap-4">
                 <RiBankFill />
                 <span>Informations bancaires</span>
               </div>
@@ -245,7 +254,7 @@ export function User() {
       </div>
       <div>
         <Tabs defaultValue="infos">
-          <TabsList className="grid grid-cols-6">
+          <TabsList className="flex w-full flex-wrap">
             <TabsTrigger value="infos">Général</TabsTrigger>
             <TabsTrigger value="role">Rôles</TabsTrigger>
             <TabsTrigger value="demand">Demandes</TabsTrigger>

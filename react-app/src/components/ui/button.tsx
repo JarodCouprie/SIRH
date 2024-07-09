@@ -28,7 +28,7 @@ const buttonVariants = cva(
           "justify-start text-gray-900 underline-offset-4 hover:underline dark:text-gray-50",
         navActive: "justify-start shadow bg-gray-50 text-gray-900",
         navNotActive:
-          "justify-start hover:bg-gray-800 hover:text-gray-50 text-gray-50",
+          "justify-start hover:bg-gray-50 hover:text-gray-900 text-gray-50",
         callToAction:
           "justify-center bg-indigo-700 text-indigo-50 hover:bg-indigo-800",
       },

@@ -22,6 +22,7 @@ services:
     platform: linux/amd64
     image: mysql:latest
     container_name: mysql-sirh-dev
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: sirh-db
@@ -43,6 +44,7 @@ services:
       - "9000:9000"
       - "8900:8900"
     container_name: minio-sirh-dev
+    restart: unless-stopped
     volumes:
       - "sirh_data_dev:/data/minio"
     networks:
