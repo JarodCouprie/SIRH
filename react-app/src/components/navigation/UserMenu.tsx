@@ -67,7 +67,6 @@ export function UserMenu() {
             <span className="max-md:hidden">
               {user.firstname} {user.lastname}
             </span>
-            <MixerVerticalIcon className="max-md:hidden" />
           </Button>
         </div>
       </DropdownMenuTrigger>

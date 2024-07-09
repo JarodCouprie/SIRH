@@ -61,7 +61,7 @@ function NavBarLink(props: any) {
           : buttonVariants({ variant: "navNotActive", size: "nav" })
       }
     >
-      <div className="flex w-full gap-4 max-md:flex-col max-md:items-center">
+      <div className="flex w-full items-start justify-start gap-4 max-md:flex-col max-md:items-center">
         {children}
         <span className="max-md:hidden">{title}</span>
       </div>
