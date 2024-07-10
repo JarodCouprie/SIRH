@@ -4,6 +4,7 @@ import { UserModel } from "@/models/User.model.ts";
 
 const CurrentUserContext = createContext({
   user: new UserModel(),
+  refreshUser: () => {},
 });
 
 export function useCurrentUser() {
@@ -20,13 +21,16 @@ export function CurrentUserProvider({ children }: any) {
       setUser(response.data.data);
     });
   };
-
   useEffect(() => {
     fetchUser().then();
   }, []);
 
+  function refreshUser() {
+    fetchUser().then();
+  }
+
   return (
-    <CurrentUserContext.Provider value={{ user }}>
+    <CurrentUserContext.Provider value={{ user, refreshUser }}>
       {children}
     </CurrentUserContext.Provider>
   );
