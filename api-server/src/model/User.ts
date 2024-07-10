@@ -4,7 +4,7 @@ export class User {
   lastname: string;
   email: string;
   password: string;
-  createdAt: Date;
+  created_at: Date;
   active: boolean;
   ca: number;
   tt: number;
@@ -16,7 +16,7 @@ export class User {
     lastname: string,
     email: string,
     password: string,
-    createdAt: Date,
+    created_at: Date,
     active: boolean,
     ca: number,
     tt: number,
@@ -27,7 +27,7 @@ export class User {
     this.lastname = lastname;
     this.email = email;
     this.password = password;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.active = active;
     this.ca = ca;
     this.tt = tt;
@@ -69,7 +69,7 @@ export class UserDTO {
   firstname: string;
   lastname: string;
   email: string;
-  createdAt: Date;
+  created_at: Date;
   active: boolean;
   ca: number;
   tt: number;
@@ -80,7 +80,7 @@ export class UserDTO {
     this.firstname = user.firstname;
     this.lastname = user.lastname;
     this.email = user.email;
-    this.createdAt = user.createdAt;
+    this.created_at = user.created_at;
     this.active = user.active;
     this.ca = user.ca;
     this.rtt = user.rtt;

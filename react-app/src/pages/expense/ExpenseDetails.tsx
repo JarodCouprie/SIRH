@@ -31,8 +31,8 @@ export function ExpenseDetails() {
     type: ExpenseType.TRAVEL,
     amount: "",
     motivation: "",
-    createdAt: new Date(),
-    facturationDate: new Date(),
+    created_at: new Date(),
+    facturation_date: new Date(),
     status: ExpenseStatus.WAITING,
   });
   const { id } = useParams();
@@ -52,19 +52,19 @@ export function ExpenseDetails() {
           toast.error("Une erreur est survenue");
           return;
         }
-        const facturationDate: Date = new Date(
-          response.data.data.facturationDate.split("T")[0],
+        const facturation_date: Date = new Date(
+          response.data.data.facturation_date.split("T")[0],
         );
         const creartedAt: Date = new Date(
-          response.data.data.createdAt.split("T")[0],
+          response.data.data.created_at.split("T")[0],
         );
         setExpense({
           id: response.data.data.id,
           type: convertFromStringToExpenseTypeEnum(response.data.data.type),
           amount: response.data.data.amount,
           motivation: response.data.data.motivation,
-          facturationDate: facturationDate,
-          createdAt: creartedAt,
+          facturation_date: facturation_date,
+          created_at: creartedAt,
           status: convertFromStringToExpenseStatusEnum(
             response.data.data.status,
           ),
@@ -167,13 +167,13 @@ export function ExpenseDetails() {
             <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Date de facturation</div>
               <div className="text-xl">
-                {expense.facturationDate.toLocaleDateString()}
+                {expense.facturation_date.toLocaleDateString()}
               </div>
             </div>
             <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Date de création</div>
               <div className="text-xl">
-                {expense.createdAt.toLocaleDateString()}
+                {expense.created_at.toLocaleDateString()}
               </div>
             </div>
             <div className="rounded border-gray-300/50 p-4 dark:border-gray-700/50">

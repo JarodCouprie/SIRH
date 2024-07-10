@@ -9,7 +9,7 @@ export class ExpenseRepository {
       `
               SELECT *
               FROM expense
-              ORDER BY facturationDate DESC
+              ORDER BY facturation_date DESC
               LIMIT ?,?;
           `,
       [offset, limit],
@@ -74,7 +74,7 @@ export class ExpenseRepository {
                 SELECT *
                 FROM expense
                 WHERE id_owner = ? AND type = ?
-                ORDER BY facturationDate DESC
+                ORDER BY facturation_date DESC
                 LIMIT ?,?;
             `,
       [user_id, type, offset, limit],
@@ -87,7 +87,7 @@ export class ExpenseRepository {
               SELECT COUNT(*) AS count
               FROM expense
               WHERE id_owner = ?
-              ORDER BY facturationDate DESC;
+              ORDER BY facturation_date DESC;
           `,
       [id_owner],
     );
@@ -100,7 +100,7 @@ export class ExpenseRepository {
               SELECT COUNT(*) AS count
               FROM expense
               WHERE type =  ?
-              ORDER BY facturationDate DESC;
+              ORDER BY facturation_date DESC;
           `,
       [type],
     );
@@ -125,7 +125,7 @@ export class ExpenseRepository {
   public static async createExpenseDemand(expense: Expense) {
     const [result]: any = await this.pool.query(
       `
-            INSERT INTO expense (type, amount, motivation, status, id_owner, facturationDate)
+            INSERT INTO expense (type, amount, motivation, status, id_owner, facturation_date)
             VALUES (?,?,?,?,?,?);
             `,
       [
@@ -134,7 +134,7 @@ export class ExpenseRepository {
         expense.motivation,
         expense.status,
         expense.id_owner,
-        expense.facturationDate,
+        expense.facturation_date,
       ],
     );
     return result;
@@ -147,14 +147,14 @@ export class ExpenseRepository {
             SET type = ?,
             amount = ?,
             motivation = ?,
-            facturationDate = ?
+            facturation_date = ?
             WHERE id = ?;
             `,
       [
         expense.type,
         expense.amount,
         expense.motivation,
-        expense.facturationDate,
+        expense.facturation_date,
         id,
       ],
     );
@@ -202,7 +202,7 @@ export class ExpenseRepository {
     const [rows]: any = await this.pool.query(
       `
         SELECT amount, 
-               facturationDate,
+               facturation_date,
                status
         FROM expense;
       `,
@@ -214,7 +214,7 @@ export class ExpenseRepository {
     const [rows]: any = await this.pool.query(
       `
         SELECT amount,
-               facturationDate,
+               facturation_date,
                status
         FROM expense
         WHERE id_owner = ?;
@@ -231,11 +231,11 @@ export class ExpenseRepository {
     const [rows]: any = await this.pool.query(
       `
         SELECT amount, 
-               facturationDate,
+               facturation_date,
                status
         FROM expense
-        WHERE date_format(facturationDate, '%M') = ?
-        AND date_format(facturationDate, '%Y') = ?;
+        WHERE date_format(facturation_date, '%M') = ?
+        AND date_format(facturation_date, '%Y') = ?;
       `,
       [monthName, year],
     );
@@ -249,12 +249,12 @@ export class ExpenseRepository {
     const [rows]: any = await this.pool.query(
       `
         SELECT amount,
-               facturationDate,
+               facturation_date,
                status
         FROM expense
         WHERE id_owner = ?
-        AND date_format(facturationDate, '%M') = ? 
-        AND date_format(facturationDate, '%Y') = ?;
+        AND date_format(facturation_date, '%M') = ? 
+        AND date_format(facturation_date, '%Y') = ?;
       `,
       [user_id, monthName, year],
     );

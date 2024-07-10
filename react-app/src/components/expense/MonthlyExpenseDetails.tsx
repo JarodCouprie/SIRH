@@ -55,7 +55,7 @@ export function MonthlyExpenseDetails() {
     let notRefundedAmount = 0;
     let notRefundedInvoiceAmount = 0;
     expensesAmountDateAndStatus.forEach((row) => {
-      let rowDate: Date = new Date(row.facturationDate);
+      let rowDate: Date = new Date(row.facturation_date);
       let todayDate: Date = new Date();
       if (rowDate.getFullYear() + 1 != todayDate.getFullYear() + 1) return;
 

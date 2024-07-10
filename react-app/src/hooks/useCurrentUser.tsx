@@ -16,7 +16,7 @@ export function CurrentUserProvider({ children }: any) {
     firstname: "",
     lastname: "",
     email: "",
-    createdAt: new Date(),
+    created_at: new Date(),
     active: false,
     ca: 0,
     tt: 0,

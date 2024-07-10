@@ -25,7 +25,7 @@ export class DemandAll {
   startDate: Date;
   endDate: Date;
   motivation: string;
-  createdAt: Date;
+  created_at: Date;
   status: string;
   number_day: number;
   type: DemandType;
@@ -35,7 +35,7 @@ export class DemandAll {
     startDate: Date,
     endDate: Date,
     motivation: string,
-    createdAt: Date,
+    created_at: Date,
     status: string,
     number_day: number,
     type: DemandType,
@@ -44,7 +44,7 @@ export class DemandAll {
     this.startDate = startDate;
     this.endDate = endDate;
     this.motivation = motivation;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.status = status;
     this.number_day = number_day;
     this.type = type;

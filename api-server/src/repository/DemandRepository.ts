@@ -11,7 +11,7 @@ export class DemandRepository {
       `SELECT *
        FROM demand
        WHERE type = ?
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [type, limit, offset],
     );
@@ -22,7 +22,7 @@ export class DemandRepository {
     const [rows] = await this.pool.query(
       `SELECT *
        FROM demand
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [limit, offset],
     );

@@ -244,7 +244,7 @@ export function Demand() {
                       <div>{getStatusOption(demand.type).label}</div>
                       <div className="text-xs text-zinc-500">
                         {new Date(
-                          demand?.createdAt?.toString(),
+                          demand?.created_at?.toString(),
                         ).toLocaleDateString("fr-FR", dateOptions)}
                       </div>
                     </div>

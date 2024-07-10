@@ -170,7 +170,7 @@ export function Detail({ demand }: any) {
             <UserInfoRow title="Status">{demand.status}</UserInfoRow>
             <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
             <UserInfoRow title="Date de création">
-              {new Date(demand?.createdAt?.toString()).toLocaleDateString(
+              {new Date(demand?.created_at?.toString()).toLocaleDateString(
                 "fr-FR",
                 dateTimeOptions,
               )}

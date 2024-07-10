@@ -2,12 +2,12 @@ import { Expense, ExpenseStatus, ExpenseType } from "../../model/Expense";
 
 export class ExpenseAmountDateAndStatusDTO {
   amount: number;
-  facturationDate: Date;
+  facturation_date: Date;
   status: ExpenseStatus;
 
   constructor(expense: Expense) {
     this.amount = expense.amount;
-    this.facturationDate = expense.facturationDate;
+    this.facturation_date = expense.facturation_date;
     this.status = expense.status;
   }
 }

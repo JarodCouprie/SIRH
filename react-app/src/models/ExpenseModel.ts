@@ -3,24 +3,24 @@ export class ExpenseList {
   type: ExpenseType;
   amount: number;
   motivation: string;
-  createdAt: Date;
-  facturationDate: Date;
+  created_at: Date;
+  facturation_date: Date;
   status: ExpenseStatus;
   constructor(
     id: string,
     type: ExpenseType,
     amount: number,
     motivation: string,
-    createdAt: Date,
-    facturationDate: Date,
+    created_at: Date,
+    facturation_date: Date,
     status: ExpenseStatus,
   ) {
     this.id = id;
     this.type = type;
     this.amount = amount;
     this.motivation = motivation;
-    this.createdAt = createdAt;
-    this.facturationDate = facturationDate;
+    this.created_at = created_at;
+    this.facturation_date = facturation_date;
     this.status = status;
   }
 }
@@ -59,12 +59,12 @@ export class ExpenseResponse {
 
 export class ExpenseAmountDateAndStatus {
   amount: number;
-  facturationDate: Date;
+  facturation_date: Date;
   status: ExpenseStatus;
 
-  constructor(amount: number, facturationDate: Date, status: ExpenseStatus) {
+  constructor(amount: number, facturation_date: Date, status: ExpenseStatus) {
     this.amount = amount;
-    this.facturationDate = facturationDate;
+    this.facturation_date = facturation_date;
     this.status = status;
   }
 }

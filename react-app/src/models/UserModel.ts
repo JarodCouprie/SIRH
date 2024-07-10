@@ -3,7 +3,7 @@ export class UserModel {
   firstname: string;
   lastname: string;
   email: string;
-  createdAt: Date;
+  created_at: Date;
   active: boolean;
   ca: number;
   tt: number;
@@ -14,7 +14,7 @@ export class UserModel {
     firstname: string,
     lastname: string,
     email: string,
-    createdAt: Date,
+    created_at: Date,
     active: boolean,
     ca: number,
     tt: number,
@@ -24,7 +24,7 @@ export class UserModel {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.active = active;
     this.ca = ca;
     this.tt = tt;

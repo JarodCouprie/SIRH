@@ -86,7 +86,7 @@ export class ExpenseService {
   public static async createExpenseDemand(expense: Expense, userId: number) {
     try {
       expense.id_owner = userId;
-      //expense.facturationDate = new Date(expense.facturationDate.getDate());
+      //expense.facturation_date = new Date(expense.facturation_date.getDate());
       expense.status = ExpenseStatus.WAITING;
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
       return new ControllerResponse(200, "Operation was a success");

@@ -36,7 +36,7 @@ export function User() {
     firstname: "",
     lastname: "",
     email: "",
-    createdAt: new Date(),
+    created_at: new Date(),
     active: false,
     ca: 0,
     rtt: 0,
@@ -101,7 +101,7 @@ export function User() {
             <UserInfoRow title="Prénom">{user.firstname}</UserInfoRow>
             <UserInfoRow title="Email">{user.email}</UserInfoRow>
             {/*<UserInfoRow title="Date de création">*/}
-            {/*  {new Date(user.createdAt.toString()).toLocaleString("fr-FR")}*/}
+            {/*  {new Date(user.created_at.toString()).toLocaleString("fr-FR")}*/}
             {/*</UserInfoRow>*/}
           </CardContent>
         </Card>

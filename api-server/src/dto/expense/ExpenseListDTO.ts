@@ -5,8 +5,8 @@ export class ExpenseListDTO {
   type: ExpenseType;
   amount: number;
   motivation: string;
-  createdAt: Date;
-  facturationDate: Date;
+  created_at: Date;
+  facturation_date: Date;
   status: ExpenseStatus;
 
   constructor(expense: Expense) {
@@ -14,8 +14,8 @@ export class ExpenseListDTO {
     this.type = expense.type;
     this.amount = expense.amount;
     this.motivation = expense.motivation;
-    this.createdAt = expense.createdAt;
-    this.facturationDate = expense.facturationDate;
+    this.created_at = expense.created_at;
+    this.facturation_date = expense.facturation_date;
     this.status = expense.status;
   }
 }

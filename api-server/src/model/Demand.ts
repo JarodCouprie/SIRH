@@ -3,7 +3,7 @@ export class Demand {
   startDate: Date;
   endDate: Date;
   motivation: string;
-  createdAt: Date;
+  created_at: Date;
   status: string;
   type: DemandType;
   number_day: number;
@@ -15,7 +15,7 @@ export class Demand {
     startDate: Date,
     endDate: Date,
     motivation: string,
-    createdAt: Date,
+    created_at: Date,
     status: string,
     type: DemandType,
     number_day: number,
@@ -26,7 +26,7 @@ export class Demand {
     this.startDate = startDate;
     this.endDate = endDate;
     this.motivation = motivation;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.status = status;
     this.type = type;
     this.number_day = number_day;

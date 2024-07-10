@@ -82,12 +82,15 @@ export function ExpenseListCard(props: any) {
       <TableCell>
         <div>{typeText}</div>
         <div className="text-xs">
-          {new Date(expense.createdAt).toLocaleDateString("fr-FR", dateOptions)}
+          {new Date(expense.created_at).toLocaleDateString(
+            "fr-FR",
+            dateOptions,
+          )}
         </div>
       </TableCell>
       <TableCell className="text-left">{expense.amount.toFixed(2)}€</TableCell>
       <TableCell className="text-left">
-        {new Date(expense.facturationDate).toLocaleDateString(
+        {new Date(expense.facturation_date).toLocaleDateString(
           "fr-FR",
           dateOptions,
         )}

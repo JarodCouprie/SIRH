@@ -34,7 +34,7 @@ export function CreateExpense() {
     type: "",
     amount: "",
     motivation: "",
-    facturationDate: new Date(),
+    facturation_date: new Date(),
     ownerId: "",
   });
   const { id } = useParams();
@@ -50,13 +50,13 @@ export function CreateExpense() {
             return;
           }
           const date: Date = new Date(
-            response.data.data.facturationDate.split("T")[0],
+            response.data.data.facturation_date.split("T")[0],
           );
           setCreatedExpense({
             type: response.data.data.type,
             amount: response.data.data.amount,
             motivation: response.data.data.motivation,
-            facturationDate: date,
+            facturation_date: date,
             ownerId: response.data.data.ownerId,
           });
         },
@@ -87,20 +87,20 @@ export function CreateExpense() {
     });
   };
 
-  const handlerExpenseFacturationDateChange = (value: Date | undefined) => {
+  const handlerExpensefacturation_dateChange = (value: Date | undefined) => {
     setCreatedExpense({
       ...createdExpense,
-      ["facturationDate"]: value,
+      ["facturation_date"]: value,
     });
     value?.setHours(3);
   };
 
   const displayDate = () => {
-    if (createdExpense.facturationDate == undefined)
+    if (createdExpense.facturation_date == undefined)
       return <span> Sélectionner une date </span>;
     else
       return (
-        <span> {createdExpense.facturationDate.toLocaleDateString()} </span>
+        <span> {createdExpense.facturation_date.toLocaleDateString()} </span>
       );
   };
   const convertFromStringToSelectedTypeEnum = (
@@ -113,14 +113,14 @@ export function CreateExpense() {
     e: MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
-    createdExpense.facturationDate.setHours(3);
-    const date = createdExpense.facturationDate.toISOString().split("T")[0];
+    createdExpense.facturation_date.setHours(3);
+    const date = createdExpense.facturation_date.toISOString().split("T")[0];
 
     const body = {
       type: createdExpense.type,
       amount: createdExpense.amount,
       motivation: createdExpense.motivation,
-      facturationDate: date,
+      facturation_date: date,
       ownerId: "",
     };
     try {
@@ -136,11 +136,11 @@ export function CreateExpense() {
         } else {
           if (method == "POST")
             toast.message(
-              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été créée.`,
+              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturation_date} a été créée.`,
             );
           else
             toast.message(
-              `La demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturationDate} a été modifiée.`,
+              `La demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturation_date} a été modifiée.`,
             );
           navigate("/expense");
         }
@@ -231,9 +231,9 @@ export function CreateExpense() {
                   <PopoverContent className=" w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={createdExpense.facturationDate}
+                      selected={createdExpense.facturation_date}
                       onSelect={(value) =>
-                        handlerExpenseFacturationDateChange(value)
+                        handlerExpensefacturation_dateChange(value)
                       }
                       initialFocus
                     />

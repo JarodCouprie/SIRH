@@ -5,8 +5,8 @@ export class Expense {
   type: ExpenseType;
   amount: number;
   motivation: string;
-  createdAt: Date;
-  facturationDate: Date;
+  created_at: Date;
+  facturation_date: Date;
   status: ExpenseStatus;
   id_owner: number;
   userValidateId?: number;
@@ -16,8 +16,8 @@ export class Expense {
     type: ExpenseType,
     amount: number,
     motivation: string,
-    createdAt: Date,
-    facturationDate: Date,
+    created_at: Date,
+    facturation_date: Date,
     status: ExpenseStatus,
     ownerId: number,
     userValidateId?: number,
@@ -26,8 +26,8 @@ export class Expense {
     this.type = type;
     this.amount = amount;
     this.motivation = motivation;
-    this.createdAt = createdAt;
-    this.facturationDate = createdAt;
+    this.created_at = created_at;
+    this.facturation_date = created_at;
     this.status = status;
     this.id_owner = ownerId;
     this.userValidateId = userValidateId;
