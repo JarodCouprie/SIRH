@@ -130,9 +130,14 @@ export function CreateExpense() {
         method: method,
         body: JSON.stringify(body),
       }).then((response) => {
-        if (response.response.status !== 200) {
+        if (
+          response.response.status !== 200 &&
+          response.response.status !== 400
+        ) {
           toast.error(`Echec de l'opération`);
           return;
+        } else if (response.response.status == 400) {
+          toast.error(`Les données renseignées sont invalides ou incomplètes`);
         } else {
           if (method == "POST")
             toast.message(
@@ -205,7 +210,7 @@ export function CreateExpense() {
                   Montant
                 </Label>
                 <Input
-                  type="text"
+                  type="number"
                   id="amount"
                   placeholder="0€"
                   name="amount"

@@ -3,6 +3,12 @@ import dotenv from "dotenv";
 import { verifyToken } from "../middleware/AuthMiddleware";
 import { ExpenseService } from "../service/ExpenseService";
 import { CustomRequest } from "../helper/CustomRequest";
+import {
+  validateData,
+  validateExpenseData,
+} from "../middleware/ValidationMiddleware";
+import { demandCreateSchema } from "../schema/demand.schema";
+import { expenseCreateSchema } from "../schema/expense.schema";
 
 const router = Router();
 dotenv.config();
@@ -81,16 +87,21 @@ router.get("/count/all", verifyToken, async (req: Request, res: Response) => {
 
 // Gestion des demandes liées aux frais
 
-router.put("/:id", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
+router.put(
+  "/:id",
+  verifyToken,
+  validateExpenseData(expenseCreateSchema),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
 
-  const { code, message, data } = await ExpenseService.editExpenseDemand(
-    req.params.id,
-    req.body,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
+    const { code, message, data } = await ExpenseService.editExpenseDemand(
+      req.params.id,
+      req.body,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
@@ -119,13 +130,18 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.post("/", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
-  const { code, message, data } = await ExpenseService.createExpenseDemand(
-    req.body,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
+router.post(
+  "/",
+  verifyToken,
+  validateExpenseData(expenseCreateSchema),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+    const { code, message, daSta } = await ExpenseService.createExpenseDemand(
+      req.body,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 export default router;
