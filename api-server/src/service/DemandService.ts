@@ -1,6 +1,6 @@
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { DemandRepository } from "../repository/DemandRepository";
-import { Demand, DemandType } from "../model/Demand";
+import { Demand, DemandType, StatusDemand } from "../model/Demand";
 import { logger } from "../helper/Logger";
 import { DemandDTO } from "../dto/demand/DemandDTO";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
@@ -99,10 +99,24 @@ export class DemandService {
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse(200, "", demand);
+      return new ControllerResponse(200, "", new DemandDTO(demand));
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");
+    }
+  }
+
+  public static async changeStatusDemand(id: string) {
+    try {
+      const demand_: StatusDemand = {
+        id: +id,
+        status: "WAITING",
+      };
+      const statusChange = await DemandRepository.editStatusDemand(demand_);
+      return new ControllerResponse(200, "", statusChange);
+    } catch (error) {
+      logger.error(`Failed to edit the demand. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the demand");
     }
   }
 
@@ -128,6 +142,7 @@ export class DemandService {
 
       if (body.startDate && body.endDate) {
         number_day = calculateNumberOfDays(body.startDate, body.endDate);
+        console.log(number_day);
       }
 
       const userResponse: any = await UserService.getUserById(userId);
@@ -223,8 +238,6 @@ export class DemandService {
         number_day,
         id,
       );
-
-      console.log(newDemand);
 
       await UserService.updateUserDays(id, user.rtt, user.ca, user.tt);
       const demand: any = await DemandRepository.createDemand(newDemand);

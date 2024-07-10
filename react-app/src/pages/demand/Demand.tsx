@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { DemandAll } from "@/models/DemandModel.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -15,15 +14,10 @@ import { useNavigate } from "react-router-dom";
 import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
 import { MdOutlineLaptop } from "react-icons/md";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb.tsx";
-import {
   CaretLeftIcon,
   CaretRightIcon,
   MinusIcon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
@@ -36,10 +30,16 @@ import {
 } from "@/components/ui/select.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { DemandCard } from "@/components/demand/demandCard.tsx";
+import { MainRoot } from "@/components/navigation/MainRoot.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandAll[]>([]);
-  const [filter, setFilter] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [type, setType] = useState("");
@@ -148,71 +148,17 @@ export function Demand() {
   const handleFilter = (type = "") => {
     setPageNumber(1);
     setType(type);
-    setFilter(type);
   };
 
-  return (
+  const newDemand = (
+    <Button variant="callToAction" onClick={handleClickCreate}>
+      <PlusIcon className="mr-2 size-4" />
+      Faire une demande
+    </Button>
+  );
+
+  const tableDemand = (
     <>
-      <div>Demandes</div>
-      <div className="flex w-full justify-end py-4">
-        <Button variant="callToAction" onClick={handleClickCreate}>
-          Faire une demande
-        </Button>
-      </div>
-
-      <DemandCard />
-
-      <div className="border-b border-b-gray-400 pt-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/demand" onClick={() => handleFilter()}>
-                  <span
-                    className={`hover:text-indigo-600 ${filter === "" && "text-indigo-600"}`}
-                  >
-                    Général
-                  </span>
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/demand" onClick={() => handleFilter("CA")}>
-                  <span
-                    className={`hover:text-indigo-600 ${filter === "CA" && "text-indigo-600"}`}
-                  >
-                    Congés
-                  </span>
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/demand" onClick={() => handleFilter("RTT")}>
-                  <span
-                    className={`hover:text-indigo-600 ${filter === "RTT" && "text-indigo-600"}`}
-                  >
-                    RTT
-                  </span>
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/demand" onClick={() => handleFilter("TT")}>
-                  <span
-                    className={`hover:text-indigo-600 ${filter === "TT" && "text-indigo-600"}`}
-                  >
-                    Télétravail
-                  </span>
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-
       <div className="rounded pt-4">
         <Table>
           <TableHeader>
@@ -311,5 +257,33 @@ export function Demand() {
         </div>
       </div>
     </>
+  );
+
+  return (
+    <MainRoot title="Demandes" action={newDemand}>
+      <DemandCard />
+      <div className="py-4">
+        <Tabs defaultValue="general">
+          <TabsList className="flex flex-wrap">
+            <TabsTrigger value="general" onClick={() => handleFilter()}>
+              Général
+            </TabsTrigger>
+            <TabsTrigger value="ca" onClick={() => handleFilter("CA")}>
+              Congés
+            </TabsTrigger>
+            <TabsTrigger value="tt" onClick={() => handleFilter("TT")}>
+              Télétravail
+            </TabsTrigger>
+            <TabsTrigger value="rtt" onClick={() => handleFilter("RTT")}>
+              RTT
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="general">{tableDemand}</TabsContent>
+          <TabsContent value="ca">{tableDemand}</TabsContent>
+          <TabsContent value="tt">{tableDemand}</TabsContent>
+          <TabsContent value="rtt">{tableDemand}</TabsContent>
+        </Tabs>
+      </div>
+    </MainRoot>
   );
 }

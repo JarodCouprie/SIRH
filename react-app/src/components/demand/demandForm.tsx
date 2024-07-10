@@ -15,7 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -39,6 +38,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
   submitUrl,
   method,
 }) => {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
   const { id } = useParams();
   const navigate = useNavigate();
   const [start_date, setStartDate] = useState<Date>();
@@ -159,7 +164,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {start_date ? (
-                  format(start_date, "PPP")
+                  new Date(start_date).toLocaleString("fr-FR", dateOptions)
                 ) : (
                   <span>Date de début</span>
                 )}
@@ -184,7 +189,11 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {end_date ? format(end_date, "PPP") : <span>Date de fin</span>}
+                {end_date ? (
+                  new Date(end_date).toLocaleString("fr-FR", dateOptions)
+                ) : (
+                  <span>Date de fin</span>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">

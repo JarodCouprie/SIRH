@@ -10,6 +10,7 @@ export class DatabaseClient {
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_USER_PASSWORD,
       database: process.env.MYSQL_DATABASE,
+      dateStrings: ["DATETIME", "DATE"],
     })
     .promise();
 
@@ -19,6 +20,7 @@ export class DatabaseClient {
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_USER_PASSWORD,
       database: process.env.MYSQL_DATABASE,
+      dateStrings: ["DATETIME", "DATE"],
     })
     .promise();
 }
