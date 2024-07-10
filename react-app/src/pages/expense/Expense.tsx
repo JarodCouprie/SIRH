@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { Label } from "@/components/ui/label";
-import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import {
   Select,
   SelectContent,
@@ -28,6 +28,7 @@ import {
 import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetails.tsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 
 export function Expense() {
   const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
@@ -100,14 +101,15 @@ export function Expense() {
     navigate("create");
   };
 
+  const newExpense = (
+    <Button variant="callToAction" onClick={handleRedirection}>
+      <PlusIcon className="mr-2 size-4" />
+      Créer une demande
+    </Button>
+  );
+
   return (
-    <>
-      <div className="flex justify-between py-4">
-        <div className="max-[300px]:text-xl min-[300px]:text-2xl"> Frais</div>
-        <Button variant="callToAction" onClick={handleRedirection}>
-          Demande de remboursement
-        </Button>
-      </div>
+    <MainRoot title="Frais" action={newExpense}>
       <MonthlyExpenseDetails />
       <div className="border-b-2 pt-6">
         <Breadcrumb>
@@ -232,6 +234,6 @@ export function Expense() {
           </div>
         </div>
       </div>
-    </>
+    </MainRoot>
   );
 }
