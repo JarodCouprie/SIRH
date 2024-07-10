@@ -158,7 +158,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start p-6 text-left font-normal outline outline-1",
+                  "w-full justify-start border-gray-500 p-6 text-left font-normal",
                   !start_date && "text-muted-foreground",
                 )}
               >
@@ -184,7 +184,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full justify-start p-6 text-left font-normal outline outline-1",
+                  "w-full justify-start border-gray-500 p-6 text-left font-normal",
                   !end_date && "text-muted-foreground",
                 )}
               >
@@ -270,7 +270,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
               value={selectedType}
               onValueChange={handleSelectChange}
             >
-              <SelectTrigger className="p-6 outline outline-1">
+              <SelectTrigger className="p-6">
                 <SelectValue placeholder="Type de demande..." />
               </SelectTrigger>
               <SelectContent>
