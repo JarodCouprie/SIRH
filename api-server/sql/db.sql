@@ -11,14 +11,10 @@ CREATE TABLE users
     nationality VARCHAR(50),
     role        VARCHAR(50),
     iban        VARCHAR(50),
-    PRIMARY KEY (id)
-);
+    ca  INT,
+    tt INT,
+    rtt INT,
 
-CREATE TABLE localisation
-(
-    id  BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    lat DECIMAL(15, 2),
-    lng DECIMAL(15, 2),
     PRIMARY KEY (id)
 );
 
@@ -28,14 +24,15 @@ CREATE TABLE demand
     startDate               DATE,
     endDate                 DATE,
     motivation              VARCHAR(50),
-    createdAt               DATE,
+    createdAt               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
-    id_owner   BIGINT        NOT NULL,
-    id_validator BIGINT        NOT NULL,
+    number_day              INT,
+    id_user_create_demand   BIGINT        NOT NULL,
+    id_user_validate_demand BIGINT        NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_owner) REFERENCES users (id),
-    FOREIGN KEY (id_validator) REFERENCES users (id)
+    FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
+    FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
 );
 
 CREATE TABLE absence
@@ -47,11 +44,11 @@ CREATE TABLE absence
     motivation               VARCHAR(50),
     createdAt                DATE,
     status                   VARCHAR(50),
-    id_owner   BIGINT        NOT NULL,
-    id_validator BIGINT        NOT NULL,
+    id_user_create_absence   BIGINT        NOT NULL,
+    id_user_validate_absence BIGINT        NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_owner) REFERENCES users (id),
-    FOREIGN KEY (id_validator) REFERENCES users (id)
+    FOREIGN KEY (id_user_create_absence) REFERENCES users (id),
+    FOREIGN KEY (id_user_validate_absence) REFERENCES users (id)
 );
 
 CREATE TABLE expense
@@ -225,7 +222,7 @@ CREATE TABLE belong_team_service
 INSERT INTO users(firstName, lastName, email, password, address, nationality, role, iban)
 VALUES ("Super", "Admin", "admin@admin.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
         "admin address", "admin nationaly", "ROLE_ADMIN", "admin iban"),
-        ("User", "Lambda", "user@lambda.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
+       ("Simple", "User", "simple@user.com", "$2b$10$e5Kv7sv9QlCdFGQBYTPBguSx3.Ogqbgq8DSy4JcAo5Y3ubYhdSQo6",
         "user address", "user nationaly", "ROLE_USER", "user iban");
 
 INSERT INTO expense(type,amount,motivation,status,id_owner,id_validator, facturationDate)

@@ -21,6 +21,8 @@ const badgeVariants = cva(
           "text-red-800 bg-red-200/80 dark:text-red-600 dark:bg-red-900/40 border-none",
         waiting:
           "text-yellow-800 bg-amber-300/40 dark:text-yellow-600 dark:bg-yellow-600/20 border-none",
+        draft:
+          "text-blue-800 bg-sky-300/40 dark:text-sky-600 dark:bg-sky-600/20 border-none",
       },
     },
     defaultVariants: {

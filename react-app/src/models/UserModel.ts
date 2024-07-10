@@ -5,6 +5,9 @@ export class UserModel {
   email: string;
   createdAt: Date;
   active: boolean;
+  ca: number;
+  tt: number;
+  rtt: number;
 
   constructor(
     id: number,
@@ -13,6 +16,9 @@ export class UserModel {
     email: string,
     createdAt: Date,
     active: boolean,
+    ca: number,
+    tt: number,
+    rtt: number,
   ) {
     this.id = id;
     this.firstname = firstname;
@@ -20,6 +26,9 @@ export class UserModel {
     this.email = email;
     this.createdAt = createdAt;
     this.active = active;
+    this.ca = ca;
+    this.tt = tt;
+    this.rtt = rtt;
   }
 }
 
