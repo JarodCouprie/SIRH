@@ -56,6 +56,11 @@ const DemandForm: React.FC<DemandFormProps> = ({
     type?: string;
   }>({});
 
+  const isWeekday = (date: Date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  };
+
   useEffect(() => {
     if (initialData) {
       setStartDate(new Date(initialData.startDate));
@@ -75,10 +80,6 @@ const DemandForm: React.FC<DemandFormProps> = ({
       const startDate = start_date?.toLocaleDateString("fr-CA");
       let endDate = end_date?.toLocaleDateString("fr-CA");
       let demandeData;
-
-      if (!endDate) {
-        endDate = startDate;
-      }
 
       if (method === "PUT") {
         demandeData = {
@@ -176,6 +177,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 selected={start_date}
                 onSelect={setStartDate}
                 initialFocus
+                disabled={isWeekday}
               />
             </PopoverContent>
           </Popover>
@@ -202,6 +204,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 selected={end_date}
                 onSelect={setEndDate}
                 initialFocus
+                disabled={isWeekday}
               />
             </PopoverContent>
           </Popover>

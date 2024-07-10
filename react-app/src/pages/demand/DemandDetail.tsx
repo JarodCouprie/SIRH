@@ -135,7 +135,7 @@ export function Detail({ demand }: any) {
       return (
         <>
           <div>
-            <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
+            <ConfirmDeleteItem demand={demand} navigate={navigate} />
             <Button
               variant="secondary"
               onClick={() => handleEditClick(demand.id)}
@@ -199,17 +199,18 @@ export function Detail({ demand }: any) {
   );
 }
 
-export function ConfirmDeleteItem({ demandId, navigate }: any) {
+export function ConfirmDeleteItem({ demand, navigate }: any) {
   const fetchDemand = async () => {
     const response = await customFetcher(
-      `http://localhost:5000/api/demand/${demandId}`,
+      `http://localhost:5000/api/demand/${demand.id}`,
       {
         method: "DELETE",
+        body: JSON.stringify(demand),
       },
     );
 
     if (response.response.status === 200) {
-      toast.message(`Demande numéro ${demandId} supprimée`);
+      toast.message(`Demande numéro ${demand.id} supprimée`);
       navigate("/demand", { replace: true });
     }
   };

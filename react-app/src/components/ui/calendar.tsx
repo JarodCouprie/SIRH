@@ -67,7 +67,7 @@ function Calendar({
         IconRight: ({}) => <ChevronRightIcon className="h-4 w-4" />,
       }}
       {...props}
-    />
+    ></DayPicker>
   );
 }
 Calendar.displayName = "Calendar";
