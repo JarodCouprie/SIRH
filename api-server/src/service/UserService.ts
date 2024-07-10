@@ -197,7 +197,7 @@ export class UserService {
       if (!file) {
         return new ControllerResponse(400, "Aucun fichier n'a été envoyé");
       }
-      const key = `user/${id}/${file.originalname}`;
+      const key = `user/${id}/profile-picture/${file.originalname}`;
       await MinioClient.putObjectToBucket(key, file).then(async () => {
         await UserRepository.setUserNewProfilePicture(key, id);
       });

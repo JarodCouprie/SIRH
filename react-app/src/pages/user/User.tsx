@@ -46,6 +46,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.js";
 import { Input } from "@/components/ui/input.js";
+import { FaPen } from "react-icons/fa";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip.js";
 
 export function User() {
   const { id } = useParams();
@@ -267,15 +274,27 @@ export function User() {
       <div className="flex flex-wrap justify-between gap-2 py-4">
         <div className="flex gap-2">
           <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Avatar className="size-14 cursor-pointer">
-                <AvatarImage src={user?.avatar_url} />
-                <AvatarFallback>
-                  {user.firstname.charAt(0)}
-                  {user.lastname.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-            </AlertDialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <AlertDialogTrigger asChild>
+                    <Avatar className="size-14 cursor-pointer">
+                      <AvatarImage src={user?.avatar_url} />
+                      <AvatarFallback>
+                        {user.firstname.charAt(0)}
+                        {user.lastname.charAt(0)}
+                      </AvatarFallback>
+                      <div className="absolute left-0 top-0 grid size-full place-items-center bg-slate-700 opacity-0 transition duration-200 hover:opacity-90">
+                        <FaPen className="size-6 text-gray-50" />
+                      </div>
+                    </Avatar>
+                  </AlertDialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Modifier la photo</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Nouvelle image de profil</AlertDialogTitle>
