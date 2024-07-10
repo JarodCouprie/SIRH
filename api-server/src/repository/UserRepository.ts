@@ -135,6 +135,16 @@ export class UserRepository {
     return result;
   }
 
+  public static async setUserNewProfilePicture(key: string, id: number) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET image_key = ?
+       WHERE id = ?`,
+      [key, id],
+    );
+    return result;
+  }
+
   public static async resetPassword(user: ResetUserPassword) {
     const [result] = await this.pool.query(
       `
@@ -156,7 +166,9 @@ export class UserRepository {
     const [result] = await this.pool.query(
       `
           UPDATE users
-          SET rtt = ?, ca = ?, tt = ?
+          SET rtt = ?,
+              ca  = ?,
+              tt  = ?
           WHERE id = ?
       `,
       [rtt, ca, tt, id],

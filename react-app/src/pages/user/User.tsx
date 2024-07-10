@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { UserModel } from "@/models/User.model.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -34,6 +34,18 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.js";
+import { Input } from "@/components/ui/input.js";
 
 export function User() {
   const { id } = useParams();
@@ -220,17 +232,70 @@ export function User() {
     </Card>
   );
 
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
+  };
+
+  const handleSubmitPicture = async () => {
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    const config = {
+      method: "PUT",
+      body: formData,
+    };
+    await customFetcher(
+      `http://localhost:5000/api/user/set-picture/${id}`,
+      config,
+    ).then((response) => {
+      if (response.response.status !== 200) {
+        return;
+      }
+      setUserLoaded(true);
+      setUser(response.data.data);
+    });
+  };
+
   const userMainPage = (
     <div className="w-full">
       <div className="flex flex-wrap justify-between gap-2 py-4">
         <div className="flex gap-2">
-          <Avatar className="size-14">
-            <AvatarImage src={user?.avatar_url} />
-            <AvatarFallback>
-              {user.firstname.charAt(0)}
-              {user.lastname.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Avatar className="size-14 cursor-pointer">
+                <AvatarImage src={user?.avatar_url} />
+                <AvatarFallback>
+                  {user.firstname.charAt(0)}
+                  {user.lastname.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Nouvelle image de profil</AlertDialogTitle>
+                <AlertDialogDescription></AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="grid w-full items-center gap-1.5">
+                <Input
+                  type="file"
+                  className="bg-gray-50"
+                  onChange={handleFileChange}
+                />
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={handleSubmitPicture}>
+                  Modifier
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <div>
             <div className="flex items-center gap-4">
               <span className="text-3xl font-bold text-gray-950 dark:text-slate-200">

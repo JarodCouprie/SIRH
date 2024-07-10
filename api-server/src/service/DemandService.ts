@@ -224,8 +224,6 @@ export class DemandService {
         id,
       );
 
-      console.log(newDemand);
-
       await UserService.updateUserDays(id, user.rtt, user.ca, user.tt);
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
