@@ -254,7 +254,7 @@ export function User() {
       </div>
       <div>
         <Tabs defaultValue="infos">
-          <TabsList className="flex w-full flex-wrap">
+          <TabsList className="flex flex-wrap">
             <TabsTrigger value="infos">Général</TabsTrigger>
             <TabsTrigger value="role">Rôles</TabsTrigger>
             <TabsTrigger value="demand">Demandes</TabsTrigger>
