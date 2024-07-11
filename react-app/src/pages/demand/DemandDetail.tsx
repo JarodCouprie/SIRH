@@ -205,7 +205,6 @@ export function ConfirmDeleteItem({ demand, navigate }: any) {
       `http://localhost:5000/api/demand/${demand.id}`,
       {
         method: "DELETE",
-        body: JSON.stringify(demand),
       },
     );
 

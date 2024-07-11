@@ -72,7 +72,6 @@ router.delete(
 
     const { code, message, data } = await DemandService.deleteDemand(
       req.params.id_demand,
-      req.body,
       userId,
     );
     res.status(code).json({ message, data });

@@ -222,16 +222,18 @@ export class DemandService {
     }
   }
 
-  public static async deleteDemand(
-    id: string,
-    body: NumberDayDemand,
-    userId: number,
-  ) {
+  public static async deleteDemand(id: string, userId: number) {
     try {
+      const demand: any = await DemandRepository.getDemandById(+id);
+
+      if (!demand) {
+        return new ControllerResponse(404, "pas de demande");
+      }
+
       const userResponse: any = await UserService.getUserById(userId);
       const user = userResponse.data;
 
-      updateUserDays(user, body.type, body.number_day, true);
+      updateUserDays(user, demand.type, demand.number_day, true);
       await DemandRepository.deleteDemand(+id);
       await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
       return new ControllerResponse(200, "");
