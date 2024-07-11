@@ -4,7 +4,7 @@ export class Demand {
   endDate: Date;
   motivation: string;
   createdAt: Date;
-  status: string;
+  status: DemandStatus;
   type: DemandType;
   number_day: number;
   idOwner: number;
@@ -16,7 +16,7 @@ export class Demand {
     endDate: Date,
     motivation: string,
     createdAt: Date,
-    status: string,
+    status: DemandStatus,
     type: DemandType,
     number_day: number,
     idOwner: number,
@@ -35,8 +35,36 @@ export class Demand {
   }
 }
 
+export class StatusDemand {
+  id: number;
+  status: DemandStatus;
+
+  constructor(id: number, status: DemandStatus) {
+    this.id = id;
+    this.status = status;
+  }
+}
+
+export class NumberDayDemand {
+  id: number;
+  number_day: number;
+  type: DemandType;
+
+  constructor(id: number, number_day: number, type: DemandType) {
+    this.id = id;
+    this.number_day = number_day;
+    this.type = type;
+  }
+}
+
 export enum DemandType {
   RTT = "RTT",
   TT = "TT",
   CA = "CA",
+}
+export enum DemandStatus {
+  ACCEPTED = "ACCEPTED",
+  WAITING = "WAITING",
+  DENIED = "DENIED",
+  DRAFT = "DRAFT",
 }
