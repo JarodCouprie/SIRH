@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog.tsx";
 import { toast } from "sonner";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -83,6 +84,21 @@ export function Detail({ demand }: any) {
     minute: "numeric",
   };
 
+  const getClassForStatus = (status: any) => {
+    switch (status) {
+      case "ACCEPTED":
+        return <Badge variant="accepted">Acceptée</Badge>;
+      case "WAITING":
+        return <Badge variant="waiting">En attente</Badge>;
+      case "DENIED":
+        return <Badge variant="denied">Refusée</Badge>;
+      case "DRAFT":
+        return <Badge variant="draft">A confirmer</Badge>;
+      default:
+        return <Badge variant="outline">Erreur</Badge>;
+    }
+  };
+
   const TypeDemand = (status: any) => {
     switch (status) {
       case "CA":
@@ -101,24 +117,10 @@ export function Detail({ demand }: any) {
   };
 
   const handleConfirmClick = async (id: number, demand: DemandDTO) => {
-    const formatDate = ({ date }: { date: any }) => {
-      let date_ = new Date(date).toLocaleDateString("fr-CA");
-      return date_;
-    };
-
-    const demandeData = {
-      startDate: formatDate({ date: demand.startDate }),
-      endDate: formatDate({ date: demand.endDate }),
-      motivation: demand.motivation,
-      type: demand.type,
-      status: "WAITING",
-    };
-
     const response = await customFetcher(
-      `http://localhost:5000/api/demand/${id}`,
+      `http://localhost:5000/api/demand/status/${id}`,
       {
         method: "PUT",
-        body: JSON.stringify(demandeData),
       },
     );
 
@@ -133,7 +135,7 @@ export function Detail({ demand }: any) {
       return (
         <>
           <div>
-            <ConfirmDeleteItem demandId={demand.id} navigate={navigate} />
+            <ConfirmDeleteItem demand={demand} navigate={navigate} />
             <Button
               variant="secondary"
               onClick={() => handleEditClick(demand.id)}
@@ -167,7 +169,9 @@ export function Detail({ demand }: any) {
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
             <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
-            <UserInfoRow title="Status">{demand.status}</UserInfoRow>
+            <UserInfoRow title="Status">
+              {getClassForStatus(demand.status)}
+            </UserInfoRow>
             <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
             <UserInfoRow title="Date de création">
               {new Date(demand?.createdAt?.toString()).toLocaleDateString(
@@ -195,17 +199,17 @@ export function Detail({ demand }: any) {
   );
 }
 
-export function ConfirmDeleteItem({ demandId, navigate }: any) {
+export function ConfirmDeleteItem({ demand, navigate }: any) {
   const fetchDemand = async () => {
     const response = await customFetcher(
-      `http://localhost:5000/api/demand/${demandId}`,
+      `http://localhost:5000/api/demand/${demand.id}`,
       {
         method: "DELETE",
       },
     );
 
     if (response.response.status === 200) {
-      toast.message(`Demande numéro ${demandId} supprimée`);
+      toast.message(`Demande numéro ${demand.id} supprimée`);
       navigate("/demand", { replace: true });
     }
   };

@@ -20,32 +20,6 @@ router.get("/:id_demand", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.put(
-  "/:id_demand",
-  verifyToken,
-  validateData(demandCreateSchema),
-  async (req: Request, res: Response) => {
-    let userId = (req as CustomRequest).token.userId;
-    const { code, message, data } = await DemandService.editDemand(
-      req.params.id_demand,
-      req.body,
-      userId,
-    );
-    res.status(code).json({ message, data });
-  },
-);
-
-router.delete(
-  "/:id_demand",
-  verifyToken,
-  async (req: Request, res: Response) => {
-    const { code, message, data } = await DemandService.deleteDemand(
-      req.params.id_demand,
-    );
-    res.status(code).json({ message, data });
-  },
-);
-
 router.post(
   "/",
   verifyToken,
@@ -61,6 +35,46 @@ router.post(
       message,
       data,
     });
+  },
+);
+
+router.put(
+  "/:id_demand",
+  verifyToken,
+  validateData(demandCreateSchema),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+    const { code, message, data } = await DemandService.editDemand(
+      req.params.id_demand,
+      req.body,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.put(
+  "/status/:id_demand",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await DemandService.changeStatusDemand(
+      req.params.id_demand,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.delete(
+  "/:id_demand",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } = await DemandService.deleteDemand(
+      req.params.id_demand,
+      userId,
+    );
+    res.status(code).json({ message, data });
   },
 );
 export default router;

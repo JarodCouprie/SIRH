@@ -1,5 +1,5 @@
 import { DatabaseClient } from "../helper/DatabaseClient";
-import { Demand } from "../model/Demand";
+import { Demand, StatusDemand } from "../model/Demand";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 
@@ -67,7 +67,8 @@ export class DemandRepository {
               endDate    = ?,
               motivation = ?,
               type       = ?,
-              status     = ?
+              status     = ?,
+              number_day = ?
           WHERE id = ?
           LIMIT 1;
 
@@ -78,6 +79,7 @@ export class DemandRepository {
         demand.motivation,
         demand.type,
         demand.status,
+        demand.number_day,
         id,
       ],
     );
@@ -117,6 +119,18 @@ export class DemandRepository {
         demand.number_day,
         demand.idOwner,
       ],
+    );
+    return rows[0];
+  }
+
+  static async editStatusDemand(demand: StatusDemand) {
+    const [rows]: any = await this.pool.query(
+      `
+          UPDATE demand
+          SET status = ?
+          WHERE id = ?
+      `,
+      [demand.status, demand.id],
     );
     return rows[0];
   }
