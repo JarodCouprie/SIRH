@@ -12,23 +12,42 @@ async function getRefreshToken() {
 }
 
 async function originalRequest(url: string, config: any = {}) {
-  config["headers"] = {
-    Authorization: `Bearer ${localStorage.accessToken}`,
-  };
   const response = await fetch(url, config);
   const data = await response.json();
   return { response, data };
 }
 
-export async function customFetcher(url: string, config: any = {}) {
+export async function customFetcher(
+  url: string,
+  config: any = {},
+  contentTypeJson: boolean = true,
+) {
+  if (contentTypeJson) {
+    config["headers"] = {
+      Authorization: `Bearer ${localStorage.accessToken}`,
+      "Content-Type": "application/json",
+    };
+  } else {
+    config["headers"] = {
+      Authorization: `Bearer ${localStorage.accessToken}`,
+    };
+  }
+
   let { response, data }: any = await originalRequest(url, config);
 
   if (response.status === 401) {
     await getRefreshToken();
 
-    config["headers"] = {
-      Authorization: `Bearer ${localStorage.accessToken}`,
-    };
+    if (contentTypeJson) {
+      config["headers"] = {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+        "Content-Type": "application/json",
+      };
+    } else {
+      config["headers"] = {
+        Authorization: `Bearer ${localStorage.accessToken}`,
+      };
+    }
 
     const newResponse = await originalRequest(url, config);
     response = newResponse.response;

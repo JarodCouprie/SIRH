@@ -35,7 +35,6 @@ export class MinioClient {
       }
       return await this.minioClient.presignedGetObject(this.bucket, key, 86400);
     } catch (error) {
-      console.log(error);
       logger.error(error);
     }
   }

@@ -84,7 +84,8 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user));
+      const url = await MinioClient.getSignedUrl(user.image_key);
+      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(

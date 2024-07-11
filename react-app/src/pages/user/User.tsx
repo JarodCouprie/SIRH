@@ -260,6 +260,7 @@ export function User() {
     await customFetcher(
       `http://localhost:5000/api/user/set-picture/${id}`,
       config,
+      false,
     ).then((response) => {
       if (response.response.status !== 200) {
         return;

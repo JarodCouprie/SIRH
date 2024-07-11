@@ -23,13 +23,10 @@ export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
 
   const start = new Date(startDate);
   const end = new Date(endDate);
-  console.log(start);
-  console.log(end);
   let count = 0;
   let currentDate = start;
 
   if (start.getTime() === end.getTime()) {
-    console.log("coucou");
     return isWeekend(start) ? 0 : 1;
   }
 
