@@ -73,7 +73,6 @@ describe("getDemand", () => {
         list: demands.map((demand) => new DemandDTO(demand)),
       }),
     );
-    console.log(response.data);
   });
 
   test("should return demands without type filter", async () => {

@@ -1,21 +1,39 @@
 DROP TABLE IF EXISTS belong_team_service, belong_service, belong_team, equipment, location_contract, agency, insurance_contract, insurance_company, address, service, team, document, logs, expense, absence, demand, localisation, users;
 
+CREATE TABLE address
+(
+    id           BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    street       VARCHAR(50),
+    streetNumber VARCHAR(50),
+    locality     VARCHAR(50),
+    zipcode      VARCHAR(50),
+    lat          DECIMAL(15, 10),
+    lng          DECIMAL(15, 10),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE users
 (
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     email       VARCHAR(50),
     password    VARCHAR(255),
+    country     VARCHAR(255),
+    phone       VARCHAR(50),
     firstname   VARCHAR(50),
     lastname    VARCHAR(50),
-    address     VARCHAR(50),
+    id_address  BIGINT,
     nationality VARCHAR(50),
     role        VARCHAR(50),
     iban        VARCHAR(50),
-    ca  INT,
-    tt INT,
-    rtt INT,
-
-    PRIMARY KEY (id)
+    bic         VARCHAR(50),
+    active      BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ca          INT,
+    tt          INT,
+    rtt         INT,
+    image_key   VARCHAR(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_address) REFERENCES address (id)
 );
 
 CREATE TABLE demand
@@ -120,18 +138,6 @@ CREATE TABLE service
     FOREIGN KEY (id_user_lead_service) REFERENCES users (id)
 );
 
-CREATE TABLE address
-(
-    id                          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    street                      VARCHAR(50),
-    streetNumber                VARCHAR(50),
-    locality                    VARCHAR(50),
-    zipcode                     VARCHAR(50),
-    lat                         DECIMAL(15, 2),
-    lng                         DECIMAL(15, 2),
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE insurance_company
 (
     id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -154,7 +160,6 @@ CREATE TABLE insurance_contract
 CREATE TABLE agency
 (
     id                               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    address                          VARCHAR(50),
     name                             VARCHAR(50),
     organisation                     VARCHAR(50),
     id_insurance_contract_own_agency BIGINT        NOT NULL,
@@ -217,5 +222,3 @@ CREATE TABLE belong_team_service
     FOREIGN KEY (id_team) REFERENCES team (id),
     FOREIGN KEY (id_service) REFERENCES service (id)
 );
-
-

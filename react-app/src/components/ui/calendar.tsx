@@ -70,6 +70,7 @@ function Calendar({
     ></DayPicker>
   );
 }
+
 Calendar.displayName = "Calendar";
 
 export { Calendar };

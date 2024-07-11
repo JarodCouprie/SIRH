@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UserModel } from "@/models/UserModel.ts";
+import { UserListModel } from "@/models/User.model.ts";
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button.tsx";
 import {
   CaretLeftIcon,
   CaretRightIcon,
-  CaretSortIcon,
+  CheckCircledIcon,
+  CrossCircledIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
 import { customFetcher } from "@/helper/fetchInstance.ts";
@@ -28,9 +29,10 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export function Users() {
-  const [users, setUsers] = useState<UserModel[]>([]);
+  const [users, setUsers] = useState<UserListModel[]>([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState(5);
@@ -92,54 +94,52 @@ export function Users() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Collaborateur
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Ville
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button variant="ghost" size="sm">
-                  Numéro de téléphone
-                  <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
-              </TableHead>
+              <TableHead>Collaborateur</TableHead>
+              <TableHead>Ville</TableHead>
+              <TableHead>Téléphone</TableHead>
+              <TableHead>Actif</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users?.length ? (
-              users?.map((user: UserModel) => (
+              users?.map((user: UserListModel) => (
                 <TableRow
-                  key={`${user.id}`}
+                  key={`${user?.id}`}
                   className="hover:cursor-pointer"
-                  onClick={() => handleClick(user.id)}
+                  onClick={() => handleClick(user?.id)}
                 >
                   <TableCell className="flex gap-2 font-medium">
                     <Avatar>
-                      <AvatarImage
-                        src={`https://api.dicebear.com/8.x/adventurer-neutral/svg?seed=${user.id}`}
-                      />
+                      <AvatarImage src={user?.avatar_url} />
                       <AvatarFallback>
-                        {user.firstname.charAt(0)}
-                        {user.lastname.charAt(0)}
+                        {user.firstname?.charAt(0)}
+                        {user.lastname?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <div>
-                        {user.firstname} {user.lastname}
+                        {user?.firstname} {user?.lastname}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {user.email}
+                        {user?.email}
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>{user.address?.locality}</TableCell>
+                  <TableCell>{user?.phone}</TableCell>
+                  <TableCell>
+                    {user?.active ? (
+                      <Badge variant="outline">
+                        <CheckCircledIcon className="mr-2 size-4 text-green-600" />
+                        Actif
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline">
+                        <CrossCircledIcon className="mr-2 size-4 text-orange-600" />
+                        Inactif
+                      </Badge>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

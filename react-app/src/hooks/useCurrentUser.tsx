@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { UserModel } from "@/models/UserModel.ts";
+import { UserModel } from "@/models/User.model.ts";
 
 const CurrentUserContext = createContext({
-  user: new UserModel(0, "", "", "", new Date(), false, 0, 0, 0),
+  user: new UserModel(),
+  refreshUser: () => {},
 });
 
 export function useCurrentUser() {
@@ -11,18 +12,7 @@ export function useCurrentUser() {
 }
 
 export function CurrentUserProvider({ children }: any) {
-  const [user, setUser] = useState<UserModel>({
-    id: 0,
-    firstname: "",
-    lastname: "",
-    email: "",
-    createdAt: new Date(),
-    active: false,
-    ca: 0,
-    tt: 0,
-    rtt: 0,
-  });
-
+  const [user, setUser] = useState<UserModel>(new UserModel());
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/me`).then((response) => {
       if (response.response.status !== 200) {
@@ -31,13 +21,16 @@ export function CurrentUserProvider({ children }: any) {
       setUser(response.data.data);
     });
   };
-
   useEffect(() => {
     fetchUser().then();
   }, []);
 
+  function refreshUser() {
+    fetchUser().then();
+  }
+
   return (
-    <CurrentUserContext.Provider value={{ user }}>
+    <CurrentUserContext.Provider value={{ user, refreshUser }}>
       {children}
     </CurrentUserContext.Provider>
   );

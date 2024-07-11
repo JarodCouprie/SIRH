@@ -4,7 +4,6 @@ import {
   Demand,
   DemandStatus,
   DemandType,
-  NumberDayDemand,
   StatusDemand,
 } from "../model/Demand";
 import { logger } from "../helper/Logger";
@@ -24,13 +23,10 @@ export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
 
   const start = new Date(startDate);
   const end = new Date(endDate);
-  console.log(start);
-  console.log(end);
   let count = 0;
   let currentDate = start;
 
   if (start.getTime() === end.getTime()) {
-    console.log("coucou");
     return isWeekend(start) ? 0 : 1;
   }
 
@@ -129,7 +125,7 @@ export class DemandService {
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse(200, "", new DemandDTO(demand));
+      return new ControllerResponse<DemandDTO>(200, "", new DemandDTO(demand));
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");
