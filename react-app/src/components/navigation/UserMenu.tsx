@@ -56,7 +56,7 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="border-t border-gray-700 p-2">
-          <Button variant="navNotActive" className="flex w-full gap-2">
+          <Button variant="ghostLeft" className="flex w-full gap-2">
             <Avatar className="size-8">
               <AvatarImage src={user?.avatar_url} />
               <AvatarFallback>
@@ -64,9 +64,12 @@ export function UserMenu() {
                 {user.lastname.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <span className="max-md:hidden">
-              {user.firstname} {user.lastname}
-            </span>
+            <div className="flex flex-col items-start justify-start max-md:hidden">
+              <span>
+                {user.firstname} {user.lastname}
+              </span>
+              <span className="text-xs text-gray-300  ">Connecté</span>
+            </div>
           </Button>
         </div>
       </DropdownMenuTrigger>

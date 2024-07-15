@@ -3,7 +3,6 @@ import { buttonVariants } from "@/components/ui/button.tsx";
 import { UserMenu } from "@/components/navigation/UserMenu.tsx";
 import { TbBuildingCommunity, TbLayoutDashboard } from "react-icons/tb";
 import React from "react";
-import { FileIcon } from "@radix-ui/react-icons";
 import { LuCalendarX } from "react-icons/lu";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
@@ -31,9 +30,6 @@ export function NavBar() {
           </NavBarLink>
           <NavBarLink link="/absence" title="Absences">
             <LuCalendarX className="size-6" />
-          </NavBarLink>
-          <NavBarLink link="/file" title="Documents">
-            <FileIcon className="size-6" />
           </NavBarLink>
           <NavBarLink link="/organisation" title="Organisation">
             <TbBuildingCommunity className="size-6" />

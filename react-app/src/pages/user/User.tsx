@@ -344,15 +344,11 @@ export function User() {
             <TabsTrigger value="role">Rôles</TabsTrigger>
             <TabsTrigger value="demand">Demandes</TabsTrigger>
             <TabsTrigger value="expense">Frais</TabsTrigger>
-            <TabsTrigger value="document">Documents</TabsTrigger>
-            <TabsTrigger value="stuff">Matériel</TabsTrigger>
           </TabsList>
           <TabsContent value="infos">{userInfos}</TabsContent>
           <TabsContent value="role">{userRoleContent}</TabsContent>
           <TabsContent value="demand">{userInfos}</TabsContent>
           <TabsContent value="expense">{userInfos}</TabsContent>
-          <TabsContent value="document">{userInfos}</TabsContent>
-          <TabsContent value="stuff">{userInfos}</TabsContent>
         </Tabs>
       </div>
     </div>

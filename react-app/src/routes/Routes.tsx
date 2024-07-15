@@ -16,7 +16,6 @@ import { userRoutes } from "@/routes/UserRoutes.tsx";
 import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
 import { demandRoutes } from "@/routes/DemandRoutes.tsx";
 import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
-import { fileRoutes } from "@/routes/FileRoutes.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -45,7 +44,6 @@ export const Routes = () => {
             organisationRoutes,
             demandRoutes,
             expenseRoutes,
-            fileRoutes,
           ],
         },
       ],
