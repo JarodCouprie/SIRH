@@ -14,14 +14,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MouseEvent, useEffect, useState } from "react";
-import { ExpenseStatus, selectedTypeEnum } from "@/models/ExpenseModel.ts";
+import { selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover.tsx";
 import { Calendar } from "@/components/ui/calendar.tsx";
-import { MdOutlineFileUpload } from "react-icons/md";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { toast } from "sonner";
 
@@ -35,7 +34,7 @@ export function CreateExpense() {
     amount: "",
     motivation: "",
     facturation_date: new Date(),
-    ownerId: "",
+    file: "",
   });
   const { id } = useParams();
 
@@ -57,7 +56,7 @@ export function CreateExpense() {
             amount: response.data.data.amount,
             motivation: response.data.data.motivation,
             facturation_date: date,
-            ownerId: response.data.data.ownerId,
+            file: response.data.data.file,
           });
         },
       );
@@ -73,26 +72,33 @@ export function CreateExpense() {
     } else setMethod("POST");
   }, []);
 
-  const handlerExpenseFormDataChange = (e: any) => {
+  const handleExpenseFormDataChange = (e: any) => {
     setCreatedExpense({
       ...createdExpense,
       [e.target.name]: e.target.value || e.target.selected,
     });
   };
 
-  const handlerExpenseTypeChange = (value: string) => {
+  const handleExpenseTypeChange = (value: string) => {
     setCreatedExpense({
       ...createdExpense,
-      ["type"]: convertFromStringToSelectedTypeEnum(value),
+      type: convertFromStringToSelectedTypeEnum(value),
     });
   };
 
-  const handlerExpensefacturation_dateChange = (value: Date | undefined) => {
+  const handleExpenseFacturation_dateChange = (value: Date) => {
     setCreatedExpense({
       ...createdExpense,
-      ["facturation_date"]: value,
+      facturation_date: value,
     });
-    value?.setHours(3);
+    value?.setHours(2);
+  };
+
+  const handleFileChange = (e) => {
+    setCreatedExpense({
+      ...createdExpense,
+      file: e.target.files,
+    });
   };
 
   const displayDate = () => {
@@ -116,12 +122,13 @@ export function CreateExpense() {
     createdExpense.facturation_date.setHours(3);
     const date = createdExpense.facturation_date.toISOString().split("T")[0];
 
+    console.log(createdExpense);
     const body = {
       type: createdExpense.type,
       amount: createdExpense.amount,
       motivation: createdExpense.motivation,
       facturation_date: date,
-      ownerId: "",
+      file: createdExpense.file,
     };
     try {
       let fetchUrl = "http://localhost:5000/api/expense/";
@@ -167,13 +174,13 @@ export function CreateExpense() {
       <div className="w-full py-4">
         <Card>
           <CardContent>
-            <form>
+            <form className="py-4">
               <div className="">
                 <Label className="my-1 text-lg" htmlFor="name">
                   Type
                 </Label>
                 <Select
-                  onValueChange={(value) => handlerExpenseTypeChange(value)}
+                  onValueChange={(value) => handleExpenseTypeChange(value)}
                   defaultValue={selectedTypeEnum.TRAVEL}
                   value={createdExpense.type}
                   name="type"
@@ -202,7 +209,7 @@ export function CreateExpense() {
                   name="motivation"
                   className="border-gray-400 p-4"
                   value={createdExpense.motivation}
-                  onChange={handlerExpenseFormDataChange}
+                  onChange={handleExpenseFormDataChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -216,7 +223,7 @@ export function CreateExpense() {
                   name="amount"
                   className="border-gray-400 p-4"
                   value={createdExpense.amount}
-                  onChange={handlerExpenseFormDataChange}
+                  onChange={handleExpenseFormDataChange}
                 />
               </div>
               <div className="flex flex-col">
@@ -238,26 +245,22 @@ export function CreateExpense() {
                       mode="single"
                       selected={createdExpense.facturation_date}
                       onSelect={(value) =>
-                        handlerExpensefacturation_dateChange(value)
+                        handleExpenseFacturation_dateChange(value)
                       }
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="my-4 flex h-20 w-full items-center justify-center gap-4 rounded border border-dashed border-gray-400 bg-gray-100 p-4 dark:border-gray-700 dark:bg-gray-900">
-                <MdOutlineFileUpload className="size-14 rounded-full bg-white p-1 dark:bg-gray-950" />
-                <div>
-                  <div className="flex font-medium">
-                    <div className=" cursor-pointer text-blue-700 underline dark:text-blue-500">
-                      Cliquer pour envoyer votre image
-                    </div>
-                    &nbsp;ou glisser-déposez votre photo ici
-                  </div>
-                  <div className="font-normal text-gray-500">
-                    (SVG, JPG ou PNG)
-                  </div>
-                </div>
+              <div className="py-4">
+                <Label className="my-1 text-lg" htmlFor="files">
+                  Fichier
+                </Label>
+                <Input
+                  type="file"
+                  className="cursor-pointer text-gray-950 dark:bg-slate-400"
+                  onChange={handleFileChange}
+                />
               </div>
               <div className="flex justify-end gap-8">
                 <Button

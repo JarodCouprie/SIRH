@@ -186,7 +186,7 @@ export function Expense() {
           </TableHeader>
           <TableBody>
             {expenses.map((expense) => (
-              <ExpenseListCard expense={expense} />
+              <ExpenseListCard expense={expense} key={expense.id} />
             ))}
           </TableBody>
         </Table>
