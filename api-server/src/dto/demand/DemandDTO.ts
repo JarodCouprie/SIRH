@@ -4,7 +4,8 @@ export class DemandDTO {
   id: number;
   startDate: Date;
   endDate: Date;
-  created_at: Date;
+  createdAt: Date;
+  motivation: string;
   status: string;
   number_day: number;
   type: DemandType;
@@ -13,7 +14,8 @@ export class DemandDTO {
     this.id = demand.id;
     this.startDate = demand.startDate;
     this.endDate = demand.endDate;
-    this.created_at = demand.created_at;
+    this.createdAt = new Date(`${demand.createdAt} UTC`);
+    this.motivation = demand.motivation;
     this.status = demand.status;
     this.number_day = demand.number_day;
     this.type = demand.type;

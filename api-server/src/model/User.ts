@@ -1,37 +1,76 @@
+import { RoleEnum } from "../enum/RoleEnum.js";
+import { Address, UserAddress } from "./Address.js";
+
 export class User {
   id: number;
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
+  phone: string;
   created_at: Date;
   active: boolean;
   ca: number;
   tt: number;
   rtt: number;
+  street: string;
+  streetNumber: string;
+  locality: string;
+  zipcode: string;
+  lat: number;
+  lng: number;
+  country: string;
+  nationality: string;
+  role: RoleEnum;
+  iban: string;
+  bic: string;
+  image_key: string;
 
   constructor(
     id: number,
     firstname: string,
     lastname: string,
     email: string,
-    password: string,
+    phone: string,
     created_at: Date,
     active: boolean,
     ca: number,
     tt: number,
     rtt: number,
+    street: string,
+    streetNumber: string,
+    locality: string,
+    zipcode: string,
+    lat: number,
+    lng: number,
+    country: string,
+    nationality: string,
+    role: RoleEnum,
+    iban: string,
+    bic: string,
+    image_key: string,
   ) {
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
-    this.password = password;
+    this.phone = phone;
     this.created_at = created_at;
     this.active = active;
     this.ca = ca;
     this.tt = tt;
     this.rtt = rtt;
+    this.street = street;
+    this.streetNumber = streetNumber;
+    this.locality = locality;
+    this.zipcode = zipcode;
+    this.lat = lat;
+    this.lng = lng;
+    this.country = country;
+    this.nationality = nationality;
+    this.role = role;
+    this.iban = iban;
+    this.bic = bic;
+    this.image_key = image_key;
   }
 }
 
@@ -39,18 +78,39 @@ export class CreateUser {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
+  id_address: number;
+  nationality: string;
+  role: string;
+  iban: string;
+  country: string;
+  phone: string;
+  bic: string;
+  image_key: string;
 
   constructor(
     firstname: string,
     lastname: string,
     email: string,
-    password: string,
+    phone: string,
+    id_address: number,
+    nationality: string,
+    country: string,
+    iban: string,
+    bic: string,
+    image_key?: string,
+    role?: string,
   ) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
-    this.password = password;
+    this.phone = phone;
+    this.id_address = id_address;
+    this.nationality = nationality;
+    this.country = country;
+    this.iban = iban;
+    this.bic = bic;
+    this.image_key = image_key || "";
+    this.role = role || RoleEnum.USER;
   }
 }
 
@@ -69,21 +129,65 @@ export class UserDTO {
   firstname: string;
   lastname: string;
   email: string;
+  phone: string;
   created_at: Date;
   active: boolean;
   ca: number;
   tt: number;
   rtt: number;
+  address: UserAddress;
+  country: string;
+  nationality: string;
+  role: RoleEnum;
+  iban: string;
+  bic: string;
+  avatar_url: string;
 
-  constructor(user: User) {
+  constructor(user: User, avatar_url?: string) {
     this.id = user.id;
     this.firstname = user.firstname;
     this.lastname = user.lastname;
     this.email = user.email;
-    this.created_at = user.created_at;
+    this.phone = user.phone;
+    this.created_at = new Date(`${user.created_at} UTC`);
+    this.active = user.active;
+    this.address = new UserAddress(user);
+    this.country = user.country;
+    this.nationality = user.nationality;
+    this.role = user.role;
+    this.iban = user.iban;
+    this.bic = user.bic;
+    this.ca = user.ca;
+    this.tt = user.tt;
+    this.rtt = user.rtt;
+    this.avatar_url = avatar_url || "";
+  }
+}
+
+export class UserListDTO {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: UserAddress;
+  active: boolean;
+  ca: number;
+  rtt: number;
+  tt: number;
+  avatar_url: string;
+
+  constructor(user: User, avatar_url?: string) {
+    this.id = user.id;
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
+    this.email = user.email;
+    this.phone = user.phone;
+    this.address = new UserAddress(user);
     this.active = user.active;
     this.ca = user.ca;
     this.rtt = user.rtt;
     this.tt = user.tt;
+    this.avatar_url = avatar_url || "";
   }
 }

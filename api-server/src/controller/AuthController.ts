@@ -1,17 +1,12 @@
 import { Request, Response, Router } from "express";
 import dotenv from "dotenv";
-import { verifyToken } from "../middleware/AuthMiddleware";
-import { AuthService } from "../service/AuthService";
-import { UserService } from "../service/UserService";
-import { CustomRequest } from "../helper/CustomRequest";
+import { AuthService } from "../service/AuthService.js";
+import { verifyToken } from "../middleware/AuthMiddleware.js";
+import { UserService } from "../service/UserService.js";
+import { CustomRequest } from "../helper/CustomRequest.js";
 
 const router = Router();
 dotenv.config();
-
-router.post("/register", async (req: Request, res: Response) => {
-  const { code, message } = await AuthService.createUser(req);
-  res.status(code).json({ message });
-});
 
 router.post("/login", async (req: Request, res: Response) => {
   const { code, message, data } = await AuthService.loginUser(req);

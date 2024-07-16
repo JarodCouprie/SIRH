@@ -1,6 +1,11 @@
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { DemandRepository } from "../repository/DemandRepository";
-import { Demand, DemandType } from "../model/Demand";
+import {
+  Demand,
+  DemandStatus,
+  DemandType,
+  StatusDemand,
+} from "../model/Demand";
 import { logger } from "../helper/Logger";
 import { DemandDTO } from "../dto/demand/DemandDTO";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO";
@@ -11,11 +16,32 @@ import { UserService } from "./UserService";
 export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
+  const isWeekend = (date: Date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  };
+
   const start = new Date(startDate);
   const end = new Date(endDate);
+  let count = 0;
+  let currentDate = start;
 
-  const differenceMs = end.getTime() - start.getTime();
-  return Math.ceil(differenceMs / ONE_DAY_IN_MS);
+  if (start.getTime() === end.getTime()) {
+    return isWeekend(start) ? 0 : 1;
+  }
+
+  if (isWeekend(start) && isWeekend(end)) {
+    return -1;
+  }
+
+  while (currentDate <= end) {
+    if (!isWeekend(currentDate)) {
+      count++;
+    }
+    currentDate = new Date(currentDate.getTime() + ONE_DAY_IN_MS);
+  }
+
+  return count;
 }
 
 export function updateUserDays(
@@ -99,10 +125,24 @@ export class DemandService {
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse(200, "", demand);
+      return new ControllerResponse<DemandDTO>(200, "", new DemandDTO(demand));
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");
+    }
+  }
+
+  public static async changeStatusDemand(id: string) {
+    try {
+      const demand_: StatusDemand = {
+        id: +id,
+        status: DemandStatus.WAITING,
+      };
+      const statusChange = await DemandRepository.editStatusDemand(demand_);
+      return new ControllerResponse(200, "", statusChange);
+    } catch (error) {
+      logger.error(`Failed to edit the demand. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the demand");
     }
   }
 
@@ -114,20 +154,20 @@ export class DemandService {
     try {
       const demand: any = await DemandRepository.getDemandById(+id);
 
-      if (demand.status !== "DRAFT") {
+      if (demand.status !== DemandStatus.DRAFT) {
         return new ControllerResponse(400, "Not allowed");
       }
 
       let number_day = 0;
-      const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
-
-      if (body.endDate === body.startDate) {
-        const start = new Date(body.startDate);
-        body.endDate = new Date(start.getTime() + ONE_DAY_IN_MS);
-      }
 
       if (body.startDate && body.endDate) {
         number_day = calculateNumberOfDays(body.startDate, body.endDate);
+        if (number_day === -1) {
+          return new ControllerResponse(
+            400,
+            "Il est impossibe de selectionner un jour du week end",
+          );
+        }
       }
 
       const userResponse: any = await UserService.getUserById(userId);
@@ -178,9 +218,20 @@ export class DemandService {
     }
   }
 
-  public static async deleteDemand(id: string) {
+  public static async deleteDemand(id: string, userId: number) {
     try {
+      const demand: any = await DemandRepository.getDemandById(+id);
+
+      if (!demand) {
+        return new ControllerResponse(404, "pas de demande");
+      }
+
+      const userResponse: any = await UserService.getUserById(userId);
+      const user = userResponse.data;
+
+      updateUserDays(user, demand.type, demand.number_day, true);
       await DemandRepository.deleteDemand(+id);
+      await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
       return new ControllerResponse(200, "");
     } catch (error) {
       logger.error(`Failed to delete the demand. Error: ${error}`);
@@ -191,15 +242,15 @@ export class DemandService {
   public static async createDemand(body: CreateDemand, id: number) {
     try {
       let number_day = 0;
-      const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
-
-      if (body.endDate === body.startDate) {
-        const start = new Date(body.startDate);
-        body.endDate = new Date(start.getTime() + ONE_DAY_IN_MS);
-      }
 
       if (body.startDate && body.endDate) {
         number_day = calculateNumberOfDays(body.startDate, body.endDate);
+        if (number_day === -1) {
+          return new ControllerResponse(
+            400,
+            "Il est impossibe de selectionner un jour du week end",
+          );
+        }
       }
 
       const userResponse: any = await UserService.getUserById(id);
@@ -218,13 +269,11 @@ export class DemandService {
         body.startDate,
         body.endDate,
         body.motivation,
-        "DRAFT",
+        DemandStatus.DRAFT,
         body.type,
         number_day,
         id,
       );
-
-      console.log(newDemand);
 
       await UserService.updateUserDays(id, user.rtt, user.ca, user.tt);
       const demand: any = await DemandRepository.createDemand(newDemand);

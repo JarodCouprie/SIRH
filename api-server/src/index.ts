@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import auth from "./controller/AuthController";
-import users from "./controller/UserController";
-import expense from "./controller/ExpenseController";
-import demand from "./controller/DemandController";
-import { verifyToken } from "./middleware/AuthMiddleware";
+import auth from "./controller/AuthController.js";
+import users from "./controller/UserController.js";
+import { verifyToken } from "./middleware/AuthMiddleware.js";
+import demand from "./controller/DemandController.js";
+import expense from "./controller/ExpenseController.js";
 import cors from "cors";
 
 dotenv.config();
@@ -16,8 +16,8 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", auth);
 app.use("/api/user", users);
