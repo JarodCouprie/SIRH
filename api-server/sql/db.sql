@@ -15,7 +15,7 @@ CREATE TABLE address
 CREATE TABLE users
 (
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    email       VARCHAR(50),
+    email       VARCHAR(50) UNIQUE NOT NULL,
     password    VARCHAR(255),
     country     VARCHAR(255),
     phone       VARCHAR(50),
