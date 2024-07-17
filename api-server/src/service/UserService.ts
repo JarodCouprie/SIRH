@@ -8,6 +8,7 @@ import { CreateAddress } from "../model/Address.js";
 import { RoleEnum } from "../enum/RoleEnum.js";
 import { MinioClient } from "../helper/MinioClient.js";
 import dotenv from "dotenv";
+import { CustomRequest } from "../helper/CustomRequest.js";
 
 dotenv.config();
 
@@ -85,12 +86,50 @@ export class UserService {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
       const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Rôles modifiés",
+        new UserDTO(user, url),
+      );
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(
         500,
         "Impossible de modifier le rôle de l'utilisateur",
+      );
+    }
+  }
+
+  public static async setUserActive(req: Request, id: number) {
+    try {
+      const currentUserId = (req as CustomRequest).token.userId;
+      if (currentUserId === id) {
+        return new ControllerResponse(
+          500,
+          "Impossible de vous désactiver vous même",
+        );
+      }
+      const userActive: boolean = req.body.active || false;
+      await UserRepository.setUserActive(userActive, id);
+      const user: any = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const url = await MinioClient.getSignedUrl(user.image_key);
+      let message = "Utilisateur désactivé";
+      if (user.active) {
+        message = "Utilisateur réactivé";
+      }
+      return new ControllerResponse<UserDTO>(
+        200,
+        message,
+        new UserDTO(user, url),
+      );
+    } catch (error) {
+      logger.error(`Failed to disable user role. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de désactiver l'utilisateur",
       );
     }
   }

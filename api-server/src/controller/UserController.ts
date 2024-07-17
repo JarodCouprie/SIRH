@@ -56,4 +56,12 @@ router.put(
   },
 );
 
+router.put("/active/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await UserService.setUserActive(
+    req,
+    +req.params.id,
+  );
+  res.status(code).json({ message, data });
+});
+
 export default router;
