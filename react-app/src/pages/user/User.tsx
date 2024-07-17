@@ -53,6 +53,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip.js";
+import { toast } from "sonner";
 
 export function User() {
   const { id } = useParams();
@@ -100,6 +101,24 @@ export function User() {
     navigate("/user");
   };
 
+  const handleDisableUser = async (userActive: boolean) => {
+    const config = {
+      method: "PUT",
+      body: JSON.stringify({ active: userActive }),
+    };
+    await customFetcher(
+      `http://localhost:5000/api/user/active/${id}`,
+      config,
+    ).then((response) => {
+      if (response.response.status !== 200) {
+        return toast.error(response.data.message);
+      }
+      toast.success(response.data.message);
+      setUserLoaded(true);
+      setUser(response.data.data);
+    });
+  };
+
   const userInfos = (
     <div className="grid w-full grid-cols-3 gap-4">
       <div className="col-span-1 flex flex-col gap-4 max-2xl:col-span-3">
@@ -136,9 +155,45 @@ export function User() {
             <Button variant="outline" className="text-red-600">
               Un bouton pour faire des trucs pas cool
             </Button>
-            <Button variant="outline" className="text-red-600">
-              Désactiver {user.firstname} {user.lastname}
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                {user.active ? (
+                  <Button variant="outline" className="text-red-600">
+                    Désactiver {user.firstname} {user.lastname}
+                  </Button>
+                ) : (
+                  <Button variant="outline" className="text-red-600">
+                    Réactiver {user.firstname} {user.lastname}
+                  </Button>
+                )}
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Désactiver{" "}
+                    <span className="text-gray-50">
+                      {user.firstname} {user.lastname}
+                    </span>
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Êtes-vous sûr de vouloir désactiver {user.firstname}{" "}
+                    {user.lastname}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  {user.active ? (
+                    <AlertDialogAction onClick={() => handleDisableUser(false)}>
+                      Désactiver
+                    </AlertDialogAction>
+                  ) : (
+                    <AlertDialogAction onClick={() => handleDisableUser(true)}>
+                      Réactiver
+                    </AlertDialogAction>
+                  )}
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardContent>
         </Card>
       </div>

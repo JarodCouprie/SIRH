@@ -175,4 +175,14 @@ export class UserRepository {
     );
     return result;
   }
+
+  public static async setUserActive(active: boolean, id: number) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET active = ?
+       WHERE id = ?`,
+      [active, id],
+    );
+    return result;
+  }
 }
