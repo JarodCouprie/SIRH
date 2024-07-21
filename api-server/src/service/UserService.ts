@@ -72,7 +72,10 @@ export class UserService {
       return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
-      return new ControllerResponse(500, "Impossible de créer l'utilisateur");
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer l'utilisateur",
+      );
     }
   }
 

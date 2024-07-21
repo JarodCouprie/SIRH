@@ -54,6 +54,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip.js";
 import { toast } from "sonner";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 
 export function User() {
   const { id } = useParams();
@@ -69,8 +70,9 @@ export function User() {
   if (!id) {
     return noUser;
   }
-  const [user, setUser] = useState<UserModel>(new UserModel());
-  const [userRole, setUserRole] = useState(user.role.toString());
+  const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
+  const [userRole, setUserRole] = useState(foundUser.role.toString());
+  const { user, refreshUser } = useCurrentUser();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -88,7 +90,7 @@ export function User() {
           return;
         }
         setUserLoaded(true);
-        setUser(response.data.data);
+        setFoundUser(response.data.data);
       },
     );
   };
@@ -115,7 +117,7 @@ export function User() {
       }
       toast.success(response.data.message);
       setUserLoaded(true);
-      setUser(response.data.data);
+      setFoundUser(response.data.data);
     });
   };
 
@@ -134,13 +136,18 @@ export function User() {
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
             <UserInfoRow title="Nom">
-              {user.firstname} {user.lastname}
+              {foundUser.firstname} {foundUser.lastname}
             </UserInfoRow>
-            <UserInfoRow title="Email">{user.email}</UserInfoRow>
-            <UserInfoRow title="Téléphone">{user.phone}</UserInfoRow>
-            <UserInfoRow title="Nationalité">{user.nationality}</UserInfoRow>
+            <UserInfoRow title="Email">{foundUser.email}</UserInfoRow>
+            <UserInfoRow title="Téléphone">{foundUser.phone}</UserInfoRow>
+            <UserInfoRow title="Nationalité">
+              {foundUser.nationality}
+            </UserInfoRow>
             <UserInfoRow title="Date de création">
-              {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
+              {new Date(foundUser.created_at).toLocaleString(
+                "fr-FR",
+                dateOptions,
+              )}
             </UserInfoRow>
           </CardContent>
         </Card>
@@ -157,13 +164,13 @@ export function User() {
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                {user.active ? (
+                {foundUser.active ? (
                   <Button variant="outline" className="text-red-600">
-                    Désactiver {user.firstname} {user.lastname}
+                    Désactiver {foundUser.firstname} {foundUser.lastname}
                   </Button>
                 ) : (
                   <Button variant="outline" className="text-red-600">
-                    Réactiver {user.firstname} {user.lastname}
+                    Réactiver {foundUser.firstname} {foundUser.lastname}
                   </Button>
                 )}
               </AlertDialogTrigger>
@@ -172,17 +179,17 @@ export function User() {
                   <AlertDialogTitle>
                     Désactiver{" "}
                     <span className="text-gray-50">
-                      {user.firstname} {user.lastname}
+                      {foundUser.firstname} {foundUser.lastname}
                     </span>
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Êtes-vous sûr de vouloir désactiver {user.firstname}{" "}
-                    {user.lastname}
+                    Êtes-vous sûr de vouloir désactiver {foundUser.firstname}{" "}
+                    {foundUser.lastname}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Annuler</AlertDialogCancel>
-                  {user.active ? (
+                  {foundUser.active ? (
                     <AlertDialogAction onClick={() => handleDisableUser(false)}>
                       Désactiver
                     </AlertDialogAction>
@@ -209,14 +216,18 @@ export function User() {
             </CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="Pays de résidence">{user.country}</UserInfoRow>
+            <UserInfoRow title="Pays de résidence">
+              {foundUser.country}
+            </UserInfoRow>
             <UserInfoRow title="Adresse">
-              {user.address.streetNumber} {user.address.street}
+              {foundUser.address.streetNumber} {foundUser.address.street}
             </UserInfoRow>
             <UserInfoRow title="Code postal">
-              {user.address.zipcode}
+              {foundUser.address.zipcode}
             </UserInfoRow>
-            <UserInfoRow title="Ville">{user.address.locality}</UserInfoRow>
+            <UserInfoRow title="Ville">
+              {foundUser.address.locality}
+            </UserInfoRow>
           </CardContent>
         </Card>
         <Card>
@@ -230,8 +241,8 @@ export function User() {
             </CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="IBAN">{user.iban}</UserInfoRow>
-            <UserInfoRow title="BIC">{user.bic}</UserInfoRow>
+            <UserInfoRow title="IBAN">{foundUser.iban}</UserInfoRow>
+            <UserInfoRow title="BIC">{foundUser.bic}</UserInfoRow>
           </CardContent>
         </Card>
       </div>
@@ -251,7 +262,7 @@ export function User() {
         return;
       }
       setUserLoaded(true);
-      setUser(response.data.data);
+      setFoundUser(response.data.data);
     });
   };
 
@@ -265,7 +276,7 @@ export function User() {
       </CardHeader>
       <CardContent>
         <RadioGroup
-          defaultValue={user.role}
+          defaultValue={foundUser.role}
           onValueChange={(value) => setUserRole(value)}
         >
           {Object.keys(RoleEnum).map((key) => {
@@ -275,7 +286,7 @@ export function User() {
                 <Label htmlFor={key}>
                   <Badge
                     variant={
-                      user.role.toString() === key ? "default" : "outline"
+                      foundUser.role.toString() === key ? "default" : "outline"
                     }
                   >
                     {roleEnumKeyToFrench(key)}
@@ -321,7 +332,11 @@ export function User() {
         return;
       }
       setUserLoaded(true);
-      setUser(response.data.data);
+      setFoundUser(response.data.data);
+
+      if (user.id === foundUser.id) {
+        refreshUser();
+      }
     });
   };
 
@@ -335,10 +350,10 @@ export function User() {
                 <TooltipTrigger asChild>
                   <AlertDialogTrigger asChild>
                     <Avatar className="size-14 cursor-pointer">
-                      <AvatarImage src={user?.avatar_url} />
+                      <AvatarImage src={foundUser?.avatar_url} />
                       <AvatarFallback>
-                        {user.firstname.charAt(0)}
-                        {user.lastname.charAt(0)}
+                        {foundUser.firstname.charAt(0)}
+                        {foundUser.lastname.charAt(0)}
                       </AvatarFallback>
                       <div className="absolute left-0 top-0 grid size-full place-items-center bg-slate-700 opacity-0 transition duration-200 hover:opacity-90">
                         <FaPen className="size-6 text-gray-50" />
@@ -374,9 +389,9 @@ export function User() {
           <div>
             <div className="flex items-center gap-4">
               <span className="text-3xl font-bold text-gray-950 dark:text-slate-200">
-                {user?.firstname} {user?.lastname}
+                {foundUser?.firstname} {foundUser?.lastname}
               </span>
-              {user?.active ? (
+              {foundUser?.active ? (
                 <Badge variant="outline">
                   <CheckCircledIcon className="mr-2 size-4 text-green-600" />
                   Actif
@@ -388,7 +403,7 @@ export function User() {
                 </Badge>
               )}
             </div>
-            <div className="text-gray-500">{user.email}</div>
+            <div className="text-gray-500">{foundUser.email}</div>
           </div>
         </div>
       </div>
