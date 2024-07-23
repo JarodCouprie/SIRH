@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { DemandAll } from "@/models/DemandModel.ts";
+import { DemandAll, DemandType } from "@/models/DemandModel.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -37,6 +37,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
+import { GiMedicalThermometer } from "react-icons/gi";
+import { FaRegCalendarXmark } from "react-icons/fa6";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandAll[]>([]);
@@ -118,24 +120,38 @@ export function Demand() {
 
   const getStatusOption = (status: any) => {
     switch (status) {
-      case "CA":
+      case DemandType.CA:
         return {
           icon: (
             <TbCalendarClock className="size-9 text-indigo-500 opacity-75" />
           ),
           label: "Demande de congés",
         };
-      case "RTT":
+      case DemandType.RTT:
         return {
           icon: <TbCalendarRepeat className="size-9 text-red-500 opacity-75" />,
           label: "Demande de RTT",
         };
-      case "TT":
+      case DemandType.TT:
         return {
           icon: (
             <MdOutlineLaptop className="size-9 text-orange-500 opacity-75" />
           ),
           label: "Demande de télétravail",
+        };
+      case DemandType.ABSENCE:
+        return {
+          icon: (
+            <FaRegCalendarXmark className="size-8 text-amber-500 opacity-75" />
+          ),
+          label: "Absence",
+        };
+      case DemandType.SICKNESS:
+        return {
+          icon: (
+            <GiMedicalThermometer className="size-8 text-red-500 opacity-75" />
+          ),
+          label: "Arrêt maladie",
         };
       default:
         return {
