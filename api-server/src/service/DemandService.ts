@@ -12,6 +12,8 @@ import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 import { Request } from "express";
 import { UserService } from "./UserService";
+import { MinioClient } from "../helper/MinioClient.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
 export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -81,8 +83,6 @@ export function updateUserDays(
         user.tt -= numberOfDays;
       }
       break;
-    default:
-      return "Invalid type";
   }
   return null;
 }
@@ -239,10 +239,10 @@ export class DemandService {
     }
   }
 
-  public static async createDemand(body: CreateDemand, id: number) {
+  public static async createDemand(req: Request, id: number) {
     try {
       let number_day = 0;
-
+      const body = JSON.parse(req.body.body);
       if (body.startDate && body.endDate) {
         number_day = calculateNumberOfDays(body.startDate, body.endDate);
         if (number_day === -1) {
@@ -265,6 +265,13 @@ export class DemandService {
         return new ControllerResponse(400, error);
       }
 
+      const file = req.file;
+      if (!file) {
+        return new ControllerResponse(400, "Aucun fichier n'a été envoyé");
+      }
+      const key = `user/${id}/demand/${file.originalname}`;
+      await MinioClient.putObjectToBucket(key, file);
+
       const newDemand = new CreateDemand(
         body.startDate,
         body.endDate,
@@ -272,6 +279,7 @@ export class DemandService {
         DemandStatus.DRAFT,
         body.type,
         number_day,
+        key,
         id,
       );
 

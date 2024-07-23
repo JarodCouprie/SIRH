@@ -107,8 +107,9 @@ export class DemandRepository {
                               status,
                               type,
                               number_day,
+                              file_key,
                               id_user_create_demand)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         demand.startDate,
@@ -117,6 +118,7 @@ export class DemandRepository {
         demand.status,
         demand.type,
         demand.number_day,
+        demand.file_key,
         demand.idOwner,
       ],
     );

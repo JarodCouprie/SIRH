@@ -5,8 +5,14 @@ import { DemandService } from "../service/DemandService";
 import { CustomRequest } from "../helper/CustomRequest";
 import { validateData } from "../middleware/ValidationMiddleware";
 import { demandCreateSchema } from "../schema/demand.schema";
+import multer from "multer";
 
 const router = Router();
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // Set the file size limit (50MB in this case)
+});
 
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await DemandService.getDemand(req);
@@ -23,14 +29,13 @@ router.get("/:id_demand", verifyToken, async (req: Request, res: Response) => {
 router.post(
   "/",
   verifyToken,
-  validateData(demandCreateSchema),
+  upload.single("file"),
   async (req: Request, res: Response) => {
     let userId = (req as CustomRequest).token.userId;
     const { code, message, data } = await DemandService.createDemand(
-      req.body,
+      req,
       userId,
     );
-
     res.status(code).json({
       message,
       data,
@@ -38,20 +43,15 @@ router.post(
   },
 );
 
-router.put(
-  "/:id_demand",
-  verifyToken,
-  validateData(demandCreateSchema),
-  async (req: Request, res: Response) => {
-    let userId = (req as CustomRequest).token.userId;
-    const { code, message, data } = await DemandService.editDemand(
-      req.params.id_demand,
-      req.body,
-      userId,
-    );
-    res.status(code).json({ message, data });
-  },
-);
+router.put("/:id_demand", verifyToken, async (req: Request, res: Response) => {
+  let userId = (req as CustomRequest).token.userId;
+  const { code, message, data } = await DemandService.editDemand(
+    req.params.id_demand,
+    req.body,
+    userId,
+  );
+  res.status(code).json({ message, data });
+});
 
 router.put(
   "/status/:id_demand",

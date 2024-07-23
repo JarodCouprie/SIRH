@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -50,6 +50,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const [end_date, setEndDate] = useState<Date>();
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
+  const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<{
     startDate?: string;
     endDate?: string;
@@ -79,10 +80,10 @@ const DemandForm: React.FC<DemandFormProps> = ({
       const motivation = event.currentTarget.description.value;
       const startDate = start_date?.toLocaleDateString("fr-CA");
       let endDate = end_date?.toLocaleDateString("fr-CA");
-      let demandeData;
+      let demandData;
 
       if (method === "PUT") {
-        demandeData = {
+        demandData = {
           startDate,
           endDate,
           motivation,
@@ -91,7 +92,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
         };
       }
       if (method === "POST") {
-        demandeData = {
+        demandData = {
           startDate,
           endDate,
           motivation,
@@ -99,19 +100,31 @@ const DemandForm: React.FC<DemandFormProps> = ({
         };
       }
 
-      const response = await customFetcher(submitUrl, {
-        method: method,
-        body: JSON.stringify(demandeData),
-      });
+      if (!file) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("body", JSON.stringify(demandData));
+
+      const response = await customFetcher(
+        submitUrl,
+        {
+          method: method,
+          body: formData,
+        },
+        false,
+      );
 
       if (response.response.status === 201 && method === "POST") {
         toast.message(
-          `Nouvelle demande de ${demandeData?.type} à la date du ${demandeData?.startDate} a bien été créée`,
+          `Nouvelle demande de ${demandData?.type} à la date du ${demandData?.startDate} a bien été créée`,
         );
         navigate("/demand", { replace: true });
       } else if (response.response.status === 200 && method === "PUT") {
         toast.message(
-          `Demande de ${demandeData?.type} a la date du ${demandeData?.startDate} modifiée`,
+          `Demande de ${demandData?.type} a la date du ${demandData?.startDate} modifiée`,
         );
         navigate(`/demand/detail/${id}`, { replace: true });
       } else if (response.data.details && response.data.details.length > 0) {
@@ -257,6 +270,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
     }
   };
 
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
+  };
+
   return (
     <Card>
       <CardTitle className="flex items-center justify-between gap-4 text-xl">
@@ -266,6 +285,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
         <form
           onSubmit={handleClickSubmitButton}
           className="flex flex-col gap-3"
+          encType="multipart/form-data"
         >
           <div className="flex justify-center">
             <Select
@@ -280,6 +300,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 <SelectItem value="CA">Congé annuel</SelectItem>
                 <SelectItem value="RTT">RTT</SelectItem>
                 <SelectItem value="TT">Télétravail</SelectItem>
+                <SelectItem value="ABSENCE">Absence</SelectItem>
+                <SelectItem value="SICKNESS">Arrêt maladie</SelectItem>
               </SelectContent>
             </Select>
             {errors.type && <p className="text-red-500">{errors.type}</p>}
@@ -294,6 +316,17 @@ const DemandForm: React.FC<DemandFormProps> = ({
             value={motivation}
             onChange={handleChange}
           />
+
+          {(selectedType === DemandType.ABSENCE ||
+            selectedType === DemandType.SICKNESS) && (
+            <Input
+              className="p-6"
+              type="file"
+              id="additionalInfo"
+              placeholder="Raison de l'absence"
+              onChange={handleFileChange}
+            />
+          )}
 
           {dateChanger()}
 

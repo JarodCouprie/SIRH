@@ -46,6 +46,7 @@ CREATE TABLE demand
     status                  VARCHAR(50),
     type                    VARCHAR(50),
     number_day              INT,
+    file_key                VARCHAR(255),
     id_user_create_demand   BIGINT        NOT NULL,
     id_user_validate_demand BIGINT        NULL,
     PRIMARY KEY (id),
