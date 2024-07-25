@@ -28,6 +28,17 @@ export class DemandRepository {
     );
     return rows;
   }
+  public static async getDemandByUser(userId: number, limit = 10, offset = 0) {
+    const [rows] = await this.pool.query(
+      `SELECT *
+       FROM demand
+       WHERE id_user_create_demand = ?
+       ORDER BY created_at
+       LIMIT ? OFFSET ? `,
+      [userId, limit, offset],
+    );
+    return rows;
+  }
 
   public static async getDemandCountWithType(type = "CA") {
     const [rows]: any = await this.pool.query(

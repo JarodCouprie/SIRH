@@ -15,7 +15,8 @@ const upload = multer({
 });
 
 router.get("/", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await DemandService.getDemand(req);
+  let userId = (req as CustomRequest).token.userId;
+  const { code, message, data } = await DemandService.getDemand(userId, req);
   res.status(code).json({ message, data });
 });
 
