@@ -15,7 +15,10 @@ import { UserService } from "./UserService";
 import { MinioClient } from "../helper/MinioClient.js";
 import { UserRepository } from "../repository/UserRepository.js";
 
-export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
+export function calculateNumberOfDays(
+  start_date: Date,
+  end_date: Date,
+): number {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
   const isWeekend = (date: Date) => {
@@ -23,8 +26,8 @@ export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
     return day === 0 || day === 6;
   };
 
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = new Date(start_date);
+  const end = new Date(end_date);
   let count = 0;
   let currentDate = start;
 
@@ -160,8 +163,8 @@ export class DemandService {
 
       let number_day = 0;
 
-      if (body.startDate && body.endDate) {
-        number_day = calculateNumberOfDays(body.startDate, body.endDate);
+      if (body.start_date && body.end_date) {
+        number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
           return new ControllerResponse(
             400,
@@ -181,12 +184,13 @@ export class DemandService {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
 
-      const originalEndDate = demand.endDate;
+      const originalEndDate = demand.end_date;
       const originalNumberOfDays = calculateNumberOfDays(
-        demand.startDate,
+        demand.start_date,
         originalEndDate,
       );
-      const isReducingDays = new Date(body.endDate) < new Date(originalEndDate);
+      const isReducingDays =
+        new Date(body.end_date) < new Date(originalEndDate);
 
       if (isReducingDays) {
         const daysToRecover = originalNumberOfDays - number_day;
@@ -200,8 +204,8 @@ export class DemandService {
       }
 
       const editDemand = new EditDemandDTO(
-        body.startDate,
-        body.endDate,
+        body.start_date,
+        body.end_date,
         body.motivation,
         body.type,
         number_day,
@@ -243,8 +247,8 @@ export class DemandService {
     try {
       let number_day = 0;
       const body = JSON.parse(req.body.body);
-      if (body.startDate && body.endDate) {
-        number_day = calculateNumberOfDays(body.startDate, body.endDate);
+      if (body.start_date && body.end_date) {
+        number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
           return new ControllerResponse(
             400,
@@ -273,8 +277,8 @@ export class DemandService {
       await MinioClient.putObjectToBucket(key, file);
 
       const newDemand = new CreateDemand(
-        body.startDate,
-        body.endDate,
+        body.start_date,
+        body.end_date,
         body.motivation,
         DemandStatus.DRAFT,
         body.type,

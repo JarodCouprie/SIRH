@@ -9,8 +9,8 @@ export function DemandEdit() {
   const { id } = useParams();
   const [demand, setDemand] = useState<DemandDTO>({
     motivation: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    start_date: new Date(),
+    end_date: new Date(),
     type: DemandType.CA,
     status: "",
   });

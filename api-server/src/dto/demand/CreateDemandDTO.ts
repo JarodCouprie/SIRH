@@ -1,8 +1,8 @@
 import { DemandType } from "../../model/Demand";
 
 export class CreateDemand {
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   motivation: string;
   status: string;
   type: DemandType;
@@ -11,8 +11,8 @@ export class CreateDemand {
   idOwner: number;
 
   constructor(
-    startDate: Date,
-    endDate: Date,
+    start_date: Date,
+    end_date: Date,
     motivation: string,
     status: string,
     type: DemandType,
@@ -20,8 +20,8 @@ export class CreateDemand {
     file_key: string,
     idOwner: number,
   ) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.motivation = motivation;
     this.status = status;
     this.type = type;

@@ -39,10 +39,10 @@ CREATE TABLE users
 CREATE TABLE demand
 (
     id                      BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    startDate               DATE,
-    endDate                 DATE,
+    start_date               DATE,
+    end_date                 DATE,
     motivation              VARCHAR(50),
-    createdAt               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status                  VARCHAR(50),
     type                    VARCHAR(50),
     number_day              INT,

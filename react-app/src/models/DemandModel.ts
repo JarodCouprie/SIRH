@@ -1,19 +1,19 @@
 export class DemandDTO {
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   motivation: string;
   type: DemandType;
   status: string;
 
   constructor(
-    startDate: Date,
-    endDate: Date,
+    start_date: Date,
+    end_date: Date,
     motivation: string,
     type: DemandType,
     status: string,
   ) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.motivation = motivation;
     this.type = type;
     this.status = status;
@@ -22,29 +22,29 @@ export class DemandDTO {
 
 export class DemandAll {
   id: number;
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   motivation: string;
-  createdAt: Date;
+  created_at: Date;
   status: string;
   number_day: number;
   type: DemandType;
 
   constructor(
     id: number,
-    startDate: Date,
-    endDate: Date,
+    start_date: Date,
+    end_date: Date,
     motivation: string,
-    createdAt: Date,
+    created_at: Date,
     status: string,
     number_day: number,
     type: DemandType,
   ) {
     this.id = id;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.motivation = motivation;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.status = status;
     this.number_day = number_day;
     this.type = type;

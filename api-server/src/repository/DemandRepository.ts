@@ -11,7 +11,7 @@ export class DemandRepository {
       `SELECT *
        FROM demand
        WHERE type = ?
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [type, limit, offset],
     );
@@ -22,7 +22,7 @@ export class DemandRepository {
     const [rows] = await this.pool.query(
       `SELECT *
        FROM demand
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [limit, offset],
     );
@@ -63,8 +63,8 @@ export class DemandRepository {
     const [rows]: any = await this.pool.query(
       `
           UPDATE demand
-          SET startDate=?,
-              endDate    = ?,
+          SET start_date=?,
+              end_date    = ?,
               motivation = ?,
               type       = ?,
               status     = ?,
@@ -74,8 +74,8 @@ export class DemandRepository {
 
       `,
       [
-        demand.startDate,
-        demand.endDate,
+        demand.start_date,
+        demand.end_date,
         demand.motivation,
         demand.type,
         demand.status,
@@ -101,8 +101,8 @@ export class DemandRepository {
   public static async createDemand(demand: CreateDemand) {
     const [rows]: any = await this.pool.query(
       `
-          INSERT INTO demand (startDate,
-                              endDate,
+          INSERT INTO demand (start_date,
+                              end_date,
                               motivation,
                               status,
                               type,
@@ -112,8 +112,8 @@ export class DemandRepository {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
-        demand.startDate,
-        demand.endDate,
+        demand.start_date,
+        demand.end_date,
         demand.motivation,
         demand.status,
         demand.type,

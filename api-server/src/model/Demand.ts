@@ -1,9 +1,9 @@
 export class Demand {
   id: number;
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   motivation: string;
-  createdAt: Date;
+  created_at: Date;
   status: DemandStatus;
   type: DemandType;
   number_day: number;
@@ -12,10 +12,10 @@ export class Demand {
 
   constructor(
     id: number,
-    startDate: Date,
-    endDate: Date,
+    start_date: Date,
+    end_date: Date,
     motivation: string,
-    createdAt: Date,
+    created_at: Date,
     status: DemandStatus,
     type: DemandType,
     number_day: number,
@@ -23,10 +23,10 @@ export class Demand {
     idValidator: number,
   ) {
     this.id = id;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.motivation = motivation;
-    this.createdAt = createdAt;
+    this.created_at = created_at;
     this.status = status;
     this.type = type;
     this.number_day = number_day;
