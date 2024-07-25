@@ -75,7 +75,6 @@ const DemandForm: React.FC<DemandFormProps> = ({
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-
     if (formDemandValid()) {
       const formMotivation = event.currentTarget.description.value;
       const formattedStartDate = startDate?.toLocaleDateString("fr-CA");
@@ -100,22 +99,34 @@ const DemandForm: React.FC<DemandFormProps> = ({
         };
       }
 
-      if (!file) {
-        return;
-      }
-
+      let response;
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("body", JSON.stringify(demandData));
+      if (file) {
+        formData.append("file", file);
+        formData.append("body", JSON.stringify(demandData));
 
-      const response = await customFetcher(
-        submitUrl,
-        {
-          method: method,
-          body: formData,
-        },
-        false,
-      );
+        response = await customFetcher(
+          submitUrl,
+          {
+            method: method,
+            body: formData,
+          },
+          false,
+        );
+      } else {
+        formData.append("body", JSON.stringify(demandData));
+        response = await customFetcher(
+          submitUrl,
+          {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: formData,
+          },
+          false,
+        );
+      }
 
       if (response.response.status === 201 && method === "POST") {
         toast.message(

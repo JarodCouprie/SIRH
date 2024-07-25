@@ -247,6 +247,7 @@ export class DemandService {
     try {
       let number_day = 0;
       const body = JSON.parse(req.body.body);
+      console.log(body);
       if (body.start_date && body.end_date) {
         number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
@@ -269,12 +270,12 @@ export class DemandService {
         return new ControllerResponse(400, error);
       }
 
-      const file = req.file;
-      if (!file) {
-        return new ControllerResponse(400, "Aucun fichier n'a été envoyé");
+      let key: string | undefined;
+      if (req.file) {
+        const file = req.file;
+        key = `user/${id}/demand/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
       }
-      const key = `user/${id}/demand/${file.originalname}`;
-      await MinioClient.putObjectToBucket(key, file);
 
       const newDemand = new CreateDemand(
         body.start_date,
@@ -283,7 +284,7 @@ export class DemandService {
         DemandStatus.DRAFT,
         body.type,
         number_day,
-        key,
+        key || "",
         id,
       );
 

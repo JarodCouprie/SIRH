@@ -33,6 +33,8 @@ router.post(
   upload.single("file"),
   async (req: Request, res: Response) => {
     let userId = (req as CustomRequest).token.userId;
+    console.log(req.body.body);
+
     const { code, message, data } = await DemandService.createDemand(
       req,
       userId,

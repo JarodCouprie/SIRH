@@ -217,9 +217,9 @@ export function Demand() {
                     ).toLocaleDateString("fr-FR")}
                   </TableCell>
                   <TableCell className="text-left">
-                    {new Date(
-                      demand?.start_date?.toString(),
-                    ).toLocaleDateString("fr-FR")}
+                    {new Date(demand?.end_date?.toString()).toLocaleDateString(
+                      "fr-FR",
+                    )}
                   </TableCell>
                   <TableCell className="text-left">
                     {demand.number_day}
@@ -284,20 +284,37 @@ export function Demand() {
             <TabsTrigger value="general" onClick={() => handleFilter()}>
               Général
             </TabsTrigger>
-            <TabsTrigger value="ca" onClick={() => handleFilter("CA")}>
+            <TabsTrigger value="ca" onClick={() => handleFilter(DemandType.CA)}>
               Congés
             </TabsTrigger>
-            <TabsTrigger value="tt" onClick={() => handleFilter("TT")}>
+            <TabsTrigger value="tt" onClick={() => handleFilter(DemandType.TT)}>
               Télétravail
             </TabsTrigger>
-            <TabsTrigger value="rtt" onClick={() => handleFilter("RTT")}>
+            <TabsTrigger
+              value="rtt"
+              onClick={() => handleFilter(DemandType.RTT)}
+            >
               RTT
+            </TabsTrigger>
+            <TabsTrigger
+              value="absence"
+              onClick={() => handleFilter(DemandType.ABSENCE)}
+            >
+              Absence
+            </TabsTrigger>
+            <TabsTrigger
+              value="sickness"
+              onClick={() => handleFilter(DemandType.SICKNESS)}
+            >
+              Arrêt maladie
             </TabsTrigger>
           </TabsList>
           <TabsContent value="general">{tableDemand}</TabsContent>
           <TabsContent value="ca">{tableDemand}</TabsContent>
           <TabsContent value="tt">{tableDemand}</TabsContent>
           <TabsContent value="rtt">{tableDemand}</TabsContent>
+          <TabsContent value="absence">{tableDemand}</TabsContent>
+          <TabsContent value="sickness">{tableDemand}</TabsContent>
         </Tabs>
       </div>
     </MainRoot>
