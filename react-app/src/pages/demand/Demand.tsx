@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { DemandAll, DemandType } from "@/models/DemandModel.ts";
+import { DemandAll, DemandStatus, DemandType } from "@/models/Demand.model.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -105,13 +105,13 @@ export function Demand() {
 
   const getClassForStatus = (status: any) => {
     switch (status) {
-      case "ACCEPTED":
+      case DemandStatus.ACCEPTED:
         return <Badge variant="accepted">Acceptée</Badge>;
-      case "WAITING":
+      case DemandStatus.WAITING:
         return <Badge variant="waiting">En attente</Badge>;
-      case "DENIED":
+      case DemandStatus.DENIED:
         return <Badge variant="denied">Refusée</Badge>;
-      case "DRAFT":
+      case DemandStatus.DRAFT:
         return <Badge variant="draft">A confirmer</Badge>;
       default:
         return <Badge variant="outline">Erreur</Badge>;
@@ -206,20 +206,20 @@ export function Demand() {
                       <div>{getStatusOption(demand.type).label}</div>
                       <div className="text-xs text-zinc-500">
                         {new Date(
-                          demand?.createdAt?.toString(),
+                          demand?.created_at?.toString(),
                         ).toLocaleDateString("fr-FR", dateOptions)}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-left">
-                    {new Date(demand?.startDate?.toString()).toLocaleDateString(
-                      "fr-FR",
-                    )}
+                    {new Date(
+                      demand?.start_date?.toString(),
+                    ).toLocaleDateString("fr-FR")}
                   </TableCell>
                   <TableCell className="text-left">
-                    {new Date(demand?.endDate?.toString()).toLocaleDateString(
-                      "fr-FR",
-                    )}
+                    {new Date(
+                      demand?.start_date?.toString(),
+                    ).toLocaleDateString("fr-FR")}
                   </TableCell>
                   <TableCell className="text-left">
                     {demand.number_day}

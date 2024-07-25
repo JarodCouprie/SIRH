@@ -58,3 +58,10 @@ export enum DemandType {
   ABSENCE = "ABSENCE",
   SICKNESS = "SICKNESS",
 }
+
+export enum DemandStatus {
+  ACCEPTED = "ACCEPTED",
+  WAITING = "WAITING",
+  DENIED = "DENIED",
+  DRAFT = "DRAFT",
+}

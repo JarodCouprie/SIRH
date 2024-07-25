@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DemandDTO } from "@/models/DemandModel.ts";
+import { DemandDTO } from "@/models/Demand.model.ts";
 import { DemandType } from "@/pages/demand/DemandDetail.tsx";
 import { useParams } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";

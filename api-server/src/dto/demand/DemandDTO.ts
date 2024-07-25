@@ -2,9 +2,9 @@ import { Demand, DemandType } from "../../model/Demand";
 
 export class DemandDTO {
   id: number;
-  startDate: Date;
-  endDate: Date;
-  createdAt: Date;
+  start_date: Date;
+  end_date: Date;
+  created_at: Date;
   motivation: string;
   status: string;
   number_day: number;
@@ -12,9 +12,9 @@ export class DemandDTO {
 
   constructor(demand: Demand) {
     this.id = demand.id;
-    this.startDate = demand.startDate;
-    this.endDate = demand.endDate;
-    this.createdAt = new Date(`${demand.createdAt} UTC`);
+    this.start_date = demand.start_date;
+    this.end_date = demand.end_date;
+    this.created_at = new Date(`${demand.created_at} UTC`);
     this.motivation = demand.motivation;
     this.status = demand.status;
     this.number_day = demand.number_day;

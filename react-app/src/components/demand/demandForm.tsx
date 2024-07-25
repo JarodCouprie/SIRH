@@ -19,7 +19,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { customFetcher } from "@/helper/fetchInstance";
-import { DemandDTO, DemandType } from "@/models/DemandModel";
+import { DemandDTO, DemandType } from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,

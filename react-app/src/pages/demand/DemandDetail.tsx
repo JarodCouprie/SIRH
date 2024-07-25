@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DemandDTO } from "@/models/DemandModel.ts";
+import { DemandDTO } from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,
