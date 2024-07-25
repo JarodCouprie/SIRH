@@ -12,7 +12,7 @@ export class UserModel {
   active: boolean;
   country: string;
   nationality: string;
-  role: RoleEnum;
+  roles: RoleEnum[];
   iban: string;
   bic: string;
   ca: number;
@@ -31,7 +31,7 @@ export class UserModel {
     active: boolean = false,
     country: string = "",
     nationality: string = "",
-    role: RoleEnum = RoleEnum.USER,
+    roles: RoleEnum[] = [RoleEnum.USER],
     iban: string = "",
     bic: string = "",
     ca: number = 0,
@@ -49,7 +49,7 @@ export class UserModel {
     this.active = active;
     this.country = country;
     this.nationality = nationality;
-    this.role = role;
+    this.roles = roles;
     this.iban = iban;
     this.bic = bic;
     this.ca = ca;

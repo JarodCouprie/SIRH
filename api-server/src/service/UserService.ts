@@ -69,6 +69,7 @@ export class UserService {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
       const url = await MinioClient.getSignedUrl(user.image_key);
+      console.log("USER", new UserDTO(user));
       return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);

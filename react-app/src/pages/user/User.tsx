@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { UserModel } from "@/models/User.model.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -32,8 +32,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,10 +53,19 @@ import {
 } from "@/components/ui/tooltip.js";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { Label } from "@/components/ui/label.js";
+import { Checkbox } from "@/components/ui/checkbox.js";
 
 export function User() {
   const { id } = useParams();
   const [userLoaded, setUserLoaded] = useState(false);
+  const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
+  const [userRoles, setUserRoles] = useState<RoleEnum[]>(foundUser.roles);
+  const [file, setFile] = useState<File | null>(null);
+  const { user, refreshUser } = useCurrentUser();
+  useEffect(() => {
+    fetchUser().then();
+  }, []);
   const navigate = useNavigate();
   const noUser = (
     <div>
@@ -70,9 +77,6 @@ export function User() {
   if (!id) {
     return noUser;
   }
-  const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
-  const [userRole, setUserRole] = useState(foundUser.role.toString());
-  const { user, refreshUser } = useCurrentUser();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -94,10 +98,6 @@ export function User() {
       },
     );
   };
-
-  useEffect(() => {
-    fetchUser().then();
-  }, []);
 
   const handleGoBackToList = () => {
     navigate("/user");
@@ -252,7 +252,7 @@ export function User() {
   const handleSubmitRole = async () => {
     const config = {
       method: "POST",
-      body: JSON.stringify({ role: userRole }),
+      body: JSON.stringify({ role: userRoles }),
     };
     await customFetcher(
       `http://localhost:5000/api/user/set-role/${id}`,
@@ -274,28 +274,20 @@ export function User() {
           <span>Rôles</span>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <RadioGroup
-          defaultValue={foundUser.role}
-          onValueChange={(value) => setUserRole(value)}
-        >
-          {Object.keys(RoleEnum).map((key) => {
-            return (
-              <div key={key} className="flex items-center space-x-2 text-xl">
-                <RadioGroupItem value={key} id={key} />
-                <Label htmlFor={key}>
-                  <Badge
-                    variant={
-                      foundUser.role.toString() === key ? "default" : "outline"
-                    }
-                  >
-                    {roleEnumKeyToFrench(key)}
-                  </Badge>
-                </Label>
-              </div>
-            );
-          })}
-        </RadioGroup>
+      <CardContent className="flex flex-col gap-2">
+        {foundUser.roles.map((role) => {
+          return (
+            <div className="flex items-center space-x-2" key={role}>
+              <Checkbox id={role} />
+              <label
+                htmlFor={role}
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {roleEnumKeyToFrench(role)}
+              </label>
+            </div>
+          );
+        })}
       </CardContent>
       <CardFooter className="flex justify-end">
         <Button variant="callToAction" onClick={handleSubmitRole}>
@@ -304,8 +296,6 @@ export function User() {
       </CardFooter>
     </Card>
   );
-
-  const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -435,9 +425,12 @@ export function User() {
   );
 }
 
-export function UserInfoRow(props: any) {
-  const title: string = props.title || "Titre à donner";
-  const children: React.JSX.Element = props.children;
+export function UserInfoRow(props: {
+  title: string;
+  children: string | string[];
+}) {
+  const title = props.title || "Titre à donner";
+  const children = props.children;
   return (
     <div className="flex flex-col gap-1 p-4">
       <div className="text-slate-800 dark:text-slate-300">{title}</div>

@@ -25,26 +25,18 @@ export class UserRepository {
       `
           SELECT users.id as id,
                  email,
-                 country,
-                 nationality,
-                 role,
-                 iban,
-                 bic,
                  firstname,
                  lastname,
                  email,
                  phone,
-                 locality,
                  street,
                  streetNumber,
+                 locality,
+                 zipcode,
                  lat,
                  lng,
-                 zipcode,
                  created_at,
                  active,
-                 ca,
-                 tt,
-                 rtt,
                  image_key
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
@@ -59,11 +51,10 @@ export class UserRepository {
   public static async getUserById(id: number) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT users.id as id,
+          SELECT users.id                  as id,
                  email,
                  country,
                  nationality,
-                 role,
                  iban,
                  bic,
                  firstname,
@@ -81,9 +72,12 @@ export class UserRepository {
                  ca,
                  tt,
                  rtt,
-                 image_key
+                 image_key,
+                 JSON_ARRAYAGG(role.label) AS roles
           FROM users
                    LEFT JOIN address ON users.id_address = address.id
+                   JOIN own_role ON users.id = own_role.id_user
+                   JOIN role ON role.id = own_role.id_role
           WHERE users.id = ?
       `,
       [id],
@@ -106,7 +100,7 @@ export class UserRepository {
   public static async createUser(user: CreateUser) {
     const [result] = await this.pool.query(
       `
-          INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic, role)
+          INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
@@ -119,7 +113,6 @@ export class UserRepository {
         user.country,
         user.phone,
         user.bic,
-        user.role,
       ],
     );
     return result;

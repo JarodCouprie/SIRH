@@ -5,8 +5,8 @@ VALUES ("Rue des Loges", "65", "Montigny-lès-Metz", "57950", 49.099960, 6.15802
 INSERT INTO role(label)
 VALUES ("USER"),
        ("ADMIN"),
-       ("HR_DIRECTOR"),
-       ("PAID_LEAVE_SPECIALIST");
+       ("HR"),
+       ("LEAVE_MANAGER");
 
 INSERT INTO users(firstname, lastname, email, password, id_address, nationality, iban, country, phone, bic, ca,
                   tt, rtt)
@@ -42,4 +42,19 @@ FROM
     role r
     ON
         r.id = owr.id_role
-GROUP BY u.id
+GROUP BY u.id;
+
+SELECT
+    u.id,
+    JSON_ARRAYAGG(r.label) AS roles
+FROM
+    users u
+        JOIN
+    own_role owr
+    ON
+        u.id = owr.id_user
+        JOIN
+    role r
+    ON
+        r.id = owr.id_role
+GROUP BY u.id;
