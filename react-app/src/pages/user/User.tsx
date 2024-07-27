@@ -12,18 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { RoleEnum, roleEnumKeyToFrench } from "@/enum/Role.enum.ts";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar.tsx";
 import { BsFillInfoSquareFill } from "react-icons/bs";
-import { FaLocationDot, FaUserGear } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
 import { RiBankFill } from "react-icons/ri";
 import { MdOutlineSecurity } from "react-icons/md";
 import {
@@ -53,13 +51,12 @@ import {
 } from "@/components/ui/tooltip.js";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
-import { Checkbox } from "@/components/ui/checkbox.js";
+import { UserRoles } from "@/components/user/userRoles.js";
 
 export function User() {
   const { id } = useParams();
   const [userLoaded, setUserLoaded] = useState(false);
   const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
-  const [userRoles, setUserRoles] = useState<RoleEnum[]>(foundUser.roles);
   const [file, setFile] = useState<File | null>(null);
   const { user, refreshUser } = useCurrentUser();
   useEffect(() => {
@@ -248,54 +245,6 @@ export function User() {
     </div>
   );
 
-  const handleSubmitRole = async () => {
-    const config = {
-      method: "POST",
-      body: JSON.stringify({ role: userRoles }),
-    };
-    await customFetcher(
-      `http://localhost:5000/api/user/set-role/${id}`,
-      config,
-    ).then((response) => {
-      if (response.response.status !== 200) {
-        return;
-      }
-      setUserLoaded(true);
-      setFoundUser(response.data.data);
-    });
-  };
-
-  const userRoleContent = (
-    <Card>
-      <CardHeader className="text-gray-900 dark:text-gray-300">
-        <CardTitle className="flex items-center gap-4 text-xl">
-          <FaUserGear />
-          <span>Rôles</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        {foundUser.roles.map((role) => {
-          return (
-            <div className="flex items-center space-x-2" key={role}>
-              <Checkbox id={role} />
-              <label
-                htmlFor={role}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {roleEnumKeyToFrench(role)}
-              </label>
-            </div>
-          );
-        })}
-      </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button variant="callToAction" onClick={handleSubmitRole}>
-          Modifier
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFile(event.target.files[0]);
@@ -405,7 +354,9 @@ export function User() {
             <TabsTrigger value="expense">Frais</TabsTrigger>
           </TabsList>
           <TabsContent value="infos">{userInfos}</TabsContent>
-          <TabsContent value="role">{userRoleContent}</TabsContent>
+          <TabsContent value="role">
+            <UserRoles roles={foundUser.roles} id={foundUser.id} />
+          </TabsContent>
           <TabsContent value="demand">{userInfos}</TabsContent>
           <TabsContent value="expense">{userInfos}</TabsContent>
         </Tabs>
