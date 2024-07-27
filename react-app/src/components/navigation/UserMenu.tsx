@@ -56,20 +56,26 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="border-t border-gray-700 p-2">
-          <Button variant="ghostLeft" className="flex w-full gap-2">
-            <Avatar className="size-8">
-              <AvatarImage src={user?.avatar_url} />
-              <AvatarFallback>
-                {user.firstname.charAt(0)}
-                {user.lastname.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col items-start justify-start max-md:hidden">
-              <span>
-                {user.firstname} {user.lastname}
-              </span>
-              <span className="text-xs text-gray-300  ">Connecté</span>
+          <Button
+            variant="noneLeft"
+            className="flex w-full justify-between gap-2"
+          >
+            <div className="flex w-full gap-2">
+              <Avatar className="size-8">
+                <AvatarImage src={user?.avatar_url} />
+                <AvatarFallback>
+                  {user.firstname.charAt(0)}
+                  {user.lastname.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start justify-start max-md:hidden">
+                <span className="text-gray-50">
+                  {user.firstname} {user.lastname}
+                </span>
+                <span className="text-xs text-gray-300">Connecté</span>
+              </div>
             </div>
+            <MixerVerticalIcon className="size-6 text-gray-300" />
           </Button>
         </div>
       </DropdownMenuTrigger>

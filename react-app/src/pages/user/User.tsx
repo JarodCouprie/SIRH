@@ -304,7 +304,7 @@ export function User() {
               <div className="grid w-full items-center gap-1.5">
                 <Input
                   type="file"
-                  className="bg-gray-50"
+                  className="cursor-pointer bg-gray-50"
                   onChange={handleFileChange}
                 />
               </div>

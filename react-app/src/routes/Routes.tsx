@@ -11,7 +11,6 @@ import { AuthTokens } from "@/type/context/authTokens.tsx";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Root } from "@/components/navigation/Root.tsx";
-import { absenceRoutes } from "@/routes/AbsenceRoutes.tsx";
 import { userRoutes } from "@/routes/UserRoutes.tsx";
 import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
 import { demandRoutes } from "@/routes/DemandRoutes.tsx";
@@ -39,7 +38,6 @@ export const Routes = () => {
           element: <Root />,
           errorElement: <PageError />,
           children: [
-            absenceRoutes,
             userRoutes,
             organisationRoutes,
             demandRoutes,
