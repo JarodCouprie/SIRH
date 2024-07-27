@@ -9,6 +9,7 @@ export class Expense {
   facturation_date: Date;
   status: ExpenseStatus;
   id_owner: number;
+  fileKey?: string;
   userValidateId?: number;
 
   constructor(
@@ -21,6 +22,7 @@ export class Expense {
     status: ExpenseStatus,
     ownerId: number,
     userValidateId?: number,
+    fileKey?: string,
   ) {
     this.id = id;
     this.type = type;
@@ -28,9 +30,10 @@ export class Expense {
     this.motivation = motivation;
     this.created_at = created_at;
     this.facturation_date = created_at;
-    this.status = status;
+    this.status = status || ExpenseStatus.WAITING;
     this.id_owner = ownerId;
     this.userValidateId = userValidateId;
+    this.fileKey = fileKey;
   }
 }
 

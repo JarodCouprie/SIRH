@@ -125,8 +125,8 @@ export class ExpenseRepository {
   public static async createExpenseDemand(expense: Expense) {
     const [result]: any = await this.pool.query(
       `
-            INSERT INTO expense (type, amount, motivation, status, id_owner, facturation_date)
-            VALUES (?,?,?,?,?,?);
+            INSERT INTO expense (type, amount, motivation, status, id_owner, facturation_date, file_key)
+            VALUES (?,?,?,?,?,?,?);
             `,
       [
         expense.type,
@@ -135,6 +135,7 @@ export class ExpenseRepository {
         expense.status,
         expense.id_owner,
         expense.facturation_date,
+        expense.fileKey,
       ],
     );
     return result;

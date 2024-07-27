@@ -6,6 +6,7 @@ import { logger } from "../helper/Logger";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "../dto/expense/ExpenseAmountDateAndStatusDTO";
 import { CustomRequest } from "../helper/CustomRequest";
+import { MinioClient } from "../helper/MinioClient";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
@@ -83,11 +84,20 @@ export class ExpenseService {
     }
   }
 
-  public static async createExpenseDemand(expense: Expense, userId: number) {
+  public static async createExpenseDemand(req: Request, userId: number) {
     try {
+      let expense: Expense = JSON.parse(req.body.body);
       expense.id_owner = userId;
-      //expense.facturation_date = new Date(expense.facturation_date.getDate());
       expense.status = ExpenseStatus.WAITING;
+
+      let key: string;
+      if (req.file) {
+        const file = req.file;
+        key = `user/${userId}/expense/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
+        expense.fileKey = key;
+      }
+
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {
@@ -136,7 +146,12 @@ export class ExpenseService {
   public static async getExpenseDemand(id: string, userId: number) {
     try {
       console.log(userId);
-      const expense: any = await ExpenseRepository.getExpenseDemand(id);
+      const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
+
+      const expense: ExpenseListDTO = new ExpenseListDTO(
+        expenseTemp,
+        await MinioClient.getSignedUrl(expenseTemp.file_key),
+      );
       if (expense.id_owner != userId)
         return new ControllerResponse(403, "Access denied");
 

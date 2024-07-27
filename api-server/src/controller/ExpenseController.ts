@@ -9,8 +9,14 @@ import {
 } from "../middleware/ValidationMiddleware";
 import { demandCreateSchema } from "../schema/demand.schema";
 import { expenseCreateSchema } from "../schema/expense.schema";
+import multer from "multer";
 
 const router = Router();
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // Set the file size limit (50MB in this case)
+});
 dotenv.config();
 
 // Recupération des valeurs et données
@@ -125,14 +131,19 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.post("/", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
-  const { code, message, data } = await ExpenseService.createExpenseDemand(
-    req.body,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
+router.post(
+  "/",
+  verifyToken,
+  upload.single("file"),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+    const { code, message, data } = await ExpenseService.createExpenseDemand(
+      req,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 export default router;
 

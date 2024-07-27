@@ -71,15 +71,16 @@ CREATE TABLE absence
 
 CREATE TABLE expense
 (
-    id                       BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    type                     VARCHAR(50),
-    amount                   FLOAT,
-    motivation               VARCHAR(50),
-    created_at                DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    facturation_date          DATE NOT NULL,
-    status                   VARCHAR(50) NOT NULL DEFAULT 'WAITING',
-    id_owner   BIGINT        NOT NULL,
-    id_validator BIGINT      NULL,
+    id               BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    type             VARCHAR(50),
+    amount           FLOAT,
+    motivation       VARCHAR(50),
+    created_at       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    facturation_date DATE          NOT NULL,
+    status           VARCHAR(50)   NOT NULL DEFAULT 'WAITING',
+    id_owner         BIGINT        NOT NULL,
+    id_validator     BIGINT        NULL,
+    file_key         VARCHAR(255)  NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_owner) REFERENCES users (id),
     FOREIGN KEY (id_validator) REFERENCES users (id)

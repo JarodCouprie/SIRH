@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MouseEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import {
   Popover,
@@ -34,8 +34,9 @@ export function CreateExpense() {
     amount: "",
     motivation: "",
     facturation_date: new Date(),
-    file: "",
   });
+  const [file, setFile] = useState<File | null>(null);
+
   const { id } = useParams();
 
   const [method, setMethod] = useState("");
@@ -56,7 +57,6 @@ export function CreateExpense() {
             amount: response.data.data.amount,
             motivation: response.data.data.motivation,
             facturation_date: date,
-            file: response.data.data.file,
           });
         },
       );
@@ -86,19 +86,20 @@ export function CreateExpense() {
     });
   };
 
-  const handleExpenseFacturation_dateChange = (value: Date) => {
-    setCreatedExpense({
-      ...createdExpense,
-      facturation_date: value,
-    });
-    value?.setHours(2);
+  const handleExpenseFacturation_dateChange = (value: Date | undefined) => {
+    if (value) {
+      setCreatedExpense({
+        ...createdExpense,
+        facturation_date: value,
+      });
+      value?.setHours(2);
+    }
   };
 
-  const handleFileChange = (e) => {
-    setCreatedExpense({
-      ...createdExpense,
-      file: e.target.files,
-    });
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
   };
 
   const displayDate = () => {
@@ -115,28 +116,35 @@ export function CreateExpense() {
     return selectedTypeEnum[stringToConvert as keyof typeof selectedTypeEnum];
   };
 
-  const handleFormSubmit = async (
-    e: MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const handleFormSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     createdExpense.facturation_date.setHours(3);
     const date = createdExpense.facturation_date.toISOString().split("T")[0];
+    const formData = new FormData();
 
-    console.log(createdExpense);
     const body = {
       type: createdExpense.type,
       amount: createdExpense.amount,
       motivation: createdExpense.motivation,
       facturation_date: date,
-      file: createdExpense.file,
     };
+
+    if (file) {
+      formData.append("file", file);
+      formData.append("body", JSON.stringify(body));
+    }
+
     try {
       let fetchUrl = "http://localhost:5000/api/expense/";
       if (id != undefined) fetchUrl = "http://localhost:5000/api/expense/" + id;
-      await customFetcher(fetchUrl, {
-        method: method,
-        body: JSON.stringify(body),
-      }).then((response) => {
+      await customFetcher(
+        fetchUrl,
+        {
+          method: method,
+          body: formData,
+        },
+        false,
+      ).then((response) => {
         if (
           response.response.status !== 200 &&
           response.response.status !== 400
@@ -174,7 +182,11 @@ export function CreateExpense() {
       <div className="w-full py-4">
         <Card>
           <CardContent>
-            <form className="py-4">
+            <form
+              className="py-4"
+              name="expenseCreationFrom"
+              id="expenseCreationFrom"
+            >
               <div className="">
                 <Label className="my-1 text-lg" htmlFor="name">
                   Type
