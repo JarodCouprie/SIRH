@@ -12,6 +12,10 @@ import { Button } from "@/components/ui/button.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge.js";
+import { Label } from "@/components/ui/label.js";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 interface UserRolesProps {
   roles: RoleEnum[];
@@ -27,6 +31,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
   const [userRoles, setUserRoles] = useState<Role[]>([]);
   const [roleCanBeModified, setRoleCanBeModified] = useState(false);
   const [fetchedRoles, setFetchedRoles] = useState<Role[]>([]);
+  const [displayWarning, setDisplayWarning] = useState(false);
   const handleSubmitRole = async () => {
     const newRoles = userRoles.map((role) => {
       return role.id;
@@ -38,7 +43,15 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
     await customFetcher(
       `http://localhost:5000/api/user/set-roles/${id}`,
       config,
-    );
+    ).then((response) => {
+      const responseRoles: RoleEnum[] = response.data.data.roles;
+      const userRoles = fetchedRoles.filter((role) =>
+        responseRoles.includes(role.label),
+      );
+      setUserRoles(userRoles);
+      setRoleCanBeModified(false);
+      toast.success("Les rôles ont été modifiés");
+    });
   };
 
   const getDatabaseRoles = async () => {
@@ -57,10 +70,19 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
 
   const addRole = (role: Role) => {
     setUserRoles([...userRoles, role]);
+    if (userRoles.length >= 1) {
+      setDisplayWarning(false);
+    }
   };
 
   const removeRole = (role: Role) => {
-    setUserRoles([...userRoles.filter((r) => r.id !== role.id)]);
+    const filteredRoles = [...userRoles.filter((r) => r.id !== role.id)];
+    if (filteredRoles.length === 0) {
+      setDisplayWarning(true);
+      return;
+    } else {
+      setUserRoles(filteredRoles);
+    }
   };
 
   useEffect(() => {
@@ -103,26 +125,37 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
                       return checked ? addRole(role) : removeRole(role);
                     }}
                   />
-                  <label
+                  <Label
                     htmlFor={role.id.toString()}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="cursor-pointer text-sm font-medium"
                   >
                     <Badge variant="default">
                       {roleEnumKeyToFrench(role.label)}
                     </Badge>
-                  </label>
+                  </Label>
                 </div>
               );
             })}
           </form>
         ) : (
-          roles.map((role) => {
+          userRoles.map((role) => {
             return (
-              <Badge key={role} variant="default">
-                {roleEnumKeyToFrench(role)}
+              <Badge key={role.id.toString()} variant="default">
+                {roleEnumKeyToFrench(role.label)}
               </Badge>
             );
           })
+        )}
+        {displayWarning && (
+          <Alert variant="destructive" className="grid place-items-center">
+            <div className="flex gap-2">
+              <ExclamationTriangleIcon className="h-4 w-4" />
+              <AlertTitle>Attention</AlertTitle>
+            </div>
+            <AlertDescription>
+              Un utilisateur doit avoir au minimum un rôle
+            </AlertDescription>
+          </Alert>
         )}
       </CardContent>
       <CardFooter className="flex justify-end gap-2">

@@ -82,6 +82,9 @@ export class UserService {
   public static async setNewRole(req: Request, id: number) {
     try {
       const roles: number[] = req.body.roles;
+      if (roles.length === 0) {
+        return new ControllerResponse(400, "Nombre de rôle insuffisant");
+      }
       await UserRepository.setUserNewRoles(roles, id);
 
       const user: any = await UserRepository.getUserById(id);

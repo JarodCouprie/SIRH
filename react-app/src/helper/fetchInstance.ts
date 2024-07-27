@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 async function getRefreshToken() {
   const response = await fetch("http://localhost:5000/api/refresh-token", {
     headers: {
@@ -14,6 +16,9 @@ async function getRefreshToken() {
 async function originalRequest(url: string, config: any = {}) {
   const response = await fetch(url, config);
   const data = await response.json();
+  if (response.status >= 400 && response.status !== 401) {
+    toast.error(data.message);
+  }
   return { response, data };
 }
 
@@ -56,6 +61,7 @@ export async function customFetcher(
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       window.location.replace("/");
+      toast.error(data.message);
     }
   }
   return { response, data };

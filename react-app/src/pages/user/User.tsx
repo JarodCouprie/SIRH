@@ -49,7 +49,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip.js";
-import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 import { UserRoles } from "@/components/user/userRoles.js";
 
@@ -109,9 +108,8 @@ export function User() {
       config,
     ).then((response) => {
       if (response.response.status !== 200) {
-        return toast.error(response.data.message);
+        return;
       }
-      toast.success(response.data.message);
       setUserLoaded(true);
       setFoundUser(response.data.data);
     });
