@@ -53,7 +53,6 @@ import {
 } from "@/components/ui/tooltip.js";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
-import { Label } from "@/components/ui/label.js";
 import { Checkbox } from "@/components/ui/checkbox.js";
 
 export function User() {
