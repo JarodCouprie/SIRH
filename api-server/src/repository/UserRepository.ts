@@ -118,12 +118,20 @@ export class UserRepository {
     return result;
   }
 
-  public static async setUserNewRole(role: RoleEnum, id: number) {
+  public static async setUserNewRoles(roles: number[], id: number) {
+    const rolesMapped = roles.map((role) => [id, role]);
+    await this.pool.query(
+      `
+          DELETE
+          FROM own_role
+          WHERE id_user = ?
+      `,
+      [id],
+    );
     const [result] = await this.pool.query(
-      `UPDATE users
-       SET role = ?
-       WHERE id = ?`,
-      [role, id],
+      `INSERT INTO own_role(id_user, id_role)
+       VALUES ?`,
+      [rolesMapped],
     );
     return result;
   }

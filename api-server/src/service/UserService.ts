@@ -69,7 +69,6 @@ export class UserService {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
       const url = await MinioClient.getSignedUrl(user.image_key);
-      console.log("USER", new UserDTO(user));
       return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
@@ -82,8 +81,8 @@ export class UserService {
 
   public static async setNewRole(req: Request, id: number) {
     try {
-      const newRole: RoleEnum = req.body.role;
-      await UserRepository.setUserNewRole(newRole, id);
+      const roles: number[] = req.body.roles;
+      await UserRepository.setUserNewRoles(roles, id);
 
       const user: any = await UserRepository.getUserById(id);
       if (!user) {

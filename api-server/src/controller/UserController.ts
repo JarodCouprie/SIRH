@@ -32,7 +32,7 @@ router.post("/", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.post(
-  "/set-role/:id",
+  "/set-roles/:id",
   verifyToken,
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.setNewRole(
