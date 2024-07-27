@@ -148,7 +148,8 @@ export class ExpenseRepository {
             SET type = ?,
             amount = ?,
             motivation = ?,
-            facturation_date = ?
+            facturation_date = ?,
+            file_key = ?
             WHERE id = ?;
             `,
       [
@@ -156,6 +157,7 @@ export class ExpenseRepository {
         expense.amount,
         expense.motivation,
         expense.facturation_date,
+        expense.fileKey,
         id,
       ],
     );

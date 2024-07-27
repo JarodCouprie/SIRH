@@ -106,19 +106,26 @@ export class ExpenseService {
     }
   }
 
-  public static async editExpenseDemand(
-    id: string,
-    expense: Expense,
-    userId: number,
-  ) {
+  public static async editExpenseDemand(req: Request, userId: number) {
     try {
-      const targetExpense: Expense =
-        await ExpenseRepository.getExpenseDemand(id);
+      const targetExpense: Expense = await ExpenseRepository.getExpenseDemand(
+        req.params.id,
+      );
       if (targetExpense.id_owner != userId)
         return new ControllerResponse(403, "Access unauthorized");
 
+      let expense: Expense = JSON.parse(req.body.body);
+
+      let key: string;
+      if (req.file) {
+        const file = req.file;
+        key = `user/${userId}/expense/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
+        expense.fileKey = key;
+      }
+
       const result: any = await ExpenseRepository.updateExpenseDemand(
-        id,
+        req.params.id,
         expense,
       );
       return new ControllerResponse(200, "Operation was a success");

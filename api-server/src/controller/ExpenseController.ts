@@ -93,16 +93,20 @@ router.get("/count/all", verifyToken, async (req: Request, res: Response) => {
 
 // Gestion des demandes liées aux frais
 
-router.put("/:id", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
+router.put(
+  "/:id",
+  verifyToken,
+  upload.single("file"),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
 
-  const { code, message, data } = await ExpenseService.editExpenseDemand(
-    req.params.id,
-    req.body,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
+    const { code, message, data } = await ExpenseService.editExpenseDemand(
+      req,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
