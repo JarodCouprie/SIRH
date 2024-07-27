@@ -205,7 +205,7 @@ export function NewUser() {
   const [userBankInfosValidatedDisplay, setUserBankInfosValidatedDisplay] =
     useState(false);
 
-  const handleUserFormDataChange = (e: any) => {
+  const handleUserFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserFormData({
       ...userFormData,
       [e.target.name]: e.target.value,

@@ -10,20 +10,10 @@ import {
 } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar.tsx";
-import { BsFillInfoSquareFill } from "react-icons/bs";
-import { FaLocationDot } from "react-icons/fa6";
-import { RiBankFill } from "react-icons/ri";
-import { MdOutlineSecurity } from "react-icons/md";
 import {
   Tabs,
   TabsContent,
@@ -51,6 +41,7 @@ import {
 } from "@/components/ui/tooltip.js";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 import { UserRoles } from "@/components/user/userRoles.js";
+import { UserInfos } from "@/components/user/userInfos.js";
 
 export function User() {
   const { id } = useParams();
@@ -73,15 +64,6 @@ export function User() {
     return noUser;
   }
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  };
-
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/user/${id}`).then(
       (response) => {
@@ -97,151 +79,6 @@ export function User() {
   const handleGoBackToList = () => {
     navigate("/user");
   };
-
-  const handleDisableUser = async (userActive: boolean) => {
-    const config = {
-      method: "PUT",
-      body: JSON.stringify({ active: userActive }),
-    };
-    await customFetcher(
-      `http://localhost:5000/api/user/active/${id}`,
-      config,
-    ).then((response) => {
-      if (response.response.status !== 200) {
-        return;
-      }
-      setUserLoaded(true);
-      setFoundUser(response.data.data);
-    });
-  };
-
-  const userInfos = (
-    <div className="grid w-full grid-cols-3 gap-4">
-      <div className="col-span-1 flex flex-col gap-4 max-2xl:col-span-3">
-        <Card>
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
-              <div className="flex flex-wrap items-center gap-4">
-                <BsFillInfoSquareFill />
-                <span>Informations personnelles</span>
-              </div>
-              <Button variant="callToAction">Modifier</Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="Nom">
-              {foundUser.firstname} {foundUser.lastname}
-            </UserInfoRow>
-            <UserInfoRow title="Email">{foundUser.email}</UserInfoRow>
-            <UserInfoRow title="Téléphone">{foundUser.phone}</UserInfoRow>
-            <UserInfoRow title="Nationalité">
-              {foundUser.nationality}
-            </UserInfoRow>
-            <UserInfoRow title="Date de création">
-              {new Date(foundUser.created_at).toLocaleString(
-                "fr-FR",
-                dateOptions,
-              )}
-            </UserInfoRow>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap items-center gap-4 text-xl">
-              <MdOutlineSecurity className="text-red-600" />
-              <span>Sécurité</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <Button variant="outline" className="text-red-600">
-              Un bouton pour faire des trucs pas cool
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                {foundUser.active ? (
-                  <Button variant="outline" className="text-red-600">
-                    Désactiver {foundUser.firstname} {foundUser.lastname}
-                  </Button>
-                ) : (
-                  <Button variant="outline" className="text-red-600">
-                    Réactiver {foundUser.firstname} {foundUser.lastname}
-                  </Button>
-                )}
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Désactiver{" "}
-                    <span className="text-gray-50">
-                      {foundUser.firstname} {foundUser.lastname}
-                    </span>
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Êtes-vous sûr de vouloir désactiver {foundUser.firstname}{" "}
-                    {foundUser.lastname}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Annuler</AlertDialogCancel>
-                  {foundUser.active ? (
-                    <AlertDialogAction onClick={() => handleDisableUser(false)}>
-                      Désactiver
-                    </AlertDialogAction>
-                  ) : (
-                    <AlertDialogAction onClick={() => handleDisableUser(true)}>
-                      Réactiver
-                    </AlertDialogAction>
-                  )}
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="col-span-2 flex flex-col gap-4 max-2xl:col-span-3">
-        <Card>
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
-              <div className="flex flex-wrap items-center gap-4">
-                <FaLocationDot />
-                <span>Adresse</span>
-              </div>
-              <Button variant="callToAction">Modifier</Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="Pays de résidence">
-              {foundUser.country}
-            </UserInfoRow>
-            <UserInfoRow title="Adresse">
-              {foundUser.address.streetNumber} {foundUser.address.street}
-            </UserInfoRow>
-            <UserInfoRow title="Code postal">
-              {foundUser.address.zipcode}
-            </UserInfoRow>
-            <UserInfoRow title="Ville">
-              {foundUser.address.locality}
-            </UserInfoRow>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
-              <div className="flex flex-wrap items-center gap-4">
-                <RiBankFill />
-                <span>Informations bancaires</span>
-              </div>
-              <Button variant="callToAction">Modifier</Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="IBAN">{foundUser.iban}</UserInfoRow>
-            <UserInfoRow title="BIC">{foundUser.bic}</UserInfoRow>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -351,12 +188,18 @@ export function User() {
             <TabsTrigger value="demand">Demandes</TabsTrigger>
             <TabsTrigger value="expense">Frais</TabsTrigger>
           </TabsList>
-          <TabsContent value="infos">{userInfos}</TabsContent>
+          <TabsContent value="infos">
+            <UserInfos user={foundUser} setUser={setFoundUser} />
+          </TabsContent>
           <TabsContent value="role">
             <UserRoles roles={foundUser.roles} id={foundUser.id} />
           </TabsContent>
-          <TabsContent value="demand">{userInfos}</TabsContent>
-          <TabsContent value="expense">{userInfos}</TabsContent>
+          <TabsContent value="demand">
+            <UserInfos user={foundUser} setUser={setFoundUser} />
+          </TabsContent>
+          <TabsContent value="expense">
+            <UserInfos user={foundUser} setUser={setFoundUser} />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
