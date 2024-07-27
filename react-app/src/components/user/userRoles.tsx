@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox.js";
 import { RoleEnum, roleEnumKeyToFrench } from "@/enum/Role.enum.js";
 import { Button } from "@/components/ui/button.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge.js";
 import { Label } from "@/components/ui/label.js";
 import { toast } from "sonner";
