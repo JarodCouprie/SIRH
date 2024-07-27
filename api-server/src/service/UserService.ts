@@ -111,7 +111,7 @@ export class UserService {
       const currentUserId = (req as CustomRequest).token.userId;
       if (currentUserId === id) {
         return new ControllerResponse(
-          500,
+          400,
           "Impossible de vous désactiver vous même",
         );
       }
