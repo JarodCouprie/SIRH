@@ -1,6 +1,5 @@
 import { CreateUser, ResetUserPassword } from "../model/User.js";
 import { DatabaseClient } from "../helper/DatabaseClient.js";
-import { RoleEnum } from "../enum/RoleEnum";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -101,7 +100,7 @@ export class UserRepository {
     const [result] = await this.pool.query(
       `
           INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         user.firstname,

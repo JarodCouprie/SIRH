@@ -1,14 +1,16 @@
 import { UserRepository } from "../repository/UserRepository.js";
-import { CreateUser, User, UserDTO, UserListDTO } from "../model/User.js";
+import { CreateUser, User } from "../model/User.js";
 import { logger } from "../helper/Logger.js";
 import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
 import { AddressRepository } from "../repository/AddressRepository.js";
 import { CreateAddress } from "../model/Address.js";
-import { RoleEnum } from "../enum/RoleEnum.js";
 import { MinioClient } from "../helper/MinioClient.js";
 import dotenv from "dotenv";
 import { CustomRequest } from "../helper/CustomRequest.js";
+import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
+import { UserDTO } from "../dto/user/UserDTO.js";
+import { UserListDTO } from "../dto/user/UserListDTO.js";
 
 dotenv.config();
 
@@ -17,8 +19,7 @@ export class UserService {
     try {
       const users: any = await UserRepository.getUsers();
       const usersDto: UserDTO[] = users.map(async (user: User) => {
-        const url = await MinioClient.getSignedUrl(user.image_key);
-        return new UserDTO(user, url);
+        return await this.getUserDTO(user);
       });
       return new ControllerResponse<UserDTO[]>(200, "", usersDto);
     } catch (error) {
@@ -45,8 +46,7 @@ export class UserService {
       const userList: any = await UserRepository.listUsers(limit, offset);
       const userListMapped: UserListDTO[] = await Promise.all(
         userList.map(async (user: User) => {
-          const url = await MinioClient.getSignedUrl(user.image_key);
-          return new UserListDTO(user, url);
+          return await this.getUserDTO(user);
         }),
       );
       return new ControllerResponse(200, "", {
@@ -68,8 +68,8 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "", userToSend);
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
       return new ControllerResponse(
@@ -91,12 +91,8 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(
-        200,
-        "Rôles modifiés",
-        new UserDTO(user, url),
-      );
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "Rôles modifiés", userToSend);
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(
@@ -121,16 +117,12 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
+      const userToSend = await this.getUserDTO(user);
       let message = "Utilisateur désactivé";
       if (user.active) {
         message = "Utilisateur réactivé";
       }
-      return new ControllerResponse<UserDTO>(
-        200,
-        message,
-        new UserDTO(user, url),
-      );
+      return new ControllerResponse<UserDTO>(200, message, userToSend);
     } catch (error) {
       logger.error(`Failed to disable user role. Error: ${error}`);
       return new ControllerResponse(
@@ -247,12 +239,12 @@ export class UserService {
       await MinioClient.putObjectToBucket(key, file).then(async () => {
         await UserRepository.setUserNewProfilePicture(key, id);
       });
-      const user: any = await UserRepository.getUserById(id);
+      const user: User = await UserRepository.getUserById(id);
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "", userToSend);
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(
@@ -260,5 +252,37 @@ export class UserService {
         "Impossible de modifier le rôle de l'utilisateur",
       );
     }
+  }
+
+  public static async updateUserInfos(req: Request, id: number) {
+    try {
+      const body: UpdateUserInfoDTO = req.body;
+
+      // await UserRepository.updateUserInfos(body, id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "", userToSend);
+    } catch (error) {
+      logger.error(`Failed to update user infos. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier les informations de l'utilisateur",
+      );
+    }
+  }
+
+  private static async getUserDTO(user: User): Promise<UserDTO> {
+    let userToSend = new UserDTO(user);
+
+    if (user.image_key) {
+      const url = await MinioClient.getSignedUrl(user.image_key);
+      userToSend = new UserDTO(user, url);
+    }
+
+    return userToSend;
   }
 }

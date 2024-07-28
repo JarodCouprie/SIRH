@@ -106,12 +106,8 @@ export function NewUser() {
     );
 
     if (newUserFetch.response.status === 201) {
-      toast.message(
-        `Nouvel utilisateur ${userFormData.firstname} ${userFormData.lastname} créé`,
-      );
       return navigate("/user");
     }
-    toast.error("Erreur lors de la création de l'utilisateur");
   };
 
   const handleNextToAddress = () => {
