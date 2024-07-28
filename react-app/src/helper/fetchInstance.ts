@@ -19,6 +19,9 @@ async function originalRequest(url: string, config: any = {}) {
   if (response.status >= 400 && response.status !== 401) {
     toast.error(data.message);
   }
+  if (response.status >= 200 && response.status < 300 && data.message) {
+    toast.success(data.message);
+  }
   return { response, data };
 }
 

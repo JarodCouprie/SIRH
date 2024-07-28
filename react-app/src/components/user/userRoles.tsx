@@ -50,7 +50,6 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
       );
       setUserRoles(userRoles);
       setRoleCanBeModified(false);
-      toast.success("Les rôles ont été modifiés");
     });
   };
 

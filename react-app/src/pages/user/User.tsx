@@ -42,6 +42,7 @@ import {
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 import { UserRoles } from "@/components/user/userRoles.js";
 import { UserInfos } from "@/components/user/userInfos.js";
+import { UserDetails } from "@/components/user/userDetails.js";
 
 export function User() {
   const { id } = useParams();
@@ -181,15 +182,15 @@ export function User() {
         </div>
       </div>
       <div>
-        <Tabs defaultValue="infos">
+        <Tabs defaultValue="details">
           <TabsList className="flex flex-wrap">
-            <TabsTrigger value="infos">Général</TabsTrigger>
+            <TabsTrigger value="details">Général</TabsTrigger>
             <TabsTrigger value="role">Rôles</TabsTrigger>
             <TabsTrigger value="demand">Demandes</TabsTrigger>
             <TabsTrigger value="expense">Frais</TabsTrigger>
           </TabsList>
-          <TabsContent value="infos">
-            <UserInfos user={foundUser} setUser={setFoundUser} />
+          <TabsContent value="details">
+            <UserDetails user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="role">
             <UserRoles roles={foundUser.roles} id={foundUser.id} />
@@ -212,22 +213,6 @@ export function User() {
         <span>Utilisateurs</span>
       </Button>
       {userLoaded ? userMainPage : noUser}
-    </div>
-  );
-}
-
-export function UserInfoRow(props: {
-  title: string;
-  children: string | string[];
-}) {
-  const title = props.title || "Titre à donner";
-  const children = props.children;
-  return (
-    <div className="flex flex-col gap-1 p-4">
-      <div className="text-slate-800 dark:text-slate-300">{title}</div>
-      <div className="font-bold text-slate-950 dark:text-slate-50">
-        {children}
-      </div>
     </div>
   );
 }
