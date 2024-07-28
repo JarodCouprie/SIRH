@@ -6,6 +6,7 @@ export class ExpenseList {
   created_at: Date;
   facturation_date: Date;
   status: ExpenseStatus;
+  fileUrl?: string;
   constructor(
     id: string,
     type: ExpenseType,
@@ -14,6 +15,7 @@ export class ExpenseList {
     created_at: Date,
     facturation_date: Date,
     status: ExpenseStatus,
+    fileUrl?: string,
   ) {
     this.id = id;
     this.type = type;
@@ -22,6 +24,7 @@ export class ExpenseList {
     this.created_at = created_at;
     this.facturation_date = facturation_date;
     this.status = status;
+    this.fileUrl = fileUrl;
   }
 }
 

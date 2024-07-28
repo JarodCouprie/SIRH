@@ -1,10 +1,19 @@
 import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetails.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
 
-import { useEffect, useState } from "react";
-import { ExpenseStatus, ExpenseType } from "@/models/ExpenseModel.ts";
+import React, { useEffect, useState } from "react";
+import {
+  ExpenseList,
+  ExpenseStatus,
+  ExpenseType,
+} from "@/models/ExpenseModel.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge.tsx";
@@ -20,21 +29,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { MdOutlineVisibility } from "react-icons/md";
 
 export function ExpenseDetails() {
   const navigate = useNavigate();
   const handleGoBackToList = () => {
     navigate("/expense");
   };
-  const [expense, setExpense] = useState({
-    id: 0,
-    type: ExpenseType.TRAVEL,
-    amount: "",
-    motivation: "",
-    created_at: new Date(),
-    facturation_date: new Date(),
-    status: ExpenseStatus.WAITING,
-  });
+  const [expense, setExpense] = useState(
+    new ExpenseList(
+      "0",
+      ExpenseType.TRAVEL,
+      0,
+      "",
+      new Date(),
+      new Date(),
+      ExpenseStatus.WAITING,
+      "",
+    ),
+  );
+
   const { id } = useParams();
 
   const convertFromStringToExpenseStatusEnum = (target: string) => {
@@ -68,6 +82,7 @@ export function ExpenseDetails() {
           status: convertFromStringToExpenseStatusEnum(
             response.data.data.status,
           ),
+          fileUrl: response.data.data.fileUrl || undefined,
         });
       },
     );
@@ -138,6 +153,29 @@ export function ExpenseDetails() {
     }
   };
 
+  const fetchFileNameFromUrl = (url?: string) => {
+    if (!url || url === "") return "Aucun fichier";
+    let fileName = url.split("/").pop();
+    if (fileName) fileName = fileName.split("?")[0];
+    else fileName = "Aucun fichier";
+
+    return fileName;
+  };
+
+  const previewButton = (url?: string) => {
+    if (url && url !== "")
+      return (
+        <Button variant="default" onClick={handlePreviewFile}>
+          <MdOutlineVisibility className="mr-2 size-6" />
+          Voir le document
+        </Button>
+      );
+  };
+
+  const handlePreviewFile = () => {
+    window.open(expense.fileUrl, "_blank");
+  };
+
   return (
     <>
       <div className="flex justify-between py-4">
@@ -149,6 +187,42 @@ export function ExpenseDetails() {
       <MonthlyExpenseDetails />
       <div className="flex w-full flex-col gap-5 py-4">
         <Card>
+          <CardHeader>
+            <div className="flex flex-wrap justify-between">
+              <CardTitle className="text-lg">
+                Visualisation de la demande n°{expense.id}
+              </CardTitle>
+              <div className="flex flex-row justify-end gap-5">
+                <AlertDialog>
+                  <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Êtes-vous sûr de vouloir supprimer cette demande ?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action est irrévesrible, les données supprimée ne
+                        pourront pas être restaurée.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete}>
+                        Confirmer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <Button
+                  variant={"callToAction"}
+                  className="text-lg"
+                  onClick={handleEdit}
+                >
+                  Modifier
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
           <CardContent className="flex flex-col p-4">
             <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Type</div>
@@ -176,43 +250,23 @@ export function ExpenseDetails() {
                 {expense.created_at.toLocaleDateString()}
               </div>
             </div>
-            <div className="rounded border-gray-300/50 p-4 dark:border-gray-700/50">
+            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
               <div className="font-bold">Status</div>
               <div className="text-xl">
                 {translateAndDisplayExpenseStatusEnum(expense.status)}
               </div>
             </div>
+            <div className="rounded border-gray-300/50 p-4 dark:border-gray-700/50">
+              <div className="font-bold">Fichier</div>
+              <div className="flex flex-wrap gap-2">
+                <div className="text-xl">
+                  {fetchFileNameFromUrl(expense.fileUrl)}
+                </div>
+                <div className="">{previewButton(expense.fileUrl)}</div>
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <div className="flex flex-row justify-end gap-5">
-          <AlertDialog>
-            <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Êtes-vous sûr de vouloir supprimer cette demande ?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  Cette action est irrévesrible, les données supprimée ne
-                  pourront pas être restaurée.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  Confirmer
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button
-            variant={"callToAction"}
-            className="text-lg"
-            onClick={handleEdit}
-          >
-            Modifier
-          </Button>
-        </div>
       </div>
     </>
   );

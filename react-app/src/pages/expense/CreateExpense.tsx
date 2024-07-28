@@ -2,7 +2,13 @@ import { MonthlyExpenseDetails } from "@/components/expense/MonthlyExpenseDetail
 import { Button } from "@/components/ui/button.tsx";
 import { ArrowLeftIcon, CalendarIcon } from "@radix-ui/react-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import {
@@ -40,6 +46,7 @@ export function CreateExpense() {
   const { id } = useParams();
 
   const [method, setMethod] = useState("");
+  const [cardTitle, setCardTitle] = useState("");
 
   const getTargetExpense = async () => {
     try {
@@ -68,8 +75,12 @@ export function CreateExpense() {
   useEffect(() => {
     if (id != undefined) {
       setMethod("PUT");
+      setCardTitle("Modification de la demande de frais n°" + id);
       getTargetExpense();
-    } else setMethod("POST");
+    } else {
+      setMethod("POST");
+      setCardTitle("Création d'une demande de frais");
+    }
   }, []);
 
   const handleExpenseFormDataChange = (e: any) => {
@@ -181,6 +192,9 @@ export function CreateExpense() {
       <MonthlyExpenseDetails />
       <div className="w-full py-4">
         <Card>
+          <CardHeader>
+            <CardTitle className="text-lg"> {cardTitle} </CardTitle>
+          </CardHeader>
           <CardContent>
             <form
               className="py-4"
@@ -274,23 +288,25 @@ export function CreateExpense() {
                   onChange={handleFileChange}
                 />
               </div>
-              <div className="flex justify-end gap-8">
-                <Button
-                  onClick={handleGoBackToList}
-                  variant="link"
-                  className="rounded p-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-900"
-                >
-                  Annuler
-                </Button>
-                <Button
-                  className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400"
-                  onClick={(e) => handleFormSubmit(e)}
-                >
-                  Envoyer
-                </Button>
-              </div>
             </form>
           </CardContent>
+          <CardFooter className="justify-end">
+            <div className="flex justify-end gap-8">
+              <Button
+                onClick={handleGoBackToList}
+                variant="link"
+                className="rounded p-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-900"
+              >
+                Annuler
+              </Button>
+              <Button
+                className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400"
+                onClick={(e) => handleFormSubmit(e)}
+              >
+                Envoyer
+              </Button>
+            </div>
+          </CardFooter>
         </Card>
       </div>
     </>
