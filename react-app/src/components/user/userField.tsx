@@ -1,6 +1,4 @@
-import React from "react";
-
-export function UserInfoRow(props: {
+export function UserField(props: {
   title: string;
   children: string | string[];
 }) {

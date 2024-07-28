@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { Button } from "@/components/ui/button.js";
-import { UserInfoRow } from "@/components/user/userField.js";
+import { UserField } from "@/components/user/userField.js";
 
 interface UserAddressProps {
   user: UserModel;
@@ -28,12 +28,12 @@ export const UserAddress: React.FC<UserAddressProps> = ({ user, setUser }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-        <UserInfoRow title="Pays de résidence">{user.country}</UserInfoRow>
-        <UserInfoRow title="Adresse">
+        <UserField title="Pays de résidence">{user.country}</UserField>
+        <UserField title="Adresse">
           {user.address.streetNumber} {user.address.street}
-        </UserInfoRow>
-        <UserInfoRow title="Code postal">{user.address.zipcode}</UserInfoRow>
-        <UserInfoRow title="Ville">{user.address.locality}</UserInfoRow>
+        </UserField>
+        <UserField title="Code postal">{user.address.zipcode}</UserField>
+        <UserField title="Ville">{user.address.locality}</UserField>
       </CardContent>
     </Card>
   );

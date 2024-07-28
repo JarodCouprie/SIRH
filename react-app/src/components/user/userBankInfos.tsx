@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card.js";
 import { RiBankFill } from "react-icons/ri";
 import { Button } from "@/components/ui/button.js";
-import { UserInfoRow } from "@/components/user/userField.js";
+import { UserField } from "@/components/user/userField.js";
 
 interface UserBankInfosProps {
   user: UserModel;
@@ -31,8 +31,8 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-        <UserInfoRow title="IBAN">{user.iban}</UserInfoRow>
-        <UserInfoRow title="BIC">{user.bic}</UserInfoRow>
+        <UserField title="IBAN">{user.iban}</UserField>
+        <UserField title="BIC">{user.bic}</UserField>
       </CardContent>
     </Card>
   );
