@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button.js";
 import { UserField } from "@/components/user/userField.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
+import { customFetcher } from "@/helper/fetchInstance.js";
 
 interface UserInfosProps {
   user: UserModel;
@@ -46,19 +47,6 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
     minute: "2-digit",
   };
 
-  const userFields = (
-    <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-      <UserField title="Nom">{userUpdated.lastname}</UserField>
-      <UserField title="Prénoom">{userUpdated.firstname}</UserField>
-      <UserField title="Email">{userUpdated.email}</UserField>
-      <UserField title="Téléphone">{userUpdated.phone}</UserField>
-      <UserField title="Nationalité">{userUpdated.nationality}</UserField>
-      <UserField title="Date de création">
-        {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
-      </UserField>
-    </CardContent>
-  );
-
   const handleUserFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserUpdated({
       ...userUpdated,
@@ -71,10 +59,32 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
     setUserCanBeUpdated(!userCanBeUpdated);
   };
 
-  const handleSubmitUpdatedUser = () => {
-    console.log(userUpdated);
-    setUserCanBeUpdated(!userCanBeUpdated);
+  const handleSubmitUpdatedUser = async () => {
+    const config = {
+      method: "POST",
+      body: JSON.stringify(userUpdated),
+    };
+    await customFetcher(
+      `http://localhost:5000/api/user/update-infos/${user.id}`,
+      config,
+    ).then((response) => {
+      setUser(response.data.data);
+      setUserCanBeUpdated(!userCanBeUpdated);
+    });
   };
+
+  const userFields = (
+    <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
+      <UserField title="Nom">{userUpdated.lastname}</UserField>
+      <UserField title="Prénom">{userUpdated.firstname}</UserField>
+      <UserField title="Email">{userUpdated.email}</UserField>
+      <UserField title="Téléphone">{userUpdated.phone}</UserField>
+      <UserField title="Nationalité">{userUpdated.nationality}</UserField>
+      <UserField title="Date de création">
+        {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
+      </UserField>
+    </CardContent>
+  );
 
   const userUpdating = (
     <CardContent className="flex flex-col gap-4 py-4">

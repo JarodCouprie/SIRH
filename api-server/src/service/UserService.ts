@@ -4,13 +4,16 @@ import { logger } from "../helper/Logger.js";
 import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
 import { AddressRepository } from "../repository/AddressRepository.js";
-import { CreateAddress } from "../model/Address.js";
+import { UserAddress } from "../model/Address.js";
 import { MinioClient } from "../helper/MinioClient.js";
 import dotenv from "dotenv";
 import { CustomRequest } from "../helper/CustomRequest.js";
 import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
 import { UserDTO } from "../dto/user/UserDTO.js";
 import { UserListDTO } from "../dto/user/UserListDTO.js";
+import { UserEntity } from "../entity/user/user.entity.js";
+import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
+import { UpdateUserAddressDTO } from "../dto/user/UpdateUserAddressDTO.js";
 
 dotenv.config();
 
@@ -151,7 +154,7 @@ export class UserService {
       const longitude = addressInfos.features[0].geometry.coordinates[0];
       const latitude = addressInfos.features[0].geometry.coordinates[1];
 
-      const newAddress = new CreateAddress(
+      const newAddress = new CreateOrUpdateAddressDTO(
         street,
         streetNumber,
         locality,
@@ -257,20 +260,71 @@ export class UserService {
   public static async updateUserInfos(req: Request, id: number) {
     try {
       const body: UpdateUserInfoDTO = req.body;
-
-      // await UserRepository.updateUserInfos(body, id);
+      await UserRepository.updateUserInfos(body, id);
 
       const user: User = await UserRepository.getUserById(id);
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
       const userToSend = await this.getUserDTO(user);
-      return new ControllerResponse<UserDTO>(200, "", userToSend);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Utilisateur modifié",
+        userToSend,
+      );
     } catch (error) {
       logger.error(`Failed to update user infos. Error: ${error}`);
       return new ControllerResponse(
         500,
         "Impossible de modifier les informations de l'utilisateur",
+      );
+    }
+  }
+
+  public static async updateUserAddress(req: Request, id: number) {
+    try {
+      const body: UpdateUserAddressDTO = req.body;
+      const userEntity: UserEntity = await UserRepository.getUserEntityById(id);
+
+      const addressInfosFetched = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${body.streetNumber}+${body.street}+${body.locality}+${body.zipcode}`,
+      );
+      const addressInfos = await addressInfosFetched.json();
+
+      if (!addressInfos.features.length) {
+        return new ControllerResponse(400, "Adresse invalide");
+      }
+
+      const longitude = addressInfos.features[0].geometry.coordinates[0];
+      const latitude = addressInfos.features[0].geometry.coordinates[1];
+
+      const newAddress = new CreateOrUpdateAddressDTO(
+        body.street,
+        body.streetNumber,
+        body.locality,
+        body.zipcode,
+        latitude,
+        longitude,
+      );
+
+      await AddressRepository.updateAddress(newAddress, userEntity.id_address);
+      await UserRepository.updateUserCountry(body.country, userEntity.id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Adresse de l'utilisateur modifiée",
+        userToSend,
+      );
+    } catch (error) {
+      logger.error(`Failed to update user address. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier l'adresse de l'utilisateur",
       );
     }
   }

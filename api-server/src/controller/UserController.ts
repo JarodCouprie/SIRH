@@ -43,6 +43,30 @@ router.post(
   },
 );
 
+router.post(
+  "/update-infos/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserInfos(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.post(
+  "/update-address/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserAddress(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
 router.put(
   "/set-picture/:id",
   verifyToken,

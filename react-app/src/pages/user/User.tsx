@@ -193,7 +193,7 @@ export function User() {
             <UserDetails user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="role">
-            <UserRoles roles={foundUser.roles} id={foundUser.id} />
+            <UserRoles user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="demand">
             <UserInfos user={foundUser} setUser={setFoundUser} />

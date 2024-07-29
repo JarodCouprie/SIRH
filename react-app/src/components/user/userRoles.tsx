@@ -10,15 +10,16 @@ import { Checkbox } from "@/components/ui/checkbox.js";
 import { RoleEnum, roleEnumKeyToFrench } from "@/enum/Role.enum.js";
 import { Button } from "@/components/ui/button.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge.js";
 import { Label } from "@/components/ui/label.js";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { UserModel } from "@/models/User.model.js";
 
-interface UserRolesProps {
-  roles: RoleEnum[];
-  id: number;
+interface UserProps {
+  user: UserModel;
+  setUser: Dispatch<SetStateAction<UserModel>>;
 }
 
 interface Role {
@@ -26,11 +27,12 @@ interface Role {
   label: RoleEnum;
 }
 
-export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
+export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
   const [userRoles, setUserRoles] = useState<Role[]>([]);
-  const [roleCanBeModified, setRoleCanBeModified] = useState(false);
+  const [rolesCanBeModified, setRolesCanBeModified] = useState(false);
   const [fetchedRoles, setFetchedRoles] = useState<Role[]>([]);
   const [displayWarning, setDisplayWarning] = useState(false);
+
   const handleSubmitRole = async () => {
     const newRoles = userRoles.map((role) => {
       return role.id;
@@ -40,15 +42,11 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
       body: JSON.stringify({ roles: newRoles }),
     };
     await customFetcher(
-      `http://localhost:5000/api/user/set-roles/${id}`,
+      `http://localhost:5000/api/user/set-roles/${user.id}`,
       config,
     ).then((response) => {
-      const responseRoles: RoleEnum[] = response.data.data.roles;
-      const userRoles = fetchedRoles.filter((role) =>
-        responseRoles.includes(role.label),
-      );
-      setUserRoles(userRoles);
-      setRoleCanBeModified(false);
+      setUser(response.data.data);
+      setRolesCanBeModified(false);
     });
   };
 
@@ -60,7 +58,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
       const responseRoles: Role[] = response.data.data;
       setFetchedRoles(responseRoles);
       const userRoles = responseRoles.filter((role) =>
-        roles.includes(role.label),
+        user.roles.includes(role.label),
       );
       setUserRoles(userRoles);
     });
@@ -88,7 +86,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
   }, []);
 
   const handleModifyRoles = () => {
-    setRoleCanBeModified(!roleCanBeModified);
+    setRolesCanBeModified(!rolesCanBeModified);
   };
 
   return (
@@ -99,7 +97,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
             <FaUserGear />
             <span>Rôles</span>
           </div>
-          {roleCanBeModified ? (
+          {rolesCanBeModified ? (
             <Button variant="ghost" onClick={handleModifyRoles}>
               Annuler
             </Button>
@@ -111,7 +109,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {roleCanBeModified ? (
+        {rolesCanBeModified ? (
           <form className="flex flex-col gap-2">
             {fetchedRoles.map((role) => {
               return (
@@ -136,10 +134,10 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
             })}
           </form>
         ) : (
-          userRoles.map((role) => {
+          user.roles.map((role) => {
             return (
-              <Badge key={role.id.toString()} variant="default">
-                {roleEnumKeyToFrench(role.label)}
+              <Badge key={role} variant="default">
+                {roleEnumKeyToFrench(role)}
               </Badge>
             );
           })
@@ -157,7 +155,7 @@ export const UserRoles: React.FC<UserRolesProps> = ({ roles, id }) => {
         )}
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        {roleCanBeModified && (
+        {rolesCanBeModified && (
           <Button variant="callToAction" onClick={handleSubmitRole}>
             Enregistrer
           </Button>

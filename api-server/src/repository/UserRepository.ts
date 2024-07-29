@@ -1,5 +1,6 @@
 import { CreateUser, ResetUserPassword } from "../model/User.js";
 import { DatabaseClient } from "../helper/DatabaseClient.js";
+import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -7,6 +8,18 @@ export class UserRepository {
   public static async getUsers() {
     const [rows] = await this.pool.query("SELECT * FROM users");
     return rows;
+  }
+
+  public static async getUserEntityById(id: number) {
+    const [rows]: any = await this.pool.query(
+      `
+          SELECT *
+          FROM users
+          WHERE users.id = ?
+      `,
+      [id],
+    );
+    return rows[0];
   }
 
   public static async getUsersCount() {
@@ -182,6 +195,37 @@ export class UserRepository {
        SET active = ?
        WHERE id = ?`,
       [active, id],
+    );
+    return result;
+  }
+
+  public static async updateUserCountry(country: string, id: number) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET country = ?
+       WHERE id = ?`,
+      [country, id],
+    );
+    return result;
+  }
+
+  public static async updateUserInfos(body: UpdateUserInfoDTO, id: number) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET firstname   = ?,
+           lastname    = ?,
+           email       = ?,
+           phone       = ?,
+           nationality = ?
+       WHERE id = ?`,
+      [
+        body.firstname,
+        body.lastname,
+        body.email,
+        body.phone,
+        body.nationality,
+        id,
+      ],
     );
     return result;
   }
