@@ -1,6 +1,7 @@
 import { CreateUser, ResetUserPassword } from "../model/User.js";
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
+import { UpdateUserBankInfosDTO } from "../dto/user/UpdateUserBankInfosDTO.js";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -226,6 +227,20 @@ export class UserRepository {
         body.nationality,
         id,
       ],
+    );
+    return result;
+  }
+
+  public static async updateUserBankInfos(
+    body: UpdateUserBankInfosDTO,
+    id: number,
+  ) {
+    const [result] = await this.pool.query(
+      `UPDATE users
+       SET iban = ?,
+           bic = ?
+       WHERE id = ?`,
+      [body.iban, body.bic, id],
     );
     return result;
   }

@@ -67,6 +67,18 @@ router.post(
   },
 );
 
+router.post(
+  "/update-bank-infos/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserBankInfos(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
 router.put(
   "/set-picture/:id",
   verifyToken,

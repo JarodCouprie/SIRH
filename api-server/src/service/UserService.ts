@@ -14,6 +14,7 @@ import { UserListDTO } from "../dto/user/UserListDTO.js";
 import { UserEntity } from "../entity/user/user.entity.js";
 import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
 import { UpdateUserAddressDTO } from "../dto/user/UpdateUserAddressDTO.js";
+import { UpdateUserBankInfosDTO } from "../dto/user/UpdateUserBankInfosDTO.js";
 
 dotenv.config();
 
@@ -325,6 +326,30 @@ export class UserService {
       return new ControllerResponse(
         500,
         "Impossible de modifier l'adresse de l'utilisateur",
+      );
+    }
+  }
+
+  public static async updateUserBankInfos(req: Request, id: number) {
+    try {
+      const body: UpdateUserBankInfosDTO = req.body;
+      await UserRepository.updateUserBankInfos(body, id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Informations bancaires de l'utilisateur modifiées",
+        userToSend,
+      );
+    } catch (error) {
+      logger.error(`Failed to update user bank infos. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier les informations bancaires de l'utilisateur",
       );
     }
   }
