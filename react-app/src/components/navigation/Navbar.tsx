@@ -6,8 +6,16 @@ import React from "react";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
 import { GrGroup } from "react-icons/gr";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { RoleEnum } from "@/enum/Role.enum.js";
 
 export function NavBar() {
+  const { user } = useCurrentUser();
+  const authorisedRoles = [RoleEnum.ADMIN, RoleEnum.HR];
+  const navLinkDisplayed = user.roles.some((role) =>
+    authorisedRoles?.includes(role),
+  );
+
   return (
     <aside
       className="flex w-80 max-w-80 flex-col justify-between gap-4
@@ -30,9 +38,11 @@ export function NavBar() {
           <NavBarLink link="/organisation" title="Organisation">
             <TbBuildingCommunity className="size-6" />
           </NavBarLink>
-          <NavBarLink link="/user" title="Collaborateurs">
-            <GrGroup className="size-6" />
-          </NavBarLink>
+          {navLinkDisplayed && (
+            <NavBarLink link="/user" title="Collaborateurs">
+              <GrGroup className="size-6" />
+            </NavBarLink>
+          )}
         </div>
       </div>
       <UserMenu />
@@ -40,13 +50,16 @@ export function NavBar() {
   );
 }
 
-function NavBarLink(props: any) {
-  const link: string = props.link || "/";
-  const children: React.JSX.Element = props.children;
-  const title: string = props.title || "lien";
+interface NavBarLinkProps {
+  link: string;
+  children: React.JSX.Element;
+  title: string;
+}
+
+const NavBarLink: React.FC<NavBarLinkProps> = (props) => {
   return (
     <NavLink
-      to={link}
+      to={props.link || "/"}
       className={({ isActive }) =>
         isActive
           ? buttonVariants({ variant: "navActive", size: "nav" })
@@ -54,9 +67,9 @@ function NavBarLink(props: any) {
       }
     >
       <div className="flex w-full items-start justify-start gap-4 max-md:flex-col max-md:items-center">
-        {children}
-        <span className="max-md:hidden">{title}</span>
+        {props.children}
+        <span className="max-md:hidden">{props.title || "lien"}</span>
       </div>
     </NavLink>
   );
-}
+};

@@ -15,9 +15,28 @@ import { userRoutes } from "@/routes/UserRoutes.tsx";
 import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
 import { demandRoutes } from "@/routes/DemandRoutes.tsx";
 import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { RoleEnum } from "@/enum/Role.enum.js";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
+  const { user } = useCurrentUser();
+  const authorisedRoles = [RoleEnum.ADMIN, RoleEnum.HR];
+  const userHasRequiredRoles = user.roles.some((role) =>
+    authorisedRoles?.includes(role),
+  );
+  const childrenRoutes = [
+    organisationRoutes,
+    demandRoutes,
+    expenseRoutes,
+    userRoutes,
+  ];
+
+  if (user.id && !userHasRequiredRoles) {
+    const routeIndex = childrenRoutes.indexOf(userRoutes);
+    childrenRoutes.splice(routeIndex, 1);
+  }
+
   const publicRoutes = [
     {
       path: "*",
@@ -37,12 +56,7 @@ export const Routes = () => {
           path: "/",
           element: <Root />,
           errorElement: <PageError />,
-          children: [
-            userRoutes,
-            organisationRoutes,
-            demandRoutes,
-            expenseRoutes,
-          ],
+          children: childrenRoutes,
         },
       ],
     },

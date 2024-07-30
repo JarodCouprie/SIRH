@@ -46,7 +46,8 @@ import { UserDetails } from "@/components/user/userDetails.js";
 
 export function User() {
   const { id } = useParams();
-  const [userLoaded, setUserLoaded] = useState(false);
+  const [userLoaded, setUserLoaded] = useState<boolean>(false);
+  const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
   const [file, setFile] = useState<File | null>(null);
   const { user, refreshUser } = useCurrentUser();
@@ -61,15 +62,12 @@ export function User() {
       </h1>
     </div>
   );
-  if (!id) {
-    return noUser;
-  }
 
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/user/${id}`).then(
       (response) => {
         if (response.response.status !== 200) {
-          return;
+          return setUserNotFound(true);
         }
         setUserLoaded(true);
         setFoundUser(response.data.data);
@@ -105,6 +103,9 @@ export function User() {
       if (response.response.status !== 200) {
         return;
       }
+      if (!response.data.data) {
+        return setUserLoaded(false);
+      }
       setUserLoaded(true);
       setFoundUser(response.data.data);
 
@@ -126,8 +127,8 @@ export function User() {
                     <Avatar className="size-14 cursor-pointer">
                       <AvatarImage src={foundUser?.avatar_url} />
                       <AvatarFallback>
-                        {foundUser.firstname.charAt(0)}
-                        {foundUser.lastname.charAt(0)}
+                        {foundUser?.firstname?.charAt(0)}
+                        {foundUser?.lastname?.charAt(0)}
                       </AvatarFallback>
                       <div className="absolute left-0 top-0 grid size-full place-items-center bg-slate-700 opacity-0 transition duration-200 hover:opacity-90">
                         <FaPen className="size-6 text-gray-50" />
@@ -212,7 +213,8 @@ export function User() {
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
         <span>Utilisateurs</span>
       </Button>
-      {userLoaded ? userMainPage : noUser}
+      {userLoaded && userMainPage}
+      {userNotFound && noUser}
     </div>
   );
 }
