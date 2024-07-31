@@ -247,7 +247,6 @@ export class DemandService {
     try {
       let number_day = 0;
       const body = JSON.parse(req.body.body);
-      console.log(body);
       if (body.start_date && body.end_date) {
         number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
