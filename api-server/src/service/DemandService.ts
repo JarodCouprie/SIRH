@@ -206,13 +206,8 @@ export class DemandService {
       let key: string | undefined;
       if (req.file) {
         const file = req.file;
-        // if (demand.file_key) {
-        //   await MinioClient.removeObjectFromBucket(demand.file_key);
-        // }
         key = `user/${userId}/demand/${file.originalname}`;
         await MinioClient.putObjectToBucket(key, file);
-        console.log(demand.file_key);
-        console.log(key);
         demand.file_key = key;
       }
 
@@ -225,7 +220,6 @@ export class DemandService {
         key || "",
         body.status,
       );
-      console.log(editDemand);
       await DemandRepository.editDemand(+idDemand, editDemand);
       await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
 
