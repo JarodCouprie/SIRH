@@ -28,14 +28,50 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
   const { code, message } = await UserService.createUser(req);
-  res.status(code).json(message);
+  res.status(code).json({ message });
 });
 
 router.post(
-  "/set-role/:id",
+  "/set-roles/:id",
   verifyToken,
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.setNewRole(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.post(
+  "/update-infos/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserInfos(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.post(
+  "/update-address/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserAddress(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.post(
+  "/update-bank-infos/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.updateUserBankInfos(
       req,
       +req.params.id,
     );
@@ -55,5 +91,13 @@ router.put(
     res.status(code).json({ message, data });
   },
 );
+
+router.put("/active/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await UserService.setUserActive(
+    req,
+    +req.params.id,
+  );
+  res.status(code).json({ message, data });
+});
 
 export default router;

@@ -30,7 +30,6 @@ CREATE TABLE users
     lastname    VARCHAR(50),
     id_address  BIGINT,
     nationality VARCHAR(50),
-    role        VARCHAR(50),
     iban        VARCHAR(50),
     bic         VARCHAR(50),
     active      BOOLEAN            NOT NULL DEFAULT TRUE,
