@@ -12,8 +12,13 @@ import { CreateDemand } from "../dto/demand/CreateDemandDTO";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
 import { Request } from "express";
 import { UserService } from "./UserService";
+import { MinioClient } from "../helper/MinioClient.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
-export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
+export function calculateNumberOfDays(
+  start_date: Date,
+  end_date: Date,
+): number {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
   const isWeekend = (date: Date) => {
@@ -21,8 +26,8 @@ export function calculateNumberOfDays(startDate: Date, endDate: Date): number {
     return day === 0 || day === 6;
   };
 
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = new Date(start_date);
+  const end = new Date(end_date);
   let count = 0;
   let currentDate = start;
 
@@ -81,14 +86,12 @@ export function updateUserDays(
         user.tt -= numberOfDays;
       }
       break;
-    default:
-      return "Invalid type";
   }
   return null;
 }
 
 export class DemandService {
-  public static async getDemand(req: Request) {
+  public static async getDemand(userId: number, req: Request) {
     try {
       const pageSize = req.query.pageSize || "0";
       const pageNumber = req.query.pageNumber || "10";
@@ -103,7 +106,7 @@ export class DemandService {
         type,
       );
       if (!type) {
-        demands = await DemandRepository.getDemand(limit, offset);
+        demands = await DemandRepository.getDemandByUser(userId, limit, offset);
         demandCount = await DemandRepository.getDemandCount();
       }
       const demandDto: DemandDTO[] = demands.map(
@@ -147,21 +150,21 @@ export class DemandService {
   }
 
   public static async editDemand(
-    id: string,
-    body: EditDemandDTO,
+    idDemand: string,
+    req: Request,
     userId: number,
   ) {
     try {
-      const demand: any = await DemandRepository.getDemandById(+id);
-
+      const demand: any = await DemandRepository.getDemandById(+idDemand);
+      const body = JSON.parse(req.body.body);
       if (demand.status !== DemandStatus.DRAFT) {
         return new ControllerResponse(400, "Not allowed");
       }
 
       let number_day = 0;
 
-      if (body.startDate && body.endDate) {
-        number_day = calculateNumberOfDays(body.startDate, body.endDate);
+      if (body.start_date && body.end_date) {
+        number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
           return new ControllerResponse(
             400,
@@ -181,12 +184,13 @@ export class DemandService {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
 
-      const originalEndDate = demand.endDate;
+      const originalEndDate = demand.end_date;
       const originalNumberOfDays = calculateNumberOfDays(
-        demand.startDate,
+        demand.start_date,
         originalEndDate,
       );
-      const isReducingDays = new Date(body.endDate) < new Date(originalEndDate);
+      const isReducingDays =
+        new Date(body.end_date) < new Date(originalEndDate);
 
       if (isReducingDays) {
         const daysToRecover = originalNumberOfDays - number_day;
@@ -199,16 +203,24 @@ export class DemandService {
         }
       }
 
+      let key: string | undefined;
+      if (req.file) {
+        const file = req.file;
+        key = `user/${userId}/demand/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
+        demand.file_key = key;
+      }
+
       const editDemand = new EditDemandDTO(
-        body.startDate,
-        body.endDate,
+        body.start_date,
+        body.end_date,
         body.motivation,
         body.type,
         number_day,
+        key || "",
         body.status,
       );
-
-      await DemandRepository.editDemand(+id, editDemand);
+      await DemandRepository.editDemand(+idDemand, editDemand);
       await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
 
       return new ControllerResponse(200, "", editDemand);
@@ -239,12 +251,12 @@ export class DemandService {
     }
   }
 
-  public static async createDemand(body: CreateDemand, id: number) {
+  public static async createDemand(req: Request, id: number) {
     try {
       let number_day = 0;
-
-      if (body.startDate && body.endDate) {
-        number_day = calculateNumberOfDays(body.startDate, body.endDate);
+      const body = JSON.parse(req.body.body);
+      if (body.start_date && body.end_date) {
+        number_day = calculateNumberOfDays(body.start_date, body.end_date);
         if (number_day === -1) {
           return new ControllerResponse(
             400,
@@ -265,13 +277,21 @@ export class DemandService {
         return new ControllerResponse(400, error);
       }
 
+      let key: string | undefined;
+      if (req.file) {
+        const file = req.file;
+        key = `user/${id}/demand/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
+      }
+
       const newDemand = new CreateDemand(
-        body.startDate,
-        body.endDate,
+        body.start_date,
+        body.end_date,
         body.motivation,
         DemandStatus.DRAFT,
         body.type,
         number_day,
+        key || "",
         id,
       );
 

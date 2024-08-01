@@ -106,12 +106,8 @@ export function NewUser() {
     );
 
     if (newUserFetch.response.status === 201) {
-      toast.message(
-        `Nouvel utilisateur ${userFormData.firstname} ${userFormData.lastname} créé`,
-      );
       return navigate("/user");
     }
-    toast.error("Erreur lors de la création de l'utilisateur");
   };
 
   const handleNextToAddress = () => {
@@ -205,7 +201,7 @@ export function NewUser() {
   const [userBankInfosValidatedDisplay, setUserBankInfosValidatedDisplay] =
     useState(false);
 
-  const handleUserFormDataChange = (e: any) => {
+  const handleUserFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserFormData({
       ...userFormData,
       [e.target.name]: e.target.value,

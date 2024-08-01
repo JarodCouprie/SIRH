@@ -1,13 +1,20 @@
 import { UserRepository } from "../repository/UserRepository.js";
-import { CreateUser, User, UserDTO, UserListDTO } from "../model/User.js";
+import { CreateUser, User } from "../model/User.js";
 import { logger } from "../helper/Logger.js";
 import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
 import { AddressRepository } from "../repository/AddressRepository.js";
-import { CreateAddress } from "../model/Address.js";
-import { RoleEnum } from "../enum/RoleEnum.js";
+import { UserAddress } from "../model/Address.js";
 import { MinioClient } from "../helper/MinioClient.js";
 import dotenv from "dotenv";
+import { CustomRequest } from "../helper/CustomRequest.js";
+import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
+import { UserDTO } from "../dto/user/UserDTO.js";
+import { UserListDTO } from "../dto/user/UserListDTO.js";
+import { UserEntity } from "../entity/user/user.entity.js";
+import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
+import { UpdateUserAddressDTO } from "../dto/user/UpdateUserAddressDTO.js";
+import { UpdateUserBankInfosDTO } from "../dto/user/UpdateUserBankInfosDTO.js";
 
 dotenv.config();
 
@@ -16,8 +23,7 @@ export class UserService {
     try {
       const users: any = await UserRepository.getUsers();
       const usersDto: UserDTO[] = users.map(async (user: User) => {
-        const url = await MinioClient.getSignedUrl(user.image_key);
-        return new UserDTO(user, url);
+        return await this.getUserDTO(user);
       });
       return new ControllerResponse<UserDTO[]>(200, "", usersDto);
     } catch (error) {
@@ -44,8 +50,7 @@ export class UserService {
       const userList: any = await UserRepository.listUsers(limit, offset);
       const userListMapped: UserListDTO[] = await Promise.all(
         userList.map(async (user: User) => {
-          const url = await MinioClient.getSignedUrl(user.image_key);
-          return new UserListDTO(user, url);
+          return await this.getUserDTO(user);
         }),
       );
       return new ControllerResponse(200, "", {
@@ -67,30 +72,66 @@ export class UserService {
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "", userToSend);
     } catch (error) {
       logger.error(`Failed to get user. Error: ${error}`);
-      return new ControllerResponse(500, "Impossible de créer l'utilisateur");
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer l'utilisateur",
+      );
     }
   }
 
   public static async setNewRole(req: Request, id: number) {
     try {
-      const newRole: RoleEnum = req.body.role;
-      await UserRepository.setUserNewRole(newRole, id);
+      const roles: number[] = req.body.roles;
+      if (roles.length === 0) {
+        return new ControllerResponse(400, "Nombre de rôle insuffisant");
+      }
+      await UserRepository.setUserNewRoles(roles, id);
 
       const user: any = await UserRepository.getUserById(id);
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "Rôles modifiés", userToSend);
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(
         500,
         "Impossible de modifier le rôle de l'utilisateur",
+      );
+    }
+  }
+
+  public static async setUserActive(req: Request, id: number) {
+    try {
+      const currentUserId = (req as CustomRequest).token.userId;
+      if (currentUserId === id) {
+        return new ControllerResponse(
+          400,
+          "Impossible de vous désactiver vous même",
+        );
+      }
+      const userActive: boolean = req.body.active || false;
+      await UserRepository.setUserActive(userActive, id);
+      const user: any = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      let message = "Utilisateur désactivé";
+      if (user.active) {
+        message = "Utilisateur réactivé";
+      }
+      return new ControllerResponse<UserDTO>(200, message, userToSend);
+    } catch (error) {
+      logger.error(`Failed to disable user role. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de désactiver l'utilisateur",
       );
     }
   }
@@ -114,7 +155,7 @@ export class UserService {
       const longitude = addressInfos.features[0].geometry.coordinates[0];
       const latitude = addressInfos.features[0].geometry.coordinates[1];
 
-      const newAddress = new CreateAddress(
+      const newAddress = new CreateOrUpdateAddressDTO(
         street,
         streetNumber,
         locality,
@@ -202,12 +243,12 @@ export class UserService {
       await MinioClient.putObjectToBucket(key, file).then(async () => {
         await UserRepository.setUserNewProfilePicture(key, id);
       });
-      const user: any = await UserRepository.getUserById(id);
+      const user: User = await UserRepository.getUserById(id);
       if (!user) {
         return new ControllerResponse(401, "L'utilisateur n'existe pas");
       }
-      const url = await MinioClient.getSignedUrl(user.image_key);
-      return new ControllerResponse<UserDTO>(200, "", new UserDTO(user, url));
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(200, "", userToSend);
     } catch (error) {
       logger.error(`Failed to set user role. Error: ${error}`);
       return new ControllerResponse(
@@ -215,5 +256,112 @@ export class UserService {
         "Impossible de modifier le rôle de l'utilisateur",
       );
     }
+  }
+
+  public static async updateUserInfos(req: Request, id: number) {
+    try {
+      const body: UpdateUserInfoDTO = req.body;
+      await UserRepository.updateUserInfos(body, id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Utilisateur modifié",
+        userToSend,
+      );
+    } catch (error) {
+      logger.error(`Failed to update user infos. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier les informations de l'utilisateur",
+      );
+    }
+  }
+
+  public static async updateUserAddress(req: Request, id: number) {
+    try {
+      const body: UpdateUserAddressDTO = req.body;
+      const userEntity: UserEntity = await UserRepository.getUserEntityById(id);
+
+      const addressInfosFetched = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${body.streetNumber}+${body.street}+${body.locality}+${body.zipcode}`,
+      );
+      const addressInfos = await addressInfosFetched.json();
+
+      if (!addressInfos.features.length) {
+        return new ControllerResponse(400, "Adresse invalide");
+      }
+
+      const longitude = addressInfos.features[0].geometry.coordinates[0];
+      const latitude = addressInfos.features[0].geometry.coordinates[1];
+
+      const newAddress = new CreateOrUpdateAddressDTO(
+        body.street,
+        body.streetNumber,
+        body.locality,
+        body.zipcode,
+        latitude,
+        longitude,
+      );
+
+      await AddressRepository.updateAddress(newAddress, userEntity.id_address);
+      await UserRepository.updateUserCountry(body.country, userEntity.id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Adresse de l'utilisateur modifiée",
+        userToSend,
+      );
+    } catch (error) {
+      logger.error(`Failed to update user address. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier l'adresse de l'utilisateur",
+      );
+    }
+  }
+
+  public static async updateUserBankInfos(req: Request, id: number) {
+    try {
+      const body: UpdateUserBankInfosDTO = req.body;
+      await UserRepository.updateUserBankInfos(body, id);
+
+      const user: User = await UserRepository.getUserById(id);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'existe pas");
+      }
+      const userToSend = await this.getUserDTO(user);
+      return new ControllerResponse<UserDTO>(
+        200,
+        "Informations bancaires de l'utilisateur modifiées",
+        userToSend,
+      );
+    } catch (error) {
+      logger.error(`Failed to update user bank infos. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier les informations bancaires de l'utilisateur",
+      );
+    }
+  }
+
+  private static async getUserDTO(user: User): Promise<UserDTO> {
+    let userToSend = new UserDTO(user);
+
+    if (user.image_key) {
+      const url = await MinioClient.getSignedUrl(user.image_key);
+      userToSend = new UserDTO(user, url);
+    }
+
+    return userToSend;
   }
 }

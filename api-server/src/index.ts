@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import { verifyToken } from "./middleware/AuthMiddleware.js";
 import auth from "./controller/AuthController.js";
 import users from "./controller/UserController.js";
-import { verifyToken } from "./middleware/AuthMiddleware.js";
 import demand from "./controller/DemandController.js";
 import expense from "./controller/ExpenseController.js";
+import role from "./controller/RoleController.js";
 import cors from "cors";
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use("/api", auth);
 app.use("/api/user", users);
 app.use("/api/expense", expense);
 app.use("/api/demand", demand);
+app.use("/api/role", role);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

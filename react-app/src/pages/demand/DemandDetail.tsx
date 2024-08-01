@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DemandDTO } from "@/models/DemandModel.ts";
+import { DemandDTO } from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,
@@ -32,8 +32,8 @@ export function DemandDetail() {
   const { id } = useParams();
   const [demand, setDemand] = useState<DemandDTO>({
     motivation: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    start_date: new Date(),
+    end_date: new Date(),
     type: DemandType.CA,
     status: "",
   });
@@ -107,6 +107,10 @@ export function Detail({ demand }: any) {
         return "Télétravail";
       case "RTT":
         return "RTT (Récupération du temps de travail)";
+      case "SICKNESS":
+        return "Arrêt maladie";
+      case "ABSENCE":
+        return "Absence";
       default:
         return "erreur";
     }
@@ -180,13 +184,13 @@ export function Detail({ demand }: any) {
               )}
             </UserInfoRow>
             <UserInfoRow title="Date de début">
-              {new Date(demand?.startDate?.toString()).toLocaleDateString(
+              {new Date(demand?.start_date?.toString()).toLocaleDateString(
                 "fr-FR",
                 dateOptions,
               )}
             </UserInfoRow>
             <UserInfoRow title="Date de fin">
-              {new Date(demand?.endDate?.toString()).toLocaleDateString(
+              {new Date(demand?.end_date?.toString()).toLocaleDateString(
                 "fr-FR",
                 dateOptions,
               )}

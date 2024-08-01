@@ -38,36 +38,53 @@ export function LoginForm() {
     }
   };
   return (
-    <div className="flex h-dvh w-dvw flex-col items-center justify-center gap-12 bg-gray-100 text-gray-950 dark:bg-gray-900 dark:text-gray-100">
-      <h1 className="bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-5xl text-transparent">
-        Bienvenue sur SIRH
-      </h1>
-      <form
-        className="flex flex-col items-center gap-6"
-        onSubmit={handleClickSubmitButton}
-      >
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label className="text-xl" htmlFor="email">
-            Email
-          </Label>
-          <Input type="email" id="email" placeholder="Email" name="email" />
+    <div className="flex h-dvh w-dvw flex-col items-center justify-center gap-12 bg-black text-gray-950 dark:text-gray-100">
+      <div className="grid size-full grid-cols-3 rounded-xl">
+        <div className="relative col-span-2 rounded max-lg:hidden">
+          <div className="absolute size-full bg-[url('@/assets/pompidou.jpg')] bg-fixed bg-center opacity-50"></div>
+          <div className="relative z-10 grid size-full place-items-center p-20">
+            <div className="flex flex-col items-start gap-4">
+              <h1 className="bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-center text-8xl text-transparent">
+                Bienvenue sur SIRH
+              </h1>
+              <p className="text-slate-50">
+                La plateforme RH qui simplifie la gestion de votre entreprise !
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label className="text-xl" htmlFor="password">
-            Mot de passe
-          </Label>
-          <Input
-            type="password"
-            id="password"
-            placeholder="Password"
-            name="password"
-          />
+        <div className="col-span-1 flex flex-col items-center justify-center rounded-r bg-white dark:bg-slate-900 max-lg:col-span-3">
+          <h2 className="bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-center text-4xl text-transparent">
+            Connexion
+          </h2>
+          <form
+            className="flex w-full flex-col items-center gap-6 px-20 py-6"
+            onSubmit={handleClickSubmitButton}
+          >
+            <div className="grid w-full items-center gap-1.5">
+              <Label className="text-xl" htmlFor="email">
+                Email
+              </Label>
+              <Input type="email" id="email" placeholder="Email" name="email" />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+              <Label className="text-xl" htmlFor="password">
+                Mot de passe
+              </Label>
+              <Input
+                type="password"
+                id="password"
+                placeholder="Password"
+                name="password"
+              />
+            </div>
+            <Button type="submit" className="w-full" variant="default">
+              Envoyer
+              <PaperPlaneIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
         </div>
-        <Button type="submit" className="w-full" variant="default">
-          Envoyer
-          <PaperPlaneIcon className="ml-2 h-4 w-4" />
-        </Button>
-      </form>
+      </div>
     </div>
   );
 }

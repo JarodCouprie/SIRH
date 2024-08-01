@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DemandDTO } from "@/models/DemandModel.ts";
+import { DemandDTO } from "@/models/Demand.model.ts";
 import { DemandType } from "@/pages/demand/DemandDetail.tsx";
 import { useParams } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
@@ -9,8 +9,8 @@ export function DemandEdit() {
   const { id } = useParams();
   const [demand, setDemand] = useState<DemandDTO>({
     motivation: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    start_date: new Date(),
+    end_date: new Date(),
     type: DemandType.CA,
     status: "",
   });
