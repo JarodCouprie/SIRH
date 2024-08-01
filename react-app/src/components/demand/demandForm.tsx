@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { customFetcher } from "@/helper/fetchInstance";
-import { DemandDTO, DemandType } from "@/models/DemandModel";
+import { DemandDTO, DemandType } from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,
@@ -46,13 +46,14 @@ const DemandForm: React.FC<DemandFormProps> = ({
   };
   const { id } = useParams();
   const navigate = useNavigate();
-  const [start_date, setStartDate] = useState<Date>();
-  const [end_date, setEndDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
+  const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<{
-    startDate?: string;
-    endDate?: string;
+    start_date?: string;
+    end_date?: string;
     type?: string;
   }>({});
 
@@ -63,8 +64,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
   useEffect(() => {
     if (initialData) {
-      setStartDate(new Date(initialData.startDate));
-      setEndDate(new Date(initialData.endDate));
+      setStartDate(new Date(initialData.start_date));
+      setEndDate(new Date(initialData.end_date));
       setMotivation(initialData.motivation);
       setSelectedType(initialData.type);
     }
@@ -74,44 +75,67 @@ const DemandForm: React.FC<DemandFormProps> = ({
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-
     if (formDemandValid()) {
-      const motivation = event.currentTarget.description.value;
-      const startDate = start_date?.toLocaleDateString("fr-CA");
-      let endDate = end_date?.toLocaleDateString("fr-CA");
-      let demandeData;
+      const formMotivation = event.currentTarget.description.value;
+      const formattedStartDate = startDate?.toLocaleDateString("fr-CA");
+      const formattedEndDate = endDate?.toLocaleDateString("fr-CA");
+      let demandData;
 
       if (method === "PUT") {
-        demandeData = {
-          startDate,
-          endDate,
-          motivation,
+        demandData = {
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+          motivation: formMotivation,
           type: selectedType,
           status: initialData?.status,
         };
       }
       if (method === "POST") {
-        demandeData = {
-          startDate,
-          endDate,
-          motivation,
+        demandData = {
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+          motivation: formMotivation,
           type: selectedType,
         };
       }
 
-      const response = await customFetcher(submitUrl, {
-        method: method,
-        body: JSON.stringify(demandeData),
-      });
+      let response;
+      const formData = new FormData();
+      if (file) {
+        formData.append("file", file);
+        formData.append("body", JSON.stringify(demandData));
+        response = await customFetcher(
+          submitUrl,
+          {
+            method: method,
+            body: formData,
+          },
+          false,
+        );
+      } else {
+        formData.append("body", JSON.stringify(demandData));
+        console.log(formData);
+        response = await customFetcher(
+          submitUrl,
+          {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: formData,
+          },
+          false,
+        );
+      }
 
       if (response.response.status === 201 && method === "POST") {
         toast.message(
-          `Nouvelle demande de ${demandeData?.type} à la date du ${demandeData?.startDate} a bien été créée`,
+          `Nouvelle demande de ${demandData?.type} à la date du ${demandData?.start_date} a bien été créée`,
         );
         navigate("/demand", { replace: true });
       } else if (response.response.status === 200 && method === "PUT") {
         toast.message(
-          `Demande de ${demandeData?.type} a la date du ${demandeData?.startDate} modifiée`,
+          `Demande de ${demandData?.type} a la date du ${demandData?.start_date} modifiée`,
         );
         navigate(`/demand/detail/${id}`, { replace: true });
       } else if (response.data.details && response.data.details.length > 0) {
@@ -123,19 +147,19 @@ const DemandForm: React.FC<DemandFormProps> = ({
   };
 
   const formDemandValid = () => {
-    const newErrors: { startDate?: string; endDate?: string; type?: string } =
+    const newErrors: { start_date?: string; end_date?: string; type?: string } =
       {};
 
     if (!selectedType.trim()) {
       newErrors.type = "Le type de demande est requis";
     }
 
-    if (!start_date) {
-      newErrors.startDate = "La date de début est requise";
+    if (!startDate) {
+      newErrors.start_date = "La date de début est requise";
     }
 
-    if (!end_date) {
-      newErrors.endDate = "La date de fin est requise";
+    if (!endDate) {
+      newErrors.end_date = "La date de fin est requise";
     }
 
     setErrors(newErrors);
@@ -160,12 +184,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 variant={"outline"}
                 className={cn(
                   "w-full justify-start border-gray-500 p-6 text-left font-normal",
-                  !start_date && "text-muted-foreground",
+                  !startDate && "text-muted-foreground",
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {start_date ? (
-                  new Date(start_date).toLocaleString("fr-FR", dateOptions)
+                {startDate ? (
+                  new Date(startDate).toLocaleString("fr-FR", dateOptions)
                 ) : (
                   <span>Date de début</span>
                 )}
@@ -174,7 +198,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={start_date}
+                selected={startDate}
                 onSelect={setStartDate}
                 initialFocus
                 disabled={isWeekday}
@@ -187,12 +211,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 variant={"outline"}
                 className={cn(
                   "w-full justify-start border-gray-500 p-6 text-left font-normal",
-                  !end_date && "text-muted-foreground",
+                  !endDate && "text-muted-foreground",
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {end_date ? (
-                  new Date(end_date).toLocaleString("fr-FR", dateOptions)
+                {endDate ? (
+                  new Date(endDate).toLocaleString("fr-FR", dateOptions)
                 ) : (
                   <span>Date de fin</span>
                 )}
@@ -201,7 +225,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
             <PopoverContent className="w-auto p-0">
               <Calendar
                 mode="single"
-                selected={end_date}
+                selected={endDate}
                 onSelect={setEndDate}
                 initialFocus
                 disabled={isWeekday}
@@ -257,6 +281,12 @@ const DemandForm: React.FC<DemandFormProps> = ({
     }
   };
 
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
+  };
+
   return (
     <Card>
       <CardTitle className="flex items-center justify-between gap-4 text-xl">
@@ -266,6 +296,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
         <form
           onSubmit={handleClickSubmitButton}
           className="flex flex-col gap-3"
+          encType="multipart/form-data"
         >
           <div className="flex justify-center">
             <Select
@@ -280,6 +311,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
                 <SelectItem value="CA">Congé annuel</SelectItem>
                 <SelectItem value="RTT">RTT</SelectItem>
                 <SelectItem value="TT">Télétravail</SelectItem>
+                <SelectItem value="ABSENCE">Absence</SelectItem>
+                <SelectItem value="SICKNESS">Arrêt maladie</SelectItem>
               </SelectContent>
             </Select>
             {errors.type && <p className="text-red-500">{errors.type}</p>}
@@ -295,17 +328,28 @@ const DemandForm: React.FC<DemandFormProps> = ({
             onChange={handleChange}
           />
 
+          {(selectedType === DemandType.ABSENCE ||
+            selectedType === DemandType.SICKNESS) && (
+            <Input
+              className="p-6"
+              type="file"
+              id="additionalInfo"
+              placeholder="Raison de l'absence"
+              onChange={handleFileChange}
+            />
+          )}
+
           {dateChanger()}
 
           <div className="flex justify-around">
             <div>
-              {errors.startDate && (
-                <p className="text-red-500">{errors.startDate}</p>
+              {errors.start_date && (
+                <p className="text-red-500">{errors.start_date}</p>
               )}
             </div>
             <div>
-              {errors.endDate && (
-                <p className="text-red-500">{errors.endDate}</p>
+              {errors.end_date && (
+                <p className="text-red-500">{errors.end_date}</p>
               )}
             </div>
           </div>

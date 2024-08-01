@@ -22,7 +22,7 @@ VALUES (1, 2),
        (2, 1),
        (2, 4);
 
-INSERT INTO `demand`(`id`, `startDate`, `endDate`, `motivation`, `createdAt`, `status`, `type`, `number_day`,
+INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`, `status`, `type`, `number_day`,
                      `id_user_create_demand`,
                      `id_user_validate_demand`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'ACCEPTED', 'CA', 1, '1',

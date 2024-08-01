@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { DemandAll } from "@/models/DemandModel.ts";
+import { DemandAll, DemandStatus, DemandType } from "@/models/Demand.model.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -37,6 +37,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
+import { GiMedicalThermometer } from "react-icons/gi";
+import { FaRegCalendarXmark } from "react-icons/fa6";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandAll[]>([]);
@@ -101,41 +103,55 @@ export function Demand() {
     navigate(`/demand/detail/${id}`);
   };
 
-  const getClassForStatus = (status: any) => {
+  const getClassForStatus = (status: DemandStatus) => {
     switch (status) {
-      case "ACCEPTED":
+      case DemandStatus.ACCEPTED:
         return <Badge variant="accepted">Acceptée</Badge>;
-      case "WAITING":
+      case DemandStatus.WAITING:
         return <Badge variant="waiting">En attente</Badge>;
-      case "DENIED":
+      case DemandStatus.DENIED:
         return <Badge variant="denied">Refusée</Badge>;
-      case "DRAFT":
+      case DemandStatus.DRAFT:
         return <Badge variant="draft">A confirmer</Badge>;
       default:
         return <Badge variant="outline">Erreur</Badge>;
     }
   };
 
-  const getStatusOption = (status: any) => {
+  const getStatusOption = (status: DemandType) => {
     switch (status) {
-      case "CA":
+      case DemandType.CA:
         return {
           icon: (
             <TbCalendarClock className="size-9 text-indigo-500 opacity-75" />
           ),
           label: "Demande de congés",
         };
-      case "RTT":
+      case DemandType.RTT:
         return {
           icon: <TbCalendarRepeat className="size-9 text-red-500 opacity-75" />,
           label: "Demande de RTT",
         };
-      case "TT":
+      case DemandType.TT:
         return {
           icon: (
             <MdOutlineLaptop className="size-9 text-orange-500 opacity-75" />
           ),
           label: "Demande de télétravail",
+        };
+      case DemandType.ABSENCE:
+        return {
+          icon: (
+            <FaRegCalendarXmark className="size-8 text-amber-500 opacity-75" />
+          ),
+          label: "Absence",
+        };
+      case DemandType.SICKNESS:
+        return {
+          icon: (
+            <GiMedicalThermometer className="size-8 text-red-500 opacity-75" />
+          ),
+          label: "Arrêt maladie",
         };
       default:
         return {
@@ -190,18 +206,18 @@ export function Demand() {
                       <div>{getStatusOption(demand.type).label}</div>
                       <div className="text-xs text-zinc-500">
                         {new Date(
-                          demand?.createdAt?.toString(),
+                          demand?.created_at?.toString(),
                         ).toLocaleDateString("fr-FR", dateOptions)}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-left">
-                    {new Date(demand?.startDate?.toString()).toLocaleDateString(
-                      "fr-FR",
-                    )}
+                    {new Date(
+                      demand?.start_date?.toString(),
+                    ).toLocaleDateString("fr-FR")}
                   </TableCell>
                   <TableCell className="text-left">
-                    {new Date(demand?.endDate?.toString()).toLocaleDateString(
+                    {new Date(demand?.end_date?.toString()).toLocaleDateString(
                       "fr-FR",
                     )}
                   </TableCell>
@@ -268,20 +284,37 @@ export function Demand() {
             <TabsTrigger value="general" onClick={() => handleFilter()}>
               Général
             </TabsTrigger>
-            <TabsTrigger value="ca" onClick={() => handleFilter("CA")}>
+            <TabsTrigger value="ca" onClick={() => handleFilter(DemandType.CA)}>
               Congés
             </TabsTrigger>
-            <TabsTrigger value="tt" onClick={() => handleFilter("TT")}>
+            <TabsTrigger value="tt" onClick={() => handleFilter(DemandType.TT)}>
               Télétravail
             </TabsTrigger>
-            <TabsTrigger value="rtt" onClick={() => handleFilter("RTT")}>
+            <TabsTrigger
+              value="rtt"
+              onClick={() => handleFilter(DemandType.RTT)}
+            >
               RTT
+            </TabsTrigger>
+            <TabsTrigger
+              value="absence"
+              onClick={() => handleFilter(DemandType.ABSENCE)}
+            >
+              Absence
+            </TabsTrigger>
+            <TabsTrigger
+              value="sickness"
+              onClick={() => handleFilter(DemandType.SICKNESS)}
+            >
+              Arrêt maladie
             </TabsTrigger>
           </TabsList>
           <TabsContent value="general">{tableDemand}</TabsContent>
           <TabsContent value="ca">{tableDemand}</TabsContent>
           <TabsContent value="tt">{tableDemand}</TabsContent>
           <TabsContent value="rtt">{tableDemand}</TabsContent>
+          <TabsContent value="absence">{tableDemand}</TabsContent>
+          <TabsContent value="sickness">{tableDemand}</TabsContent>
         </Tabs>
       </div>
     </MainRoot>
