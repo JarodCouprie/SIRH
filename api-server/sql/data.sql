@@ -27,34 +27,3 @@ INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`,
                      `id_user_validate_demand`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'ACCEPTED', 'CA', 1, '1',
         '1');
-
-# SQL QUERY TO RETRIEVE ROLES IN ONE LINE
-SELECT
-    u.id,
-    GROUP_CONCAT(r.label) AS roles
-FROM
-    users u
-        JOIN
-    own_role owr
-    ON
-        u.id = owr.id_user
-        JOIN
-    role r
-    ON
-        r.id = owr.id_role
-GROUP BY u.id;
-
-SELECT
-    u.id,
-    JSON_ARRAYAGG(r.label) AS roles
-FROM
-    users u
-        JOIN
-    own_role owr
-    ON
-        u.id = owr.id_user
-        JOIN
-    role r
-    ON
-        r.id = owr.id_role
-GROUP BY u.id;
