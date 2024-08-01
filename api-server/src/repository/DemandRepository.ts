@@ -11,7 +11,7 @@ export class DemandRepository {
       `SELECT *
        FROM demand
        WHERE type = ?
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [type, limit, offset],
     );
@@ -22,9 +22,20 @@ export class DemandRepository {
     const [rows] = await this.pool.query(
       `SELECT *
        FROM demand
-       ORDER BY createdAt
+       ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [limit, offset],
+    );
+    return rows;
+  }
+  public static async getDemandByUser(userId: number, limit = 10, offset = 0) {
+    const [rows] = await this.pool.query(
+      `SELECT *
+       FROM demand
+       WHERE id_user_create_demand = ?
+       ORDER BY created_at
+       LIMIT ? OFFSET ? `,
+      [userId, limit, offset],
     );
     return rows;
   }
@@ -63,23 +74,25 @@ export class DemandRepository {
     const [rows]: any = await this.pool.query(
       `
           UPDATE demand
-          SET startDate=?,
-              endDate    = ?,
+          SET start_date=?,
+              end_date    = ?,
               motivation = ?,
               type       = ?,
               status     = ?,
-              number_day = ?
+              number_day = ?,
+              file_key = ?
           WHERE id = ?
           LIMIT 1;
 
       `,
       [
-        demand.startDate,
-        demand.endDate,
+        demand.start_date,
+        demand.end_date,
         demand.motivation,
         demand.type,
         demand.status,
         demand.number_day,
+        demand.key,
         id,
       ],
     );
@@ -101,22 +114,24 @@ export class DemandRepository {
   public static async createDemand(demand: CreateDemand) {
     const [rows]: any = await this.pool.query(
       `
-          INSERT INTO demand (startDate,
-                              endDate,
+          INSERT INTO demand (start_date,
+                              end_date,
                               motivation,
                               status,
                               type,
                               number_day,
+                              file_key,
                               id_user_create_demand)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
-        demand.startDate,
-        demand.endDate,
+        demand.start_date,
+        demand.end_date,
         demand.motivation,
         demand.status,
         demand.type,
         demand.number_day,
+        demand.file_key,
         demand.idOwner,
       ],
     );

@@ -1,26 +1,29 @@
 import { DemandType } from "../../model/Demand";
 
 export class EditDemandDTO {
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   motivation: string;
   type: DemandType;
   number_day: number;
+  key: string;
   status: string;
 
   constructor(
-    startDate: Date,
-    endDate: Date,
+    start_date: Date,
+    end_date: Date,
     motivation: string,
     type: DemandType,
     number_day: number,
+    key: string,
     status: string,
   ) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.start_date = start_date;
+    this.end_date = end_date;
     this.motivation = motivation;
     this.type = type;
     this.number_day = number_day;
+    this.key = key;
     this.status = status;
   }
 }
