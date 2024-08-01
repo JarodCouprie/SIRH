@@ -79,7 +79,8 @@ export class DemandRepository {
               motivation = ?,
               type       = ?,
               status     = ?,
-              number_day = ?
+              number_day = ?,
+              file_key = ?
           WHERE id = ?
           LIMIT 1;
 
@@ -91,6 +92,7 @@ export class DemandRepository {
         demand.type,
         demand.status,
         demand.number_day,
+        demand.key,
         id,
       ],
     );
