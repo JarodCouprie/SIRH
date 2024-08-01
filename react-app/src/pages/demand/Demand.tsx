@@ -103,7 +103,7 @@ export function Demand() {
     navigate(`/demand/detail/${id}`);
   };
 
-  const getClassForStatus = (status: any) => {
+  const getClassForStatus = (status: DemandStatus) => {
     switch (status) {
       case DemandStatus.ACCEPTED:
         return <Badge variant="accepted">Acceptée</Badge>;
@@ -118,7 +118,7 @@ export function Demand() {
     }
   };
 
-  const getStatusOption = (status: any) => {
+  const getStatusOption = (status: DemandType) => {
     switch (status) {
       case DemandType.CA:
         return {

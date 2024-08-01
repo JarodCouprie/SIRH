@@ -107,6 +107,10 @@ export function Detail({ demand }: any) {
         return "Télétravail";
       case "RTT":
         return "RTT (Récupération du temps de travail)";
+      case "SICKNESS":
+        return "Arrêt maladie";
+      case "ABSENCE":
+        return "Absence";
       default:
         return "erreur";
     }
@@ -174,7 +178,7 @@ export function Detail({ demand }: any) {
             </UserInfoRow>
             <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
             <UserInfoRow title="Date de création">
-              {new Date(demand?.createdAt?.toString()).toLocaleDateString(
+              {new Date(demand?.created_at?.toString()).toLocaleDateString(
                 "fr-FR",
                 dateTimeOptions,
               )}

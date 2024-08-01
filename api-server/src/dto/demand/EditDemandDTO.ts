@@ -6,6 +6,7 @@ export class EditDemandDTO {
   motivation: string;
   type: DemandType;
   number_day: number;
+  key: string;
   status: string;
 
   constructor(
@@ -14,6 +15,7 @@ export class EditDemandDTO {
     motivation: string,
     type: DemandType,
     number_day: number,
+    key: string,
     status: string,
   ) {
     this.start_date = start_date;
@@ -21,6 +23,7 @@ export class EditDemandDTO {
     this.motivation = motivation;
     this.type = type;
     this.number_day = number_day;
+    this.key = key;
     this.status = status;
   }
 }

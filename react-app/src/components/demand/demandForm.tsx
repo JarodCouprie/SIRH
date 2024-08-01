@@ -104,7 +104,6 @@ const DemandForm: React.FC<DemandFormProps> = ({
       if (file) {
         formData.append("file", file);
         formData.append("body", JSON.stringify(demandData));
-
         response = await customFetcher(
           submitUrl,
           {
@@ -115,6 +114,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
         );
       } else {
         formData.append("body", JSON.stringify(demandData));
+        console.log(formData);
         response = await customFetcher(
           submitUrl,
           {

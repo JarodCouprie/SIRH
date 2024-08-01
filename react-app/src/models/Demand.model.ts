@@ -26,7 +26,7 @@ export class DemandAll {
   end_date: Date;
   motivation: string;
   created_at: Date;
-  status: string;
+  status: DemandStatus;
   number_day: number;
   type: DemandType;
 
@@ -36,7 +36,7 @@ export class DemandAll {
     end_date: Date,
     motivation: string,
     created_at: Date,
-    status: string,
+    status: DemandStatus,
     number_day: number,
     type: DemandType,
   ) {

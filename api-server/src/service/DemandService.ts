@@ -150,13 +150,13 @@ export class DemandService {
   }
 
   public static async editDemand(
-    id: string,
-    body: EditDemandDTO,
+    idDemand: string,
+    req: Request,
     userId: number,
   ) {
     try {
-      const demand: any = await DemandRepository.getDemandById(+id);
-
+      const demand: any = await DemandRepository.getDemandById(+idDemand);
+      const body = JSON.parse(req.body.body);
       if (demand.status !== DemandStatus.DRAFT) {
         return new ControllerResponse(400, "Not allowed");
       }
@@ -203,16 +203,27 @@ export class DemandService {
         }
       }
 
+      let key: string | undefined;
+      if (req.file) {
+        const file = req.file;
+        // if (demand.file_key) {
+        //   await MinioClient.removeObjectFromBucket(demand.file_key);
+        // }
+        key = `user/${userId}/demand/${file.originalname}`;
+        await MinioClient.putObjectToBucket(key, file);
+      }
+
       const editDemand = new EditDemandDTO(
         body.start_date,
         body.end_date,
         body.motivation,
         body.type,
         number_day,
+        key || "",
         body.status,
       );
-
-      await DemandRepository.editDemand(+id, editDemand);
+      console.log(editDemand);
+      await DemandRepository.editDemand(+idDemand, editDemand);
       await UserService.updateUserDays(userId, user.rtt, user.ca, user.tt);
 
       return new ControllerResponse(200, "", editDemand);

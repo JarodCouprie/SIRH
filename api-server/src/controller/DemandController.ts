@@ -44,15 +44,21 @@ router.post(
   },
 );
 
-router.put("/:id_demand", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
-  const { code, message, data } = await DemandService.editDemand(
-    req.params.id_demand,
-    req.body,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
+router.put(
+  "/:id_demand",
+  verifyToken,
+  upload.single("file"),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+    console.log(req);
+    const { code, message, data } = await DemandService.editDemand(
+      req.params.id_demand,
+      req,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 router.put(
   "/status/:id_demand",
