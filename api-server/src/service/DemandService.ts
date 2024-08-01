@@ -211,6 +211,7 @@ export class DemandService {
         // }
         key = `user/${userId}/demand/${file.originalname}`;
         await MinioClient.putObjectToBucket(key, file);
+        demand.file_key = key;
       }
 
       const editDemand = new EditDemandDTO(
