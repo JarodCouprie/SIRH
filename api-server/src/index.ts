@@ -4,6 +4,7 @@ import { verifyToken } from "./middleware/AuthMiddleware.js";
 import auth from "./controller/AuthController.js";
 import users from "./controller/UserController.js";
 import demand from "./controller/DemandController.js";
+import expense from "./controller/ExpenseController.js";
 import role from "./controller/RoleController.js";
 import cors from "cors";
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors(corsOptions));
 app.use("/api", auth);
 app.use("/api/user", users);
+app.use("/api/expense", expense);
 app.use("/api/demand", demand);
 app.use("/api/role", role);
 
