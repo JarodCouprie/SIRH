@@ -175,7 +175,7 @@ export class ExpenseService {
     try {
       const status = req.body.ExpenseStatus;
       const result: any = await ExpenseRepository.confirmExpenseDemand(
-        req.params.id,
+        +req.params.id,
         status,
         userId,
       );

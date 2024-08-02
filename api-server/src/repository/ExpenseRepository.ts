@@ -185,7 +185,7 @@ export class ExpenseRepository {
   }
 
   public static async confirmExpenseDemand(
-    id: string,
+    id: number,
     status: ExpenseStatus,
     validatorId: number,
   ) {
