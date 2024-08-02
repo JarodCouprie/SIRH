@@ -53,8 +53,8 @@ export function ExpenseCard(props: any) {
 }
 
 export enum ExpenseCardType {
-  "EXPENSE" = "EXPENSE",
-  "REFUNDED" = "REFUNDED",
-  "NON_REFUNDED" = "NON_REFUNDED",
-  "WAITING" = "WAITING",
+  EXPENSE = "EXPENSE",
+  REFUNDED = "REFUNDED",
+  NON_REFUNDED = "NON_REFUNDED",
+  WAITING = "WAITING",
 }

@@ -46,7 +46,7 @@ export class ExpenseRepository {
   }
 
   public static async getExpensesValuesByUserId(
-    user_id: string,
+    user_id: number,
     offset: number,
     limit: number,
   ) {
@@ -64,7 +64,7 @@ export class ExpenseRepository {
   }
 
   public static async getExpensesValuesByUserIdAndType(
-    user_id: string,
+    user_id: number,
     offset: number,
     limit: number,
     type: string,
@@ -81,7 +81,7 @@ export class ExpenseRepository {
     );
     return rows;
   }
-  public static async getExpensesCountByUserId(id_owner: string) {
+  public static async getExpensesCountByUserId(id_owner: number) {
     const [rows]: any = await this.pool.query(
       `
               SELECT COUNT(*) AS count
@@ -108,7 +108,7 @@ export class ExpenseRepository {
   }
   public static async getExpensesCountByTypeAndUserId(
     type: string,
-    id_owner: string,
+    id_owner: number,
   ) {
     const [rows]: any = await this.pool.query(
       `
@@ -187,7 +187,7 @@ export class ExpenseRepository {
   public static async confirmExpenseDemand(
     id: string,
     status: ExpenseStatus,
-    validatorId: string,
+    validatorId: number,
   ) {
     const [result]: any = await this.pool.query(
       `
@@ -245,7 +245,7 @@ export class ExpenseRepository {
     return rows;
   }
   public static async getExpensesAmountDateAndStatusByUserIdAndDate(
-    user_id: string,
+    user_id: number,
     monthName: string,
     year: string,
   ) {

@@ -18,7 +18,7 @@ export class ExpenseService {
       if (type != null) {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByUserIdAndType(
-            userId.toString(),
+            userId,
             +offset,
             +limit,
             type.toString(),
@@ -34,7 +34,7 @@ export class ExpenseService {
       }
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesValuesByUserId(
-          userId.toString(),
+          userId,
           +offset,
           +limit,
         );
@@ -152,7 +152,6 @@ export class ExpenseService {
 
   public static async getExpenseDemand(id: string, userId: number) {
     try {
-      console.log(userId);
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
 
       const expense: ExpenseListDTO = new ExpenseListDTO(
@@ -175,11 +174,10 @@ export class ExpenseService {
   public static async confirmExpenseDemand(req: Request, userId: number) {
     try {
       const status = req.body.ExpenseStatus;
-      const validatorId = req.body.ValidatorId;
       const result: any = await ExpenseRepository.confirmExpenseDemand(
         req.params.id,
         status,
-        validatorId,
+        userId,
       );
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {
@@ -210,18 +208,14 @@ export class ExpenseService {
   public static async getExpensesCountByUserId(req: Request, userId: number) {
     try {
       const type = req.query.type?.toString() || "ALL";
-      const id_owner = userId.toString();
       let count;
       if (type == null || type == "ALL") {
         const result: any =
-          await ExpenseRepository.getExpensesCountByUserId(id_owner);
+          await ExpenseRepository.getExpensesCountByUserId(userId);
         count = result;
       } else {
         const result: any =
-          await ExpenseRepository.getExpensesCountByTypeAndUserId(
-            type,
-            id_owner,
-          );
+          await ExpenseRepository.getExpensesCountByTypeAndUserId(type, userId);
         count = result;
       }
       return new ControllerResponse<number>(200, "", count);
@@ -319,7 +313,6 @@ export class ExpenseService {
     userId: number,
   ) {
     try {
-      const user_id = userId.toString();
       const selectedDate: string =
         req.query.date?.toString() || new Date().toDateString();
       const monthName = new Date(selectedDate).toLocaleDateString("eng", {
@@ -328,7 +321,7 @@ export class ExpenseService {
       const year = new Date(selectedDate).getFullYear().toString();
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesAmountDateAndStatusByUserIdAndDate(
-          user_id,
+          userId,
           monthName,
           year,
         );
