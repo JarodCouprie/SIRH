@@ -22,11 +22,6 @@ VALUES (1, 2),
        (2, 1),
        (2, 4);
 
-INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`, `status`, `type`, `number_day`,
-                     `id_user_create_demand`,
-                     `id_user_validate_demand`)
-VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'accepter', 'CA', '1',
-        '1');
 
 INSERT INTO expense(type,amount,motivation,status,id_owner,id_validator, facturation_date)
 VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
@@ -44,5 +39,8 @@ VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
        ("FOOD", 34.99, "Repas de test", "REFUNDED", 1, null, '2024-04-15'),
        ("HOUSING", 99, "AirBNB", "NOT_REFUNDED", 1, null, '2024-05-01');
 
+INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`, `status`, `type`, `number_day`,
+                     `id_user_create_demand`,
+                     `id_user_validate_demand`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'ACCEPTED', 'CA', 1, '1',
         '1');
