@@ -7,7 +7,7 @@ import {
   RouterProvider,
   useRouteError,
 } from "react-router-dom";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Root } from "@/components/navigation/Root.tsx";

@@ -1,4 +1,4 @@
-import { UserModel } from "@/models/User.model.js";
+import { UserModel } from "@/models/user/User.model.ts";
 import React, { Dispatch, SetStateAction } from "react";
 import { UserSecurity } from "@/components/user/userSecurity.js";
 import { UserAddress } from "@/components/user/userAddress.js";

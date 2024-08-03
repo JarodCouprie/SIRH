@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { UserModel } from "@/models/User.model.ts";
+import { UserModel } from "@/models/user/User.model.ts";
 
 const CurrentUserContext = createContext({
   user: new UserModel(),

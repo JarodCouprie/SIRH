@@ -6,7 +6,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 
 export function LoginForm() {

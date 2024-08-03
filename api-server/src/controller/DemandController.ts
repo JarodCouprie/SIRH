@@ -50,7 +50,6 @@ router.put(
   upload.single("file"),
   async (req: Request, res: Response) => {
     let userId = (req as CustomRequest).token.userId;
-    console.log(req);
     const { code, message, data } = await DemandService.editDemand(
       req.params.id_demand,
       req,

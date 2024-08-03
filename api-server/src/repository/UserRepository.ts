@@ -113,13 +113,14 @@ export class UserRepository {
   public static async createUser(user: CreateUser) {
     const [result] = await this.pool.query(
       `
-          INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO users (firstname, lastname, email, password, id_address, nationality, iban, country, phone, bic)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         user.firstname,
         user.lastname,
         user.email,
+        user.password,
         user.id_address,
         user.nationality,
         user.iban,
@@ -238,7 +239,7 @@ export class UserRepository {
     const [result] = await this.pool.query(
       `UPDATE users
        SET iban = ?,
-           bic = ?
+           bic  = ?
        WHERE id = ?`,
       [body.iban, body.bic, id],
     );

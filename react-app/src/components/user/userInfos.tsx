@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { UserModel } from "@/models/User.model.js";
+import { UserModel } from "@/models/user/User.model.ts";
 import {
   Card,
   CardContent,

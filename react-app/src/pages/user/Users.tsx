@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { UserListModel } from "@/models/User.model.ts";
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -30,9 +29,10 @@ import {
 } from "@/components/ui/select.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge.tsx";
+import { UserList } from "@/type/user/user-list.type.ts";
 
 export function Users() {
-  const [users, setUsers] = useState<UserListModel[]>([]);
+  const [users, setUsers] = useState<UserList[]>([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState(5);
@@ -102,7 +102,7 @@ export function Users() {
           </TableHeader>
           <TableBody>
             {users?.length ? (
-              users?.map((user: UserListModel) => (
+              users?.map((user: UserList) => (
                 <TableRow
                   key={`${user?.id}`}
                   className="hover:cursor-pointer"

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { UserModel } from "@/models/User.model.ts";
+import { UserModel } from "@/models/user/User.model.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {

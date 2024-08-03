@@ -15,6 +15,7 @@ import { UserEntity } from "../entity/user/user.entity.js";
 import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
 import { UpdateUserAddressDTO } from "../dto/user/UpdateUserAddressDTO.js";
 import { UpdateUserBankInfosDTO } from "../dto/user/UpdateUserBankInfosDTO.js";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -177,10 +178,13 @@ export class UserService {
         );
       }
 
+      const password = await bcrypt.hash(req.body.password, 10);
+
       const newUser = new CreateUser(
         req.body.firstname,
         req.body.lastname,
         req.body.email,
+        password,
         req.body.phone,
         userAddressId,
         req.body.nationality,
@@ -192,6 +196,8 @@ export class UserService {
       const createdUser = await UserRepository.createUser(newUser);
 
       if ("insertId" in createdUser) {
+        const createdUserId = createdUser.insertId;
+        await UserRepository.setUserNewRoles(req.body.roles, createdUserId);
         return new ControllerResponse(201, "Utilisateur créé avec succès");
       } else {
         return new ControllerResponse(

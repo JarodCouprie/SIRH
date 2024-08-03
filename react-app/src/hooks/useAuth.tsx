@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 
 const AuthContext = createContext<AuthTokens | null>(null);
 

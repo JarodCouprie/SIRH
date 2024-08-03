@@ -24,7 +24,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme.tsx";
 import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 import {
   AlertDialog,
   AlertDialogAction,
