@@ -4,7 +4,6 @@ import { logger } from "../helper/Logger.js";
 import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
 import { AddressRepository } from "../repository/AddressRepository.js";
-import { UserAddress } from "../model/Address.js";
 import { MinioClient } from "../helper/MinioClient.js";
 import dotenv from "dotenv";
 import { CustomRequest } from "../helper/CustomRequest.js";
@@ -139,6 +138,13 @@ export class UserService {
 
   public static async createUser(req: Request) {
     try {
+      if (req.body.roles.length === 0) {
+        return new ControllerResponse(
+          400,
+          "Un utilisateur doit avoir au minimum un rôle",
+        );
+      }
+
       const address = req.body.address;
       const streetNumber = address.streetNumber;
       const street = address.street;

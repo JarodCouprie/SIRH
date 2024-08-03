@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import React, { useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { toast } from "sonner";
 import {
   CreateUserFormDataModel,
   CreateUserModel,
@@ -83,12 +82,8 @@ export function NewUser() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (
-      !userInfosValidated() ||
-      !userAddressValidated() ||
-      !userBankInfosValidated()
-    ) {
-      return toast.error("Des informations sont incorrectes");
+    if (userFormData.roles.length < 1) {
+      return setDisplayWarning(true);
     }
     const newUser = new CreateUserModel(userFormData);
 
@@ -113,7 +108,7 @@ export function NewUser() {
         infos: false,
         address: false,
         bankInfos: true,
-        userRoles: false,
+        userRoles: true,
       });
     }
     return setUserInfosValidatedDisplay(true);
@@ -501,7 +496,7 @@ export function NewUser() {
           </div>
         );
       })}
-      {displayWarning && (
+      {(displayWarning || userFormData.roles.length === 0) && (
         <Alert variant="destructive" className="grid place-items-center">
           <div className="flex gap-2">
             <ExclamationTriangleIcon className="h-4 w-4" />
