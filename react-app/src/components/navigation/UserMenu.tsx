@@ -17,6 +17,7 @@ import {
   BellIcon,
   ExitIcon,
   Half2Icon,
+  LockClosedIcon,
   MixerVerticalIcon,
   MoonIcon,
   PersonIcon,
@@ -86,20 +87,37 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <NavLink to="/profile">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Paramètres</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <NavLink to="/profile">
+                  <DropdownMenuItem>
+                    Mon profil
+                    <DropdownMenuShortcut>
+                      <PersonIcon />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </NavLink>
+                <NavLink to="/profile/reset-password">
+                  <DropdownMenuItem>
+                    Nouveau mot de passe
+                    <DropdownMenuShortcut>
+                      <LockClosedIcon />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </NavLink>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <NavLink to="/profile/notifications">
             <DropdownMenuItem>
-              Mon profil
+              Notifications
               <DropdownMenuShortcut>
-                <PersonIcon />
+                <BellIcon />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </NavLink>
-          <DropdownMenuItem>
-            Notifications
-            <DropdownMenuShortcut>
-              <BellIcon />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuSub>

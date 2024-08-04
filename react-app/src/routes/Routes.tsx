@@ -18,6 +18,7 @@ import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { RoleEnum } from "@/enum/Role.enum.js";
 import { profileRoutes } from "@/routes/ProfileRoutes.tsx";
+import { dashboardRoutes } from "@/routes/DashboardRoutes.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
@@ -27,6 +28,7 @@ export const Routes = () => {
     authorisedRoles?.includes(role),
   );
   const childrenRoutes = [
+    dashboardRoutes,
     organisationRoutes,
     demandRoutes,
     expenseRoutes,
