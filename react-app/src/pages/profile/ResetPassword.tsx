@@ -44,7 +44,6 @@ class UserPasswordsToSend {
 
 export const ResetPassword = () => {
   const [passwords, setPasswords] = useState(new UserPasswords());
-  const [passwordNotValid, setPasswordNotValid] = useState(false);
   const navigate = useNavigate();
   const handleRedirect = () => {
     navigate("/");
@@ -63,7 +62,7 @@ export const ResetPassword = () => {
     const passwordsToSend = new UserPasswordsToSend(passwords);
 
     if (passwords.newPassword !== passwords.confirmPassword) {
-      return setPasswordNotValid(true);
+      return;
     }
 
     const config = {
@@ -123,8 +122,7 @@ export const ResetPassword = () => {
               onChange={handleUserPasswordsFormDataChange}
             />
           </div>
-          {(passwordNotValid ||
-            passwords.newPassword !== passwords.confirmPassword) && (
+          {passwords.newPassword !== passwords.confirmPassword && (
             <Alert variant="destructive" className="grid place-items-center">
               <div className="flex items-center gap-2">
                 <ExclamationTriangleIcon className="h-4 w-4" />

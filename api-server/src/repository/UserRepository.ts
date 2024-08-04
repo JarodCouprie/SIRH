@@ -2,11 +2,6 @@ import { CreateUser, ResetUserPassword } from "../model/User.js";
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { UpdateUserInfoDTO } from "../dto/user/UpdateUserInfoDTO.js";
 import { UpdateUserBankInfosDTO } from "../dto/user/UpdateUserBankInfosDTO.js";
-import { Request } from "express";
-import { CustomRequest } from "../helper/CustomRequest";
-import bcrypt from "bcrypt";
-import { ControllerResponse } from "../helper/ControllerResponse";
-import { logger } from "../helper/Logger";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
