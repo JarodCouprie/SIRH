@@ -3,8 +3,8 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { UserModel } from "@/models/user/User.model.ts";
 
 const CurrentUserContext = createContext({
-  user: new UserModel(),
-  refreshUser: () => {},
+  currentUser: new UserModel(),
+  refreshCurrentUser: () => {},
 });
 
 export function useCurrentUser() {
@@ -12,25 +12,24 @@ export function useCurrentUser() {
 }
 
 export function CurrentUserProvider({ children }: any) {
-  const [user, setUser] = useState<UserModel>(new UserModel());
+  const [currentUser, setCurrentUser] = useState<UserModel>(new UserModel());
   const fetchUser = async () => {
     await customFetcher(`http://localhost:5000/api/me`).then((response) => {
-      if (response.response.status !== 200) {
-        return;
+      if (response.data) {
+        setCurrentUser(response.data.data);
       }
-      setUser(response.data.data);
     });
   };
   useEffect(() => {
     fetchUser().then();
   }, []);
 
-  function refreshUser() {
+  function refreshCurrentUser() {
     fetchUser().then();
   }
 
   return (
-    <CurrentUserContext.Provider value={{ user, refreshUser }}>
+    <CurrentUserContext.Provider value={{ currentUser, refreshCurrentUser }}>
       {children}
     </CurrentUserContext.Provider>
   );

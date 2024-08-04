@@ -17,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { UserModel } from "@/models/user/User.model.ts";
 import { Role } from "@/type/user/user-role.type.ts";
+import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
 
 interface UserProps {
   user: UserModel;
@@ -24,6 +25,7 @@ interface UserProps {
 }
 
 export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
+  const { currentUser, refreshCurrentUser } = useCurrentUser();
   const [userRoles, setUserRoles] = useState<Role[]>([]);
   const [rolesCanBeModified, setRolesCanBeModified] = useState(false);
   const [fetchedRoles, setFetchedRoles] = useState<Role[]>([]);
@@ -43,6 +45,9 @@ export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
     ).then((response) => {
       setUser(response.data.data);
       setRolesCanBeModified(false);
+      if (user.id === currentUser.id) {
+        refreshCurrentUser();
+      }
     });
   };
 

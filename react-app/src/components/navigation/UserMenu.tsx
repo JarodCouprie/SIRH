@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  BellIcon,
   ExitIcon,
   Half2Icon,
   MixerVerticalIcon,
@@ -21,7 +22,7 @@ import {
   PersonIcon,
   SunIcon,
 } from "@radix-ui/react-icons";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme.tsx";
 import { useAuth } from "@/hooks/useAuth.tsx";
 import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
@@ -41,7 +42,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
-  const { user } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const handleDarkTheme = () => {
     setDarkTheme();
   };
@@ -62,15 +63,15 @@ export function UserMenu() {
           >
             <div className="flex w-full gap-2">
               <Avatar className="size-8">
-                <AvatarImage src={user?.avatar_url} />
+                <AvatarImage src={currentUser?.avatar_url} />
                 <AvatarFallback>
-                  {user.firstname.charAt(0)}
-                  {user.lastname.charAt(0)}
+                  {currentUser.firstname.charAt(0)}
+                  {currentUser.lastname.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start justify-start max-md:hidden">
                 <span className="text-gray-50">
-                  {user.firstname} {user.lastname}
+                  {currentUser.firstname} {currentUser.lastname}
                 </span>
                 <span className="text-xs text-gray-300">Connecté</span>
               </div>
@@ -81,24 +82,25 @@ export function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>
-          {user.firstname} {user.lastname}
+          {currentUser.firstname} {currentUser.lastname}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <NavLink to="/profile">
+            <DropdownMenuItem>
+              Mon profil
+              <DropdownMenuShortcut>
+                <PersonIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
           <DropdownMenuItem>
-            Mon profil
+            Notifications
             <DropdownMenuShortcut>
-              <PersonIcon />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Paramètres
-            <DropdownMenuShortcut>
-              <MixerVerticalIcon />
+              <BellIcon />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Thème</DropdownMenuSubTrigger>

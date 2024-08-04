@@ -10,9 +10,9 @@ import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 import { RoleEnum } from "@/enum/Role.enum.js";
 
 export function NavBar() {
-  const { user } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const authorisedRoles = [RoleEnum.ADMIN, RoleEnum.HR];
-  const navLinkDisplayed = user.roles.some((role) =>
+  const navLinkDisplayed = currentUser.roles.some((role) =>
     authorisedRoles?.includes(role),
   );
 

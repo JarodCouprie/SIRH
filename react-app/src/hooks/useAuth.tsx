@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }: any) => {
       localStorage.accessToken = token.accessToken;
       localStorage.refreshToken = token.refreshToken;
     } else {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      localStorage.accessToken = "";
+      localStorage.refreshToken = "";
     }
   }, [token]);
   const contextValue = useMemo(

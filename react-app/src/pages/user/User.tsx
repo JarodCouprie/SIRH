@@ -50,7 +50,7 @@ export function User() {
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
   const [file, setFile] = useState<File | null>(null);
-  const { user, refreshUser } = useCurrentUser();
+  const { currentUser, refreshCurrentUser } = useCurrentUser();
   useEffect(() => {
     fetchUser().then();
   }, []);
@@ -109,8 +109,8 @@ export function User() {
       setUserLoaded(true);
       setFoundUser(response.data.data);
 
-      if (user.id === foundUser.id) {
-        refreshUser();
+      if (currentUser.id === foundUser.id) {
+        refreshCurrentUser();
       }
     });
   };

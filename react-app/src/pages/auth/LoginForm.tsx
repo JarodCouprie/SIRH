@@ -12,7 +12,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 export function LoginForm() {
   const navigate = useNavigate();
   const { setToken } = useAuth() as AuthTokens;
-  const { refreshUser } = useCurrentUser();
+  const { refreshCurrentUser } = useCurrentUser();
   const handleClickSubmitButton = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -31,7 +31,7 @@ export function LoginForm() {
     const fetchData = await response.json();
     if (response.status === 200) {
       setToken(fetchData.data.accessToken, fetchData.data.refreshToken);
-      refreshUser();
+      refreshCurrentUser();
       navigate("/", { replace: true });
     } else {
       toast.error(`${fetchData.message}`);
