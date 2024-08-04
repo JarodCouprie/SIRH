@@ -17,7 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { UserModel } from "@/models/user/User.model.ts";
 import { Role } from "@/type/user/user-role.type.ts";
-import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 
 interface UserProps {
   user: UserModel;

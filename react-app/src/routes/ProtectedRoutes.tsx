@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { Outlet, Navigate } from "react-router-dom";
 import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 

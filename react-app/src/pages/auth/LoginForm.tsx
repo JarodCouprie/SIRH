@@ -5,9 +5,9 @@ import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 
 export function LoginForm() {
   const navigate = useNavigate();

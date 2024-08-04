@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
+import { AuthContext } from "@/hooks/useAuth";
+import React, { useEffect, useMemo, useState } from "react";
 
-const AuthContext = createContext<AuthTokens | null>(null);
-
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [token, setToken_] = useState({
     accessToken: localStorage.accessToken ? localStorage.accessToken : "",
     refreshToken: localStorage.refreshToken ? localStorage.refreshToken : "",
@@ -32,8 +32,4 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };

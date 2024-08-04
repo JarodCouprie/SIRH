@@ -1,17 +1,9 @@
-import { createContext, useContext, useState } from "react";
+import { ThemeContext } from "@/hooks/useTheme";
+import React, { useState } from "react";
 
-const ThemeContext = createContext({
-  theme: "dark",
-  setDarkTheme: () => {},
-  setLightTheme: () => {},
-  setSystemTheme: () => {},
-});
-
-export function useTheme() {
-  return useContext(ThemeContext);
-}
-
-export function ThemeContextProvider({ children }: any) {
+export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [theme, setTheme] = useState(
     localStorage.theme ? localStorage.theme : "dark",
   );
@@ -51,4 +43,4 @@ export function ThemeContextProvider({ children }: any) {
       {children}
     </ThemeContext.Provider>
   );
-}
+};

@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { LoginForm } from "@/pages/auth/LoginForm.tsx";
 import { ProtectedRoutes } from "@/routes/ProtectedRoutes.tsx";
 import {
@@ -15,7 +15,7 @@ import { userRoutes } from "@/routes/UserRoutes.tsx";
 import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
 import { demandRoutes } from "@/routes/DemandRoutes.tsx";
 import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { RoleEnum } from "@/enum/Role.enum.js";
 import { profileRoutes } from "@/routes/ProfileRoutes.tsx";
 

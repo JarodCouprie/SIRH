@@ -13,7 +13,7 @@ import { UserField } from "@/components/user/userField.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
-import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 
 interface UserInfosProps {
   user: UserModel;

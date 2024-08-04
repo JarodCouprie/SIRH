@@ -39,7 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip.js";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/components/user/userRoles.js";
 import { UserInfos } from "@/components/user/userInfos.js";
 import { UserDetails } from "@/components/user/userDetails.js";
