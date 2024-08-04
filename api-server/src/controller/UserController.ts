@@ -2,6 +2,7 @@ import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { Request, Response, Router } from "express";
 import { UserService } from "../service/UserService.js";
 import multer from "multer";
+import { AuthService } from "../service/AuthService";
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -89,6 +90,15 @@ router.put(
       +req.params.id,
     );
     res.status(code).json({ message, data });
+  },
+);
+
+router.put(
+  "/reset-password",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message } = await UserService.resetUserPassword(req);
+    res.status(code).json({ message });
   },
 );
 

@@ -1,5 +1,5 @@
 import { UserRepository } from "../repository/UserRepository.js";
-import { CreateUser, User } from "../model/User.js";
+import { CreateUser, ResetUserPassword, User } from "../model/User.js";
 import { logger } from "../helper/Logger.js";
 import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { Request } from "express";
@@ -362,6 +362,51 @@ export class UserService {
       return new ControllerResponse(
         500,
         "Impossible de modifier les informations bancaires de l'utilisateur",
+      );
+    }
+  }
+
+  public static async resetUserPassword(req: Request) {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      if (oldPassword === newPassword) {
+        return new ControllerResponse(
+          400,
+          "Mot de passe identique au précédent",
+        );
+      }
+
+      const id = (req as CustomRequest).token.userId;
+      const user = await UserRepository.getUserEntityById(id);
+
+      if (!user) {
+        const fakePassword = Date.now().toString();
+        await bcrypt.hash(fakePassword, 10);
+        return new ControllerResponse(
+          400,
+          "Erreur lors de modification du mot de passe",
+        );
+      }
+
+      const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!passwordMatch) {
+        return new ControllerResponse(
+          400,
+          "Erreur lors de modification du mot de passe",
+        );
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const resetUserPassword = new ResetUserPassword(user.id, hashedPassword);
+      await UserRepository.resetPassword(resetUserPassword);
+
+      return new ControllerResponse(201, "Mot de passe modifié avec succès");
+    } catch (error) {
+      logger.error(`Resetting password failed. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Échec de modification du mot de passe",
       );
     }
   }

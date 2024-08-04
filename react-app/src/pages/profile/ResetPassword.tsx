@@ -10,8 +10,76 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { customFetcher } from "@/helper/fetchInstance.ts";
+import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+
+class UserPasswords {
+  oldPassword: string;
+  confirmPassword: string;
+  newPassword: string;
+
+  constructor(
+    oldPassword: string = "",
+    confirmPassword: string = "",
+    newPassword: string = "",
+  ) {
+    this.oldPassword = oldPassword;
+    this.confirmPassword = confirmPassword;
+    this.newPassword = newPassword;
+  }
+}
+
+class UserPasswordsToSend {
+  oldPassword: string;
+  newPassword: string;
+
+  constructor(passwords: UserPasswords) {
+    this.oldPassword = passwords.oldPassword;
+    this.newPassword = passwords.newPassword;
+  }
+}
 
 export const ResetPassword = () => {
+  const [passwords, setPasswords] = useState(new UserPasswords());
+  const [passwordNotValid, setPasswordNotValid] = useState(false);
+  const navigate = useNavigate();
+  const handleRedirect = () => {
+    navigate("/");
+  };
+
+  const handleUserPasswordsFormDataChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setPasswords({
+      ...passwords,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handlePasswordsFormSubmit = async () => {
+    const passwordsToSend = new UserPasswordsToSend(passwords);
+
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      return setPasswordNotValid(true);
+    }
+
+    const config = {
+      method: "PUT",
+      body: JSON.stringify(passwordsToSend),
+    };
+    await customFetcher(
+      `http://localhost:5000/api/user/reset-password`,
+      config,
+    ).then((response) => {
+      if (response.response.status === 201) {
+        navigate("/");
+      }
+    });
+  };
+
   return (
     <MainRoot title="Nouveau mot de passe">
       <Card>
@@ -24,23 +92,23 @@ export const ResetPassword = () => {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="currentPassword">Mot de passe actuel</Label>
+            <Label htmlFor="oldPassword">Mot de passe actuel</Label>
             <Input
               type="password"
-              id="currentPassword"
-              name="currentPassword"
-              // value={userUpdated.iban}
-              // onChange={handleUserFormDataChange}
+              id="oldPassword"
+              name="oldPassword"
+              value={passwords.oldPassword}
+              onChange={handleUserPasswordsFormDataChange}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="password">Nouveau mot de passe</Label>
+            <Label htmlFor="newPassword">Nouveau mot de passe</Label>
             <Input
               type="password"
-              id="password"
-              name="password"
-              // value={userUpdated.iban}
-              // onChange={handleUserFormDataChange}
+              id="newPassword"
+              name="newPassword"
+              value={passwords.newPassword}
+              onChange={handleUserPasswordsFormDataChange}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -51,14 +119,29 @@ export const ResetPassword = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              // value={userUpdated.iban}
-              // onChange={handleUserFormDataChange}
+              value={passwords.confirmPassword}
+              onChange={handleUserPasswordsFormDataChange}
             />
           </div>
+          {(passwordNotValid ||
+            passwords.newPassword !== passwords.confirmPassword) && (
+            <Alert variant="destructive" className="grid place-items-center">
+              <div className="flex items-center gap-2">
+                <ExclamationTriangleIcon className="h-4 w-4" />
+                <AlertDescription>
+                  Les mots de passe doivent être identiques
+                </AlertDescription>
+              </div>
+            </Alert>
+          )}
         </CardContent>
         <CardFooter className="flex justify-end gap-4">
-          <Button variant="ghost">Annuler</Button>
-          <Button variant="callToAction">Changer mon mot de passe</Button>
+          <Button variant="ghost" onClick={handleRedirect}>
+            Annuler
+          </Button>
+          <Button variant="callToAction" onClick={handlePasswordsFormSubmit}>
+            Changer mon mot de passe
+          </Button>
         </CardFooter>
       </Card>
     </MainRoot>

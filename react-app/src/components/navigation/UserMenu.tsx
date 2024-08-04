@@ -87,29 +87,14 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Paramètres</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <NavLink to="/profile">
-                  <DropdownMenuItem>
-                    Mon profil
-                    <DropdownMenuShortcut>
-                      <PersonIcon />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </NavLink>
-                <NavLink to="/profile/reset-password">
-                  <DropdownMenuItem>
-                    Nouveau mot de passe
-                    <DropdownMenuShortcut>
-                      <LockClosedIcon />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </NavLink>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
+          <NavLink to="/profile">
+            <DropdownMenuItem>
+              Mon profil
+              <DropdownMenuShortcut>
+                <PersonIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
           <NavLink to="/profile/notifications">
             <DropdownMenuItem>
               Notifications
@@ -118,7 +103,16 @@ export function UserMenu() {
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </NavLink>
+          <NavLink to="/profile/reset-password">
+            <DropdownMenuItem>
+              Nouveau mot de passe
+              <DropdownMenuShortcut>
+                <LockClosedIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Thème</DropdownMenuSubTrigger>

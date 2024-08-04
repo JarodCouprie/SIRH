@@ -18,15 +18,6 @@ router.get("/refresh-token", async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.put(
-  "/reset-password",
-  verifyToken,
-  async (req: Request, res: Response) => {
-    const { code, message } = await AuthService.resetUserPassword(req);
-    res.status(code).json({ message });
-  },
-);
-
 router.get("/me", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await UserService.getUserById(
     (req as CustomRequest).token.userId,
