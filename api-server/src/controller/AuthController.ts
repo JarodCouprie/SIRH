@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
-import dotenv from "dotenv";
 import { AuthService } from "../service/AuthService.js";
 import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { UserService } from "../service/UserService.js";
 import { CustomRequest } from "../helper/CustomRequest.js";
+import dotenv from "dotenv";
 
 const router = Router();
 dotenv.config();

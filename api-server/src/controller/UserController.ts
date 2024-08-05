@@ -2,7 +2,6 @@ import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { Request, Response, Router } from "express";
 import { UserService } from "../service/UserService.js";
 import multer from "multer";
-import { AuthService } from "../service/AuthService";
 
 const storage = multer.memoryStorage();
 const upload = multer({

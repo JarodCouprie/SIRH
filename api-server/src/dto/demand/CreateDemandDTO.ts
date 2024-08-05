@@ -1,4 +1,4 @@
-import { DemandType } from "../../model/Demand";
+import { DemandType } from "../../model/Demand.js";
 
 export class CreateDemand {
   start_date: Date;

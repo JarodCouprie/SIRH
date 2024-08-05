@@ -1,10 +1,8 @@
 import { Request, Response, Router } from "express";
-import { verifyToken } from "../middleware/AuthMiddleware";
-import { DemandService } from "../service/DemandService";
+import { verifyToken } from "../middleware/AuthMiddleware.js";
+import { DemandService } from "../service/DemandService.js";
 
-import { CustomRequest } from "../helper/CustomRequest";
-import { validateData } from "../middleware/ValidationMiddleware";
-import { demandCreateSchema } from "../schema/demand.schema";
+import { CustomRequest } from "../helper/CustomRequest.js";
 import multer from "multer";
 
 const router = Router();

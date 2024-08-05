@@ -1,25 +1,25 @@
-import { UserService } from "../service/UserService";
-import { DemandRepository } from "../repository/DemandRepository";
+import { UserService } from "../service/UserService.js";
+import { DemandRepository } from "../repository/DemandRepository.js";
 import {
   calculateNumberOfDays,
   DemandService,
   updateUserDays,
-} from "../service/DemandService";
-import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
-import { ControllerResponse } from "../helper/ControllerResponse";
-import { Demand, DemandType } from "../model/Demand";
-import { logger } from "../helper/Logger";
-import { DemandDTO } from "../dto/demand/DemandDTO";
+} from "../service/DemandService.js";
+import { EditDemandDTO } from "../dto/demand/EditDemandDTO.js";
+import { ControllerResponse } from "../helper/ControllerResponse.js";
+import { Demand, DemandType } from "../model/Demand.js";
+import { logger } from "../helper/Logger.js";
+import { DemandDTO } from "../dto/demand/DemandDTO.js";
 import { Request } from "express";
 
-jest.mock("../service/UserService");
-jest.mock("../repository/DemandRepository");
-jest.mock("../service/DemandService", () => ({
-  ...jest.requireActual("../service/DemandService"),
+jest.mock("../service/UserService.js");
+jest.mock("../repository/DemandRepository.js");
+jest.mock("../service/DemandService.js", () => ({
+  ...jest.requireActual("../service/DemandService.js"),
   calculateNumberOfDays: jest.fn(),
   updateUserDays: jest.fn(),
 }));
-jest.mock("../helper/Logger");
+jest.mock("../helper/Logger.js");
 
 describe("getDemand", () => {
   let req: Partial<Request>;
