@@ -89,7 +89,6 @@ export class ExpenseService {
       let expense: Expense = JSON.parse(req.body.body);
       expense.id_owner = userId;
       expense.status = ExpenseStatus.WAITING;
-      console.log(expense);
 
       let key: string;
       if (req.file) {
