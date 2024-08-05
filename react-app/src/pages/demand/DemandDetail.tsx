@@ -1,20 +1,22 @@
-import { Button } from "@/components/ui/button.tsx";
-import { FaArrowLeft } from "react-icons/fa6";
-import React, { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DemandDTO } from "@/models/Demand.model.ts";
+import { FaArrowLeft } from "react-icons/fa";
+import { MdOutlineDelete } from "react-icons/md";
+import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button.tsx";
+import { DemandAll, DemandDTO, DemandStatus } from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Pencil1Icon } from "@radix-ui/react-icons";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { MdOutlineDelete } from "react-icons/md";
+import { Badge } from "@/components/ui/badge.tsx";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -23,19 +25,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
-import { toast } from "sonner";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { Badge } from "@/components/ui/badge.tsx";
 
 export function DemandDetail() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [demand, setDemand] = useState<DemandDTO>({
+  const { id } = useParams<{ id: string }>();
+  const [demand, setDemand] = useState<DemandAll>({
+    id: 0,
     motivation: "",
     start_date: new Date(),
     end_date: new Date(),
     type: DemandType.CA,
-    status: "",
+    status: DemandStatus.DRAFT,
+    created_at: new Date(),
+    number_day: 0,
   });
 
   const handleClick = () => {
@@ -43,11 +45,8 @@ export function DemandDetail() {
   };
 
   const fetchDemand = async () => {
-    await customFetcher(`http://localhost:5000/api/demand/${id}`).then(
-      (data) => {
-        setDemand(data.data.data);
-      },
-    );
+    const data = await customFetcher(`http://localhost:5000/api/demand/${id}`);
+    setDemand(data.data.data);
   };
 
   useEffect(() => {
@@ -67,7 +66,11 @@ export function DemandDetail() {
   );
 }
 
-export function Detail({ demand }: any) {
+interface DetailProps {
+  demand: DemandAll;
+}
+
+export function Detail({ demand }: DetailProps) {
   const navigate = useNavigate();
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -84,7 +87,7 @@ export function Detail({ demand }: any) {
     minute: "numeric",
   };
 
-  const getClassForStatus = (status: any) => {
+  const getClassForStatus = (status: string) => {
     switch (status) {
       case "ACCEPTED":
         return <Badge variant="accepted">Acceptée</Badge>;
@@ -99,17 +102,17 @@ export function Detail({ demand }: any) {
     }
   };
 
-  const TypeDemand = (status: any) => {
+  const TypeDemand = (status: DemandType) => {
     switch (status) {
-      case "CA":
+      case DemandType.CA:
         return "Congés payés";
-      case "TT":
+      case DemandType.TT:
         return "Télétravail";
-      case "RTT":
+      case DemandType.RTT:
         return "RTT (Récupération du temps de travail)";
-      case "SICKNESS":
+      case DemandType.SICKNESS:
         return "Arrêt maladie";
-      case "ABSENCE":
+      case DemandType.ABSENCE:
         return "Absence";
       default:
         return "erreur";
@@ -137,73 +140,77 @@ export function Detail({ demand }: any) {
   const handleButton = () => {
     if (demand.status === "DRAFT") {
       return (
-        <>
-          <div>
-            <ConfirmDeleteItem demand={demand} navigate={navigate} />
-            <Button
-              variant="secondary"
-              onClick={() => handleEditClick(demand.id)}
-              className="mx-2"
-            >
-              <Pencil1Icon className="mr-2 size-5" />
-              Modifier
-            </Button>
-            <Button
-              variant="callToAction"
-              onClick={() => handleConfirmClick(demand.id, demand)}
-            >
-              <CheckIcon className="mr-2 size-5" />
-              Confirmer la demande
-            </Button>
-          </div>
-        </>
+        <div>
+          <ConfirmDeleteItem demand={demand} navigate={navigate} />
+          <Button
+            variant="secondary"
+            onClick={() => handleEditClick(demand.id)}
+            className="mx-2"
+          >
+            <Pencil1Icon className="mr-2 size-5" />
+            Modifier
+          </Button>
+          <Button
+            variant="callToAction"
+            onClick={() => handleConfirmClick(demand.id, demand)}
+          >
+            <CheckIcon className="mr-2 size-5" />
+            Confirmer la demande
+          </Button>
+        </div>
       );
     }
   };
 
   return (
-    <>
-      <div className="w-full">
-        <Card className="col-span-1 max-2xl:col-span-3">
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex items-center justify-between gap-4 text-xl">
-              <span>Informations de la demande</span>
-              {handleButton()}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-            <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
-            <UserInfoRow title="Status">
-              {getClassForStatus(demand.status)}
-            </UserInfoRow>
-            <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
-            <UserInfoRow title="Date de création">
-              {new Date(demand?.created_at?.toString()).toLocaleDateString(
-                "fr-FR",
-                dateTimeOptions,
-              )}
-            </UserInfoRow>
-            <UserInfoRow title="Date de début">
-              {new Date(demand?.start_date?.toString()).toLocaleDateString(
-                "fr-FR",
-                dateOptions,
-              )}
-            </UserInfoRow>
-            <UserInfoRow title="Date de fin">
-              {new Date(demand?.end_date?.toString()).toLocaleDateString(
-                "fr-FR",
-                dateOptions,
-              )}
-            </UserInfoRow>
-            <UserInfoRow title="Total jour(s)">{demand.number_day}</UserInfoRow>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <div className="w-full">
+      <Card className="col-span-1 max-2xl:col-span-3">
+        <CardHeader className="text-gray-900 dark:text-gray-300">
+          <CardTitle className="flex items-center justify-between gap-4 text-xl">
+            <span>Informations de la demande</span>
+            {handleButton()}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
+          <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
+          <UserInfoRow title="Status">
+            {getClassForStatus(demand.status)}
+          </UserInfoRow>
+          <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
+          <UserInfoRow title="Date de création">
+            {new Date(demand.created_at.toString()).toLocaleDateString(
+              "fr-FR",
+              dateTimeOptions,
+            )}
+          </UserInfoRow>
+          <UserInfoRow title="Date de début">
+            {new Date(demand.start_date.toString()).toLocaleDateString(
+              "fr-FR",
+              dateOptions,
+            )}
+          </UserInfoRow>
+          <UserInfoRow title="Date de fin">
+            {new Date(demand.end_date.toString()).toLocaleDateString(
+              "fr-FR",
+              dateOptions,
+            )}
+          </UserInfoRow>
+          <UserInfoRow title="Total jour(s)">{demand.number_day}</UserInfoRow>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
-export function ConfirmDeleteItem({ demand, navigate }: any) {
+interface ConfirmDeleteItemProps {
+  demand: DemandAll;
+  navigate: ReturnType<typeof useNavigate>;
+}
+
+export function ConfirmDeleteItem({
+  demand,
+  navigate,
+}: ConfirmDeleteItemProps) {
   const fetchDemand = async () => {
     const response = await customFetcher(
       `http://localhost:5000/api/demand/${demand.id}`,
@@ -221,7 +228,7 @@ export function ConfirmDeleteItem({ demand, navigate }: any) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" onClick={ConfirmDeleteItem}>
+        <Button variant="ghost">
           <MdOutlineDelete className="mr-2 size-5 text-red-600" />
           <span className="text-red-600">Supprimer</span>
         </Button>
@@ -236,16 +243,22 @@ export function ConfirmDeleteItem({ demand, navigate }: any) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Annuler</AlertDialogCancel>
-          <AlertDialogAction onClick={fetchDemand}>Supprimer</AlertDialogAction>
+
+          <Button onClick={fetchDemand} variant="destructive">
+            Supprimer
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 }
 
-export function UserInfoRow(props: any) {
-  const title: string = props.title || "Titre à donner";
-  const children: React.JSX.Element = props.children;
+interface UserInfoRowProps {
+  title: string;
+  children: ReactNode;
+}
+
+export function UserInfoRow({ title, children }: UserInfoRowProps) {
   return (
     <div className="flex flex-col gap-1 p-4">
       <div className="text-xs text-slate-800 dark:text-slate-300">{title}</div>
@@ -260,4 +273,6 @@ export enum DemandType {
   RTT = "RTT",
   TT = "TT",
   CA = "CA",
+  SICKNESS = "SICKNESS",
+  ABSENCE = "ABSENCE",
 }
