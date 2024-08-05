@@ -114,7 +114,6 @@ const DemandForm: React.FC<DemandFormProps> = ({
         );
       } else {
         formData.append("body", JSON.stringify(demandData));
-        console.log(formData);
         response = await customFetcher(
           submitUrl,
           {
