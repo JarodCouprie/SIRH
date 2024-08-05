@@ -6,7 +6,7 @@ import { UserRepository } from "../repository/UserRepository.js";
 
 export function generateAccessToken(user: User) {
   return jwt.sign(
-    { userId: user.id },
+    { userId: user.id, userRoles: user.roles },
     String(process.env.ACCESS_TOKEN_SECRET),
     {
       expiresIn: process.env.ACCESS_TOKEN_LIFETIME,
@@ -32,12 +32,9 @@ export async function generateNewAccessToken(req: Request) {
       jwt.verify(token, String(process.env.REFRESH_TOKEN_SECRET))
     );
     const user = await UserRepository.getUserById(refreshToken.userId);
-    if (!user) {
-      return new ControllerResponse(401, "L'utilisateur n'existe pas");
+    if (!user || !user.active) {
+      return new ControllerResponse(401, "Utilisateur indisponible");
     }
-    // if (!user.active) {
-    //   return new ControllerResponse(401, "Utilisateur inactif");
-    // }
     return {
       accessToken: generateAccessToken(user),
       refreshToken: generateRefreshToken(user),

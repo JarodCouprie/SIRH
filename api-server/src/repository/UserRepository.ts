@@ -72,7 +72,6 @@ export class UserRepository {
                  bic,
                  firstname,
                  lastname,
-                 email,
                  phone,
                  locality,
                  street,
@@ -101,9 +100,19 @@ export class UserRepository {
   public static async getUserByEmail(email: string) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT users.id                  as id,
+                 password,
+                 email,
+                 firstname,
+                 lastname,
+                 created_at,
+                 active,
+                 JSON_ARRAYAGG(role.label) AS roles
           FROM users
+                   JOIN own_role ON users.id = own_role.id_user
+                   JOIN role ON role.id = own_role.id_role
           WHERE email = ?
+          GROUP BY users.id;
       `,
       [email],
     );
