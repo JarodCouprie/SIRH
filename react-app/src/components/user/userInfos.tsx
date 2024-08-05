@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { UserModel } from "@/models/User.model.js";
+import { UserModel } from "@/models/user/User.model.ts";
 import {
   Card,
   CardContent,
@@ -13,6 +13,7 @@ import { UserField } from "@/components/user/userField.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 
 interface UserInfosProps {
   user: UserModel;
@@ -36,6 +37,7 @@ class UserInfosData {
 }
 
 export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
+  const { currentUser, refreshCurrentUser } = useCurrentUser();
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserInfosData(user));
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -70,6 +72,9 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
     ).then((response) => {
       setUser(response.data.data);
       setUserCanBeUpdated(!userCanBeUpdated);
+      if (user.id === currentUser.id) {
+        refreshCurrentUser();
+      }
     });
   };
 

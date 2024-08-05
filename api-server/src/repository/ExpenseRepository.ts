@@ -1,5 +1,5 @@
-import { DatabaseClient } from "../helper/DatabaseClient";
-import { Expense, ExpenseStatus } from "../model/Expense";
+import { DatabaseClient } from "../helper/DatabaseClient.js";
+import { Expense, ExpenseStatus } from "../model/Expense.js";
 
 export class ExpenseRepository {
   private static pool = DatabaseClient.mysqlPool;

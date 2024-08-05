@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ExpenseType } from "../model/Expense";
+import { ExpenseType } from "../model/Expense.js";
 
 export const expenseCreateSchema = z
   .object({

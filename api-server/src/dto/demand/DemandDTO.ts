@@ -1,4 +1,4 @@
-import { Demand, DemandType } from "../../model/Demand";
+import { Demand, DemandType } from "../../model/Demand.js";
 
 export class DemandDTO {
   id: number;

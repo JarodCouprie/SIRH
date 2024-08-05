@@ -1,7 +1,7 @@
-import { useTheme } from "@/hooks/useTheme.tsx";
+import { useTheme } from "@/hooks/useTheme.ts";
 import { useEffect } from "react";
-import { AuthProvider } from "@/hooks/useAuth.tsx";
 import { Routes } from "@/routes/Routes.tsx";
+import { AuthProvider } from "@/providers/authContext.tsx";
 
 function App() {
   const { theme } = useTheme();

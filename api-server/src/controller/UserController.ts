@@ -92,6 +92,15 @@ router.put(
   },
 );
 
+router.put(
+  "/reset-password",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message } = await UserService.resetUserPassword(req);
+    res.status(code).json({ message });
+  },
+);
+
 router.put("/active/:id", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await UserService.setUserActive(
     req,

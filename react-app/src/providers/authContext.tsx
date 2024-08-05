@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthContext } from "@/hooks/useAuth";
+import React, { useEffect, useMemo, useState } from "react";
 
-const AuthContext = createContext<AuthTokens | null>(null);
-
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [token, setToken_] = useState({
     accessToken: localStorage.accessToken ? localStorage.accessToken : "",
     refreshToken: localStorage.refreshToken ? localStorage.refreshToken : "",
@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }: any) => {
       localStorage.accessToken = token.accessToken;
       localStorage.refreshToken = token.refreshToken;
     } else {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      localStorage.accessToken = "";
+      localStorage.refreshToken = "";
     }
   }, [token]);
   const contextValue = useMemo(
@@ -32,8 +32,4 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };

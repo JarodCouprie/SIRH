@@ -1,5 +1,3 @@
-import { User } from "./User";
-
 export class Expense {
   id: string;
   type: ExpenseType;

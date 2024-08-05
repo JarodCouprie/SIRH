@@ -1,14 +1,8 @@
 import { Request, Response, Router } from "express";
+import { verifyToken } from "../middleware/AuthMiddleware.js";
+import { ExpenseService } from "../service/ExpenseService.js";
+import { CustomRequest } from "../helper/CustomRequest.js";
 import dotenv from "dotenv";
-import { verifyToken } from "../middleware/AuthMiddleware";
-import { ExpenseService } from "../service/ExpenseService";
-import { CustomRequest } from "../helper/CustomRequest";
-import {
-  validateData,
-  validateExpenseData,
-} from "../middleware/ValidationMiddleware";
-import { demandCreateSchema } from "../schema/demand.schema";
-import { expenseCreateSchema } from "../schema/expense.schema";
 import multer from "multer";
 
 const router = Router();

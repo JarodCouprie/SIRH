@@ -283,7 +283,6 @@ export class ExpenseService {
         month: "long",
       });
       const year = new Date(selectedDate).getFullYear().toString();
-      console.log(monthName, selectedDate);
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesAmountDateAndStatusByDate(
           monthName,
