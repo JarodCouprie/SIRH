@@ -2,6 +2,8 @@ import { verifyToken } from "../middleware/AuthMiddleware.js";
 import { Request, Response, Router } from "express";
 import { UserService } from "../service/UserService.js";
 import multer from "multer";
+import { hasRole } from "../middleware/HasRoleMiddleware.js";
+import { RoleEnum } from "../enum/RoleEnum.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -16,24 +18,42 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.get("/list", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await UserService.getUserList(req);
-  res.status(code).json({ message, data });
-});
+router.get(
+  "/list",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.getUserList(req);
+    res.status(code).json({ message, data });
+  },
+);
 
-router.get("/:id", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await UserService.getUserById(+req.params.id);
-  res.status(code).json({ message, data });
-});
+router.get(
+  "/:id",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.getUserById(
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
-router.post("/", verifyToken, async (req: Request, res: Response) => {
-  const { code, message } = await UserService.createUser(req);
-  res.status(code).json({ message });
-});
+router.post(
+  "/",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    const { code, message } = await UserService.createUser(req);
+    res.status(code).json({ message });
+  },
+);
 
 router.post(
   "/set-roles/:id",
   verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.setNewRole(
       req,
@@ -46,6 +66,7 @@ router.post(
 router.post(
   "/update-infos/:id",
   verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.updateUserInfos(
       req,
@@ -58,6 +79,7 @@ router.post(
 router.post(
   "/update-address/:id",
   verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.updateUserAddress(
       req,
@@ -70,6 +92,7 @@ router.post(
 router.post(
   "/update-bank-infos/:id",
   verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
     const { code, message, data } = await UserService.updateUserBankInfos(
       req,
@@ -101,12 +124,17 @@ router.put(
   },
 );
 
-router.put("/active/:id", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await UserService.setUserActive(
-    req,
-    +req.params.id,
-  );
-  res.status(code).json({ message, data });
-});
+router.put(
+  "/active/:id",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await UserService.setUserActive(
+      req,
+      +req.params.id,
+    );
+    res.status(code).json({ message, data });
+  },
+);
 
 export default router;
