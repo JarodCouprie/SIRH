@@ -142,8 +142,8 @@ export function CreateExpense() {
 
     if (file) {
       formData.append("file", file);
-      formData.append("body", JSON.stringify(body));
     }
+    formData.append("body", JSON.stringify(body));
 
     try {
       let fetchUrl = "http://localhost:5000/api/expense/";
