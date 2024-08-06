@@ -77,9 +77,9 @@ export class CreateUser {
   firstname: string;
   lastname: string;
   email: string;
+  password: string;
   id_address: number;
   nationality: string;
-  roles: RoleEnum[];
   iban: string;
   country: string;
   phone: string;
@@ -90,6 +90,7 @@ export class CreateUser {
     firstname: string,
     lastname: string,
     email: string,
+    password: string,
     phone: string,
     id_address: number,
     nationality: string,
@@ -97,11 +98,11 @@ export class CreateUser {
     iban: string,
     bic: string,
     image_key?: string,
-    roles?: RoleEnum[],
   ) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
+    this.password = password;
     this.phone = phone;
     this.id_address = id_address;
     this.nationality = nationality;
@@ -109,7 +110,6 @@ export class CreateUser {
     this.iban = iban;
     this.bic = bic;
     this.image_key = image_key || "";
-    this.roles = roles || [RoleEnum.USER];
   }
 }
 

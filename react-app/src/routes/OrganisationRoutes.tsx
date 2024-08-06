@@ -1,9 +1,11 @@
+import { Organisation } from "@/pages/Organisation.tsx";
+
 export const organisationRoutes = {
   path: "organisation",
   children: [
     {
       path: "",
-      element: <div>Organisation</div>,
+      element: <Organisation />,
     },
   ],
 };

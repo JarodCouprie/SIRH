@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ExpenseList,
   ExpenseStatus,
@@ -112,7 +112,6 @@ export function ExpenseDetails() {
   const translateAndDisplayExpenseStatusEnum = (
     enumToTranslate: ExpenseStatus,
   ) => {
-    console.log(enumToTranslate);
     switch (enumToTranslate) {
       case ExpenseStatus.WAITING:
         return (

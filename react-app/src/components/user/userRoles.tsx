@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card.js";
 import { FaUserGear } from "react-icons/fa6";
 import { Checkbox } from "@/components/ui/checkbox.js";
-import { RoleEnum, roleEnumKeyToFrench } from "@/enum/Role.enum.js";
+import { roleEnumKeyToFrench } from "@/enum/Role.enum.js";
 import { Button } from "@/components/ui/button.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -15,19 +15,17 @@ import { Badge } from "@/components/ui/badge.js";
 import { Label } from "@/components/ui/label.js";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.js";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { UserModel } from "@/models/User.model.js";
+import { UserModel } from "@/models/user/User.model.ts";
+import { Role } from "@/type/user/user-role.type.ts";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 
 interface UserProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
 }
 
-interface Role {
-  id: number;
-  label: RoleEnum;
-}
-
 export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
+  const { currentUser, refreshCurrentUser } = useCurrentUser();
   const [userRoles, setUserRoles] = useState<Role[]>([]);
   const [rolesCanBeModified, setRolesCanBeModified] = useState(false);
   const [fetchedRoles, setFetchedRoles] = useState<Role[]>([]);
@@ -47,6 +45,9 @@ export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
     ).then((response) => {
       setUser(response.data.data);
       setRolesCanBeModified(false);
+      if (user.id === currentUser.id) {
+        refreshCurrentUser();
+      }
     });
   };
 

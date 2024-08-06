@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { LoginForm } from "@/pages/auth/LoginForm.tsx";
 import { ProtectedRoutes } from "@/routes/ProtectedRoutes.tsx";
 import {
@@ -7,7 +7,7 @@ import {
   RouterProvider,
   useRouteError,
 } from "react-router-dom";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 import { toast } from "sonner";
 import NotFound from "@/pages/error/NotFound.tsx";
 import { Root } from "@/components/navigation/Root.tsx";
@@ -15,24 +15,28 @@ import { userRoutes } from "@/routes/UserRoutes.tsx";
 import { organisationRoutes } from "@/routes/OrganisationRoutes.tsx";
 import { demandRoutes } from "@/routes/DemandRoutes.tsx";
 import { expenseRoutes } from "@/routes/ExpenseRoutes.tsx";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { RoleEnum } from "@/enum/Role.enum.js";
+import { profileRoutes } from "@/routes/ProfileRoutes.tsx";
+import { dashboardRoutes } from "@/routes/DashboardRoutes.tsx";
 
 export const Routes = () => {
   const { token } = useAuth() as AuthTokens;
-  const { user } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const authorisedRoles = [RoleEnum.ADMIN, RoleEnum.HR];
-  const userHasRequiredRoles = user.roles.some((role) =>
+  const userHasRequiredRoles = currentUser.roles.some((role) =>
     authorisedRoles?.includes(role),
   );
   const childrenRoutes = [
+    dashboardRoutes,
     organisationRoutes,
     demandRoutes,
     expenseRoutes,
     userRoutes,
+    profileRoutes,
   ];
 
-  if (user.id && !userHasRequiredRoles) {
+  if (currentUser.id && !userHasRequiredRoles) {
     const routeIndex = childrenRoutes.indexOf(userRoutes);
     childrenRoutes.splice(routeIndex, 1);
   }

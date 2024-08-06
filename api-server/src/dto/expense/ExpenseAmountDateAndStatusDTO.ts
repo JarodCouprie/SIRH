@@ -1,4 +1,4 @@
-import { Expense, ExpenseStatus, ExpenseType } from "../../model/Expense";
+import { Expense, ExpenseStatus } from "../../model/Expense.js";
 
 export class ExpenseAmountDateAndStatusDTO {
   amount: number;

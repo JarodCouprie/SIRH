@@ -7,10 +7,8 @@ async function getRefreshToken() {
       "Content-Type": "application/json",
     },
   });
-  const fetchData = await response.json();
-  localStorage.accessToken = fetchData.data.accessToken;
-  localStorage.refreshToken = fetchData.data.refreshToken;
-  return fetchData;
+  const data = await response.json();
+  return { response, data };
 }
 
 async function originalRequest(url: string, config: any = {}) {
@@ -29,7 +27,7 @@ export async function customFetcher(
   url: string,
   config: any = {},
   contentTypeJson: boolean = true,
-) {
+): Promise<{ response: Response; data: any }> {
   if (contentTypeJson) {
     config["headers"] = {
       Authorization: `Bearer ${localStorage.accessToken}`,
@@ -44,7 +42,17 @@ export async function customFetcher(
   let { response, data }: any = await originalRequest(url, config);
 
   if (response.status === 401) {
-    await getRefreshToken();
+    const newTokens = await getRefreshToken();
+
+    if (newTokens.response.status !== 200) {
+      if (window.location.pathname === "/login") {
+        return { response: new Response(), data: null };
+      }
+      window.location.replace("/login");
+    } else {
+      localStorage.accessToken = newTokens.data.data.accessToken;
+      localStorage.refreshToken = newTokens.data.data.refreshToken;
+    }
 
     if (contentTypeJson) {
       config["headers"] = {
@@ -61,9 +69,9 @@ export async function customFetcher(
     response = newResponse.response;
     data = newResponse.data;
     if (response.status === 401) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      window.location.replace("/");
+      localStorage.accessToken = "";
+      localStorage.refreshToken = "";
+      window.location.replace("/login");
       toast.error(data.message);
     }
   }

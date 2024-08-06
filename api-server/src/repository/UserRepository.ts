@@ -72,7 +72,6 @@ export class UserRepository {
                  bic,
                  firstname,
                  lastname,
-                 email,
                  phone,
                  locality,
                  street,
@@ -101,9 +100,19 @@ export class UserRepository {
   public static async getUserByEmail(email: string) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT users.id                  as id,
+                 password,
+                 email,
+                 firstname,
+                 lastname,
+                 created_at,
+                 active,
+                 JSON_ARRAYAGG(role.label) AS roles
           FROM users
+                   JOIN own_role ON users.id = own_role.id_user
+                   JOIN role ON role.id = own_role.id_role
           WHERE email = ?
+          GROUP BY users.id;
       `,
       [email],
     );
@@ -113,13 +122,14 @@ export class UserRepository {
   public static async createUser(user: CreateUser) {
     const [result] = await this.pool.query(
       `
-          INSERT INTO users (firstname, lastname, email, id_address, nationality, iban, country, phone, bic)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO users (firstname, lastname, email, password, id_address, nationality, iban, country, phone, bic)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         user.firstname,
         user.lastname,
         user.email,
+        user.password,
         user.id_address,
         user.nationality,
         user.iban,
@@ -238,7 +248,7 @@ export class UserRepository {
     const [result] = await this.pool.query(
       `UPDATE users
        SET iban = ?,
-           bic = ?
+           bic  = ?
        WHERE id = ?`,
       [body.iban, body.bic, id],
     );

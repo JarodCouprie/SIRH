@@ -6,13 +6,13 @@ import React from "react";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
 import { GrGroup } from "react-icons/gr";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { RoleEnum } from "@/enum/Role.enum.js";
 
 export function NavBar() {
-  const { user } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const authorisedRoles = [RoleEnum.ADMIN, RoleEnum.HR];
-  const navLinkDisplayed = user.roles.some((role) =>
+  const navLinkDisplayed = currentUser.roles.some((role) =>
     authorisedRoles?.includes(role),
   );
 

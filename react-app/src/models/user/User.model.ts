@@ -59,37 +59,6 @@ export class UserModel {
   }
 }
 
-export class UserListModel {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-  address: AddressModel;
-  active: boolean;
-  avatar_url: string;
-
-  constructor(
-    id: number,
-    firstname: string,
-    lastname: string,
-    email: string,
-    phone: string,
-    address: AddressModel,
-    active: boolean,
-    avatar_url: string,
-  ) {
-    this.id = id;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.email = email;
-    this.phone = phone;
-    this.address = address;
-    this.active = active;
-    this.avatar_url = avatar_url;
-  }
-}
-
 export class ResetUserPassword {
   id: number;
   password: string;

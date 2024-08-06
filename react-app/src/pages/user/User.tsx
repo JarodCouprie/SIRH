@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { UserModel } from "@/models/User.model.ts";
+import { UserModel } from "@/models/user/User.model.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -39,7 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip.js";
-import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/components/user/userRoles.js";
 import { UserInfos } from "@/components/user/userInfos.js";
 import { UserDetails } from "@/components/user/userDetails.js";
@@ -50,7 +50,7 @@ export function User() {
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
   const [file, setFile] = useState<File | null>(null);
-  const { user, refreshUser } = useCurrentUser();
+  const { currentUser, refreshCurrentUser } = useCurrentUser();
   useEffect(() => {
     fetchUser().then();
   }, []);
@@ -109,8 +109,8 @@ export function User() {
       setUserLoaded(true);
       setFoundUser(response.data.data);
 
-      if (user.id === foundUser.id) {
-        refreshUser();
+      if (currentUser.id === foundUser.id) {
+        refreshCurrentUser();
       }
     });
   };

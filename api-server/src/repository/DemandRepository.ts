@@ -1,7 +1,7 @@
-import { DatabaseClient } from "../helper/DatabaseClient";
-import { Demand, StatusDemand } from "../model/Demand";
-import { CreateDemand } from "../dto/demand/CreateDemandDTO";
-import { EditDemandDTO } from "../dto/demand/EditDemandDTO";
+import { DatabaseClient } from "../helper/DatabaseClient.js";
+import { EditDemandDTO } from "../dto/demand/EditDemandDTO.js";
+import { CreateDemand } from "../dto/demand/CreateDemandDTO.js";
+import { StatusDemand } from "../model/Demand.js";
 
 export class DemandRepository {
   private static pool = DatabaseClient.mysqlPool;

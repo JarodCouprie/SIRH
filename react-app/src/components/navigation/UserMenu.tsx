@@ -14,17 +14,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  BellIcon,
   ExitIcon,
   Half2Icon,
+  LockClosedIcon,
   MixerVerticalIcon,
   MoonIcon,
   PersonIcon,
   SunIcon,
 } from "@radix-ui/react-icons";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/hooks/useTheme.tsx";
-import { useAuth } from "@/hooks/useAuth.tsx";
-import { AuthTokens } from "@/type/context/authTokens.tsx";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useTheme } from "@/hooks/useTheme.ts";
+import { useAuth } from "@/hooks/useAuth.ts";
+import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,12 +38,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useCurrentUser } from "@/hooks/useCurrentUser.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
-  const { user } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const handleDarkTheme = () => {
     setDarkTheme();
   };
@@ -62,15 +64,15 @@ export function UserMenu() {
           >
             <div className="flex w-full gap-2">
               <Avatar className="size-8">
-                <AvatarImage src={user?.avatar_url} />
+                <AvatarImage src={currentUser?.avatar_url} />
                 <AvatarFallback>
-                  {user.firstname.charAt(0)}
-                  {user.lastname.charAt(0)}
+                  {currentUser.firstname.charAt(0)}
+                  {currentUser.lastname.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start justify-start max-md:hidden">
                 <span className="text-gray-50">
-                  {user.firstname} {user.lastname}
+                  {currentUser.firstname} {currentUser.lastname}
                 </span>
                 <span className="text-xs text-gray-300">Connecté</span>
               </div>
@@ -81,22 +83,34 @@ export function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>
-          {user.firstname} {user.lastname}
+          {currentUser.firstname} {currentUser.lastname}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Mon profil
-            <DropdownMenuShortcut>
-              <PersonIcon />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Paramètres
-            <DropdownMenuShortcut>
-              <MixerVerticalIcon />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <NavLink to="/profile">
+            <DropdownMenuItem>
+              Mon profil
+              <DropdownMenuShortcut>
+                <PersonIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
+          <NavLink to="/profile/notifications">
+            <DropdownMenuItem>
+              Notifications
+              <DropdownMenuShortcut>
+                <BellIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
+          <NavLink to="/profile/reset-password">
+            <DropdownMenuItem>
+              Nouveau mot de passe
+              <DropdownMenuShortcut>
+                <LockClosedIcon />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </NavLink>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
