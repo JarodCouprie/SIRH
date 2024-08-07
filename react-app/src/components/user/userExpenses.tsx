@@ -49,7 +49,7 @@ interface UserExpenseProps {
   user: UserModel;
 }
 
-export const UserValidationExpense: React.FC<UserExpenseProps> = ({ user }) => {
+export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
   const [expenseList, setExpenseList] = useState<ExpenseList[]>([]);
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);

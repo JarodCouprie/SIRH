@@ -1,5 +1,4 @@
 import { Demand, DemandType } from "../../model/Demand.js";
-import { number } from "zod";
 
 export class DemandDTO {
   id: number;

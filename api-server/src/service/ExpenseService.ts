@@ -55,7 +55,6 @@ export class ExpenseService {
     try {
       const pageSize = req.query.pageSize || "0";
       const pageNumber = req.query.pageNumber || "10";
-      const status = ExpenseStatus.WAITING;
       const limit = +pageSize;
       const offset = (+pageNumber - 1) * +pageSize;
 

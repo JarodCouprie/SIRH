@@ -1,10 +1,13 @@
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { DemandRepository } from "../repository/DemandRepository";
 import {
+  ConfirmDemand,
   Demand,
   DemandStatus,
   DemandType,
+  RejectDemand,
   StatusDemand,
+  ValidatedDemand,
 } from "../model/Demand";
 import { logger } from "../helper/Logger";
 import { DemandDTO } from "../dto/demand/DemandDTO";
@@ -14,6 +17,9 @@ import { Request } from "express";
 import { UserService } from "./UserService";
 import { MinioClient } from "../helper/MinioClient.js";
 import { UserRepository } from "../repository/UserRepository.js";
+import { DemandValidatedDTO } from "../dto/demand/DemandValidatedDTO.js";
+import { ExpenseValidation } from "../dto/expense/ExpenseListDTO.js";
+import { ExpenseRepository } from "../repository/ExpenseRepository.js";
 
 export function calculateNumberOfDays(
   start_date: Date,
@@ -312,9 +318,63 @@ export class DemandService {
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
     } catch (error) {
-      return new ControllerResponse(500, "Failed to create the demand");
+      return new ControllerResponse(500, "Impossible de créer la demande");
+    }
+  }
+
+  public static async getValidatedDemand(req: Request, userId: number) {
+    try {
+      const pageSize = req.query.pageSize || "0";
+      const pageNumber = req.query.pageNumber || "10";
+      const limit = +pageSize;
+      const offset = (+pageNumber - 1) * +pageSize;
+
+      const demands: ValidatedDemand[] =
+        await DemandRepository.getValidatedDemands(userId, limit, offset);
+
+      const demandsCount: number =
+        await DemandRepository.geCountByUserId(userId);
+
+      const demandListDto = demands.map(
+        (demand) => new DemandValidatedDTO(demand),
+      );
+
+      return new ControllerResponse(200, "", {
+        totalData: demandsCount,
+        list: demandListDto,
+      });
+    } catch (error) {
+      logger.error(`Get demands failed. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer les demandes",
+      );
+    }
+  }
+
+  public static async confirmDemand(id: number, userId: number) {
+    try {
+      const demand = new ConfirmDemand(id, userId);
+      await DemandRepository.confirmDemand(demand);
+      return new ControllerResponse(200, "Demande confirmée");
+    } catch (error) {
+      logger.error(`Failed to confirm demand. Error: ${error}`);
+      return new ControllerResponse(500, "Impossible de valider la demande");
+    }
+  }
+
+  public static async rejectDemand(
+    id: number,
+    userId: number,
+    justification: string,
+  ) {
+    try {
+      const demand = new RejectDemand(id, userId, justification);
+      await DemandRepository.rejectDemand(demand);
+      return new ControllerResponse(200, "Demande rejetée");
+    } catch (error) {
+      logger.error(`Failed to reject demand. Error: ${error}`);
+      return new ControllerResponse(500, "Impossible de rejeter la demande");
     }
   }
 }
-
-export default DemandService;
