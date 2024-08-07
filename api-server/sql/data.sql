@@ -40,7 +40,7 @@ VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11' ),
        ("HOUSING", 99, "AirBNB", "NOT_REFUNDED", 1, null, '2024-05-01');
 
 INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`, `status`, `type`, `number_day`,
-                     `id_user_create_demand`,
-                     `id_user_validate_demand`)
+                     `id_owner`,
+                     `id_validator`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'ACCEPTED', 'CA', 1, '1',
         '1');

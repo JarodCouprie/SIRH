@@ -26,30 +26,21 @@ export class ExpenseListDTO {
 
 export class ExpenseValidation {
   id: number;
-  status: ExpenseStatus;
   id_validator: number;
 
-  constructor(id: number, status: ExpenseStatus, id_validator: number) {
+  constructor(id: number, id_validator: number) {
     this.id = id;
-    this.status = status;
     this.id_validator = id_validator;
   }
 }
 export class ExpenseInvalidation {
   id: number;
   justification: string;
-  status: ExpenseStatus;
   id_validator: number;
 
-  constructor(
-    id: number,
-    status: ExpenseStatus,
-    justification: string,
-    id_validator: number,
-  ) {
+  constructor(id: number, justification: string, id_validator: number) {
     this.id = id;
     this.justification = justification;
-    this.status = status;
     this.id_validator = id_validator;
   }
 }

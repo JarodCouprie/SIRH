@@ -4,8 +4,6 @@ import { ExpenseService } from "../service/ExpenseService.js";
 import { CustomRequest } from "../helper/CustomRequest.js";
 import dotenv from "dotenv";
 import multer from "multer";
-import { hasRole } from "../middleware/HasRoleMiddleware";
-import { RoleEnum } from "../enum/RoleEnum";
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -29,11 +27,12 @@ router.get("/list/all", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.get(
-  "/validation/list",
+  "/validation/list/:id",
   verifyToken,
   async (req: Request, res: Response) => {
+    const id = req.params.id;
     const { code, message, data } =
-      await ExpenseService.getExpensesValidationList(req);
+      await ExpenseService.getExpensesValidationList(req, +id);
     res.status(code).json({ message, data });
   },
 );
@@ -119,8 +118,10 @@ router.put(
   async (req: Request, res: Response) => {
     let userId = (req as CustomRequest).token.userId;
 
-    const { code, message, data } =
-      await ExpenseService.editExpenseValidationDemand(+req.params.id, userId);
+    const { code, message, data } = await ExpenseService.confirmExpense(
+      +req.params.id,
+      userId,
+    );
     res.status(code).json({ message, data });
   },
 );
@@ -130,12 +131,11 @@ router.put(
   async (req: Request, res: Response) => {
     let userId = (req as CustomRequest).token.userId;
 
-    const { code, message, data } =
-      await ExpenseService.editExpenseInvalidationDemand(
-        +req.params.id,
-        userId,
-        req,
-      );
+    const { code, message, data } = await ExpenseService.rejectExpense(
+      +req.params.id,
+      userId,
+      req,
+    );
     res.status(code).json({ message, data });
   },
 );

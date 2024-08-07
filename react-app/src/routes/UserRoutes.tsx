@@ -12,6 +12,12 @@ export const userRoutes = {
     {
       path: ":id",
       element: <User />,
+      children: [
+        {
+          path: "expense/:id",
+          element: <div>Hello</div>,
+        },
+      ],
     },
     {
       path: "new",

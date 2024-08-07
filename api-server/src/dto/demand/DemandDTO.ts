@@ -1,4 +1,5 @@
 import { Demand, DemandType } from "../../model/Demand.js";
+import { number } from "zod";
 
 export class DemandDTO {
   id: number;
@@ -8,6 +9,7 @@ export class DemandDTO {
   motivation: string;
   status: string;
   number_day: number;
+  id_owner: number;
   type: DemandType;
 
   constructor(demand: Demand) {
@@ -18,6 +20,7 @@ export class DemandDTO {
     this.motivation = demand.motivation;
     this.status = demand.status;
     this.number_day = demand.number_day;
+    this.id_owner = demand.id_owner;
     this.type = demand.type;
   }
 }

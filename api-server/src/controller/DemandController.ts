@@ -61,8 +61,10 @@ router.put(
   "/status/:id_demand",
   verifyToken,
   async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
     const { code, message, data } = await DemandService.changeStatusDemand(
       req.params.id_demand,
+      userId,
     );
     res.status(code).json({ message, data });
   },

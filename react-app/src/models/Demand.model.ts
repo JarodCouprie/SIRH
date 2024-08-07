@@ -28,6 +28,7 @@ export class DemandAll {
   created_at: Date;
   status: DemandStatus;
   number_day: number;
+  id_owner: number;
   type: DemandType;
 
   constructor(
@@ -38,6 +39,7 @@ export class DemandAll {
     created_at: Date,
     status: DemandStatus,
     number_day: number,
+    id_owner: number,
     type: DemandType,
   ) {
     this.id = id;
@@ -47,6 +49,7 @@ export class DemandAll {
     this.created_at = created_at;
     this.status = status;
     this.number_day = number_day;
+    this.id_owner = id_owner;
     this.type = type;
   }
 }

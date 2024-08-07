@@ -32,7 +32,7 @@ export class DemandRepository {
     const [rows] = await this.pool.query(
       `SELECT *
        FROM demand
-       WHERE id_user_create_demand = ?
+       WHERE id_owner = ?
        ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [userId, limit, offset],
@@ -121,7 +121,7 @@ export class DemandRepository {
                               type,
                               number_day,
                               file_key,
-                              id_user_create_demand)
+                              id_owner)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [

@@ -53,11 +53,11 @@ CREATE TABLE demand
     type                    VARCHAR(50),
     number_day              INT,
     file_key                VARCHAR(255),
-    id_user_create_demand   BIGINT        NOT NULL,
-    id_user_validate_demand BIGINT        NULL,
+    id_owner  BIGINT        NOT NULL,
+    id_validator BIGINT        NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
-    FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
+    FOREIGN KEY (id_owner) REFERENCES users (id),
+    FOREIGN KEY (id_validator) REFERENCES users (id)
 );
 
 CREATE TABLE expense

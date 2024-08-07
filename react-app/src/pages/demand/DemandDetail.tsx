@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -37,11 +38,12 @@ export function DemandDetail() {
     type: DemandType.CA,
     status: DemandStatus.DRAFT,
     created_at: new Date(),
+    id_owner: 0,
     number_day: 0,
   });
 
   const handleClick = () => {
-    navigate("/demand");
+    navigate(-1);
   };
 
   const fetchDemand = async () => {
@@ -58,7 +60,7 @@ export function DemandDetail() {
       <div>
         <Button variant="link" onClick={handleClick}>
           <FaArrowLeft className="mr-2" />
-          <div>Demandes</div>
+          <div>Retour</div>
         </Button>
       </div>
       {id ? <Detail demand={demand} /> : <div> Cette demande n'existe pas</div>}
@@ -72,6 +74,7 @@ interface DetailProps {
 
 export function Detail({ demand }: DetailProps) {
   const navigate = useNavigate();
+  const { currentUser } = useCurrentUser();
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
     year: "numeric",
@@ -138,7 +141,10 @@ export function Detail({ demand }: DetailProps) {
   };
 
   const handleButton = () => {
-    if (demand.status === "DRAFT") {
+    if (
+      demand.status === DemandStatus.DRAFT &&
+      demand.id_owner === currentUser.id
+    ) {
       return (
         <div>
           <ConfirmDeleteItem demand={demand} navigate={navigate} />
@@ -211,6 +217,8 @@ export function ConfirmDeleteItem({
   demand,
   navigate,
 }: ConfirmDeleteItemProps) {
+  const { refreshCurrentUser } = useCurrentUser();
+
   const fetchDemand = async () => {
     const response = await customFetcher(
       `http://localhost:5000/api/demand/${demand.id}`,
@@ -223,6 +231,8 @@ export function ConfirmDeleteItem({
       toast.message(`Demande numéro ${demand.id} supprimée`);
       navigate("/demand", { replace: true });
     }
+
+    refreshCurrentUser();
   };
 
   return (

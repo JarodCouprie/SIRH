@@ -26,6 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 
 interface DemandFormProps {
   initialData?: DemandDTO;
@@ -56,6 +57,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
     end_date?: string;
     type?: string;
   }>({});
+  const { refreshCurrentUser } = useCurrentUser();
 
   const isWeekday = (date: Date) => {
     const day = date.getDay();
@@ -142,6 +144,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
       } else {
         toast.error(`${response.data.message}`);
       }
+
+      refreshCurrentUser();
     }
   };
 

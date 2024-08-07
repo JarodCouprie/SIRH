@@ -201,7 +201,7 @@ export function User() {
             <UserInfos user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="expense">
-            <UserValidationExpense user={foundUser} setUser={setFoundUser} />
+            <UserValidationExpense user={foundUser} />
           </TabsContent>
         </Tabs>
       </div>

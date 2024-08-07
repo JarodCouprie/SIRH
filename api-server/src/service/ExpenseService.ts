@@ -1,5 +1,5 @@
 import { ExpenseRepository } from "../repository/ExpenseRepository";
-import { Expense, ExpenseStatus, ExpenseType } from "../model/Expense";
+import { Expense, ExpenseStatus } from "../model/Expense";
 import {
   ExpenseInvalidation,
   ExpenseListDTO,
@@ -9,11 +9,7 @@ import { ControllerResponse } from "../helper/ControllerResponse";
 import { logger } from "../helper/Logger";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "../dto/expense/ExpenseAmountDateAndStatusDTO";
-import { CustomRequest } from "../helper/CustomRequest";
 import { MinioClient } from "../helper/MinioClient";
-import { DemandRepository } from "../repository/DemandRepository";
-import { DemandDTO } from "../dto/demand/DemandDTO";
-import { Demand, DemandStatus, StatusDemand } from "../model/Demand";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
@@ -55,7 +51,7 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesValidationList(req: Request) {
+  public static async getExpensesValidationList(req: Request, id: number) {
     try {
       const pageSize = req.query.pageSize || "0";
       const pageNumber = req.query.pageNumber || "10";
@@ -66,10 +62,10 @@ export class ExpenseService {
       const expenses = await ExpenseRepository.getExpensesValidationValues(
         limit,
         offset,
-        status,
+        id,
       );
       const expenseCount =
-        await ExpenseRepository.getExpensesValidationCount(status);
+        await ExpenseRepository.getExpensesValidationCount(id);
 
       const expenseDTO: ExpenseListDTO[] = expenses.map(
         (expense: Expense) => new ExpenseListDTO(expense),
@@ -171,15 +167,13 @@ export class ExpenseService {
     }
   }
 
-  public static async editExpenseValidationDemand(id: number, userId: number) {
+  public static async confirmExpense(id: number, userId: number) {
     try {
       const expense_: ExpenseValidation = {
         id: id,
-        status: ExpenseStatus.REFUNDED,
         id_validator: userId,
       };
-      const statusChange =
-        await ExpenseRepository.confirmExpenseValidationDemand(expense_);
+      const statusChange = await ExpenseRepository.confirmExpense(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);
@@ -187,20 +181,14 @@ export class ExpenseService {
     }
   }
 
-  public static async editExpenseInvalidationDemand(
-    id: number,
-    userId: number,
-    req: Request,
-  ) {
+  public static async rejectExpense(id: number, userId: number, req: Request) {
     try {
       const expense_: ExpenseInvalidation = {
         id: id,
-        status: ExpenseStatus.NOT_REFUNDED,
         justification: req.body.justification,
         id_validator: userId,
       };
-      const statusChange =
-        await ExpenseRepository.confirmExpenseInvalidationDemand(expense_);
+      const statusChange = await ExpenseRepository.rejectExpense(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);

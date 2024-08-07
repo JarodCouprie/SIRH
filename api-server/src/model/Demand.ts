@@ -7,8 +7,8 @@ export class Demand {
   status: DemandStatus;
   type: DemandType;
   number_day: number;
-  idOwner: number;
-  idValidator: number;
+  id_owner: number;
+  id_validator: number;
 
   constructor(
     id: number,
@@ -19,8 +19,8 @@ export class Demand {
     status: DemandStatus,
     type: DemandType,
     number_day: number,
-    idOwner: number,
-    idValidator: number,
+    id_owner: number,
+    id_validator: number,
   ) {
     this.id = id;
     this.start_date = start_date;
@@ -30,8 +30,8 @@ export class Demand {
     this.status = status;
     this.type = type;
     this.number_day = number_day;
-    this.idOwner = idOwner;
-    this.idValidator = idValidator;
+    this.id_owner = id_owner;
+    this.id_validator = id_validator;
   }
 }
 

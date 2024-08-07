@@ -135,8 +135,15 @@ export class DemandService {
     }
   }
 
-  public static async changeStatusDemand(id: string) {
+  public static async changeStatusDemand(id: string, userId: number) {
     try {
+      const demand: any = await DemandRepository.getDemandById(+id);
+      if (demand.id_owner !== userId) {
+        return new ControllerResponse(
+          401,
+          "Vous n'êtes pas autorisé à modifier cette demande",
+        );
+      }
       const demand_: StatusDemand = {
         id: +id,
         status: DemandStatus.WAITING,
@@ -156,6 +163,12 @@ export class DemandService {
   ) {
     try {
       const demand: any = await DemandRepository.getDemandById(+idDemand);
+      if (demand.id_owner !== userId) {
+        return new ControllerResponse(
+          401,
+          "Vous n'êtes pas autorisé à modifier cette demande",
+        );
+      }
       const body = JSON.parse(req.body.body);
       if (demand.status !== DemandStatus.DRAFT) {
         return new ControllerResponse(400, "Not allowed");

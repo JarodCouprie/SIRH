@@ -1,5 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { UserModel } from "@/models/user/User.model.ts";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -44,16 +43,13 @@ import {
 } from "@/components/ui/alert-dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { MdOutlineEuroSymbol } from "react-icons/md";
+import { UserModel } from "@/models/user/User.model.js";
 
-interface UserAddressProps {
+interface UserExpenseProps {
   user: UserModel;
-  setUser: Dispatch<SetStateAction<UserModel>>;
 }
 
-export const UserValidationExpense: React.FC<UserAddressProps> = ({
-  user,
-  setUser,
-}) => {
+export const UserValidationExpense: React.FC<UserExpenseProps> = ({ user }) => {
   const [expenseList, setExpenseList] = useState<ExpenseList[]>([]);
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
@@ -127,11 +123,10 @@ export const UserValidationExpense: React.FC<UserAddressProps> = ({
   const fetchExpense = async (pageSize: number, pageNumber: number) => {
     try {
       const response = await customFetcher(
-        "http://localhost:5000/api/expense/validation/list?" +
+        `http://localhost:5000/api/expense/validation/list/${user.id}?` +
           new URLSearchParams({
             pageSize: pageSize.toString() || "10",
             pageNumber: pageNumber.toString() || "1",
-            status: "",
           }),
       );
       if (response.response.status === 200) {
@@ -168,11 +163,10 @@ export const UserValidationExpense: React.FC<UserAddressProps> = ({
           <TableHeader>
             <TableRow>
               <TableHead className="text-left"> Type de demande </TableHead>
-              <TableHead className="text-left"> Demandeur </TableHead>
               <TableHead className="text-left"> Frais </TableHead>
               <TableHead className="text-left"> Date de facturation </TableHead>
               <TableHead className="text-left"> Status </TableHead>
-              <TableHead className="text-left"> Action </TableHead>
+              <TableHead className="text-left"> Actions </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -202,10 +196,6 @@ export const UserValidationExpense: React.FC<UserAddressProps> = ({
                   </TableCell>
 
                   <TableCell>
-                    <div>???</div>
-                  </TableCell>
-
-                  <TableCell>
                     <div>{expense.amount}</div>
                   </TableCell>
 
@@ -218,20 +208,24 @@ export const UserValidationExpense: React.FC<UserAddressProps> = ({
                   <TableCell>{getClassForStatus(expense.status)}</TableCell>
 
                   <TableCell>
-                    <div className="flex gap-2">
-                      <RefuseExpense
-                        expense={expense}
-                        refreshExpenses={() =>
-                          fetchExpense(pageSize, pageNumber)
-                        }
-                      />
-                      <Button
-                        variant="outline"
-                        onClick={() => handleConfirmClick(+expense.id, expense)}
-                      >
-                        <span className="text-indigo-700">Accepter</span>
-                      </Button>
-                    </div>
+                    {expense.status === ExpenseStatus.WAITING && (
+                      <div className="flex gap-2">
+                        <RefuseExpense
+                          expense={expense}
+                          refreshExpenses={() =>
+                            fetchExpense(pageSize, pageNumber)
+                          }
+                        />
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            handleConfirmClick(+expense.id, expense)
+                          }
+                        >
+                          <span className="text-indigo-700">Accepter</span>
+                        </Button>
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
               ))
