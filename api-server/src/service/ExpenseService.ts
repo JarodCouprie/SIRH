@@ -1,6 +1,7 @@
 import { ExpenseRepository } from "../repository/ExpenseRepository";
 import { Expense, ExpenseStatus, ExpenseType } from "../model/Expense";
 import {
+  ExpenseInvalidation,
   ExpenseListDTO,
   ExpenseValidation,
 } from "../dto/expense/ExpenseListDTO";
@@ -189,15 +190,17 @@ export class ExpenseService {
   public static async editExpenseInvalidationDemand(
     id: number,
     userId: number,
+    req: Request,
   ) {
     try {
-      const expense_: ExpenseValidation = {
+      const expense_: ExpenseInvalidation = {
         id: id,
         status: ExpenseStatus.NOT_REFUNDED,
+        justification: req.body.justification,
         id_validator: userId,
       };
       const statusChange =
-        await ExpenseRepository.confirmExpenseValidationDemand(expense_);
+        await ExpenseRepository.confirmExpenseInvalidationDemand(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);

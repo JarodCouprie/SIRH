@@ -1,6 +1,10 @@
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { Expense, ExpenseStatus } from "../model/Expense.js";
-import { ExpenseValidation } from "../dto/expense/ExpenseListDTO";
+import {
+  ExpenseInvalidation,
+  ExpenseValidation,
+} from "../dto/expense/ExpenseListDTO";
+import { exitOnError } from "winston";
 
 export class ExpenseRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -240,6 +244,22 @@ export class ExpenseRepository {
             WHERE id = ?;
             `,
       [expense.status, expense.id_validator, expense.id],
+    );
+    return result;
+  }
+
+  public static async confirmExpenseInvalidationDemand(
+    expense: ExpenseInvalidation,
+  ) {
+    const [result]: any = await this.pool.query(
+      `
+          UPDATE expense
+          SET status        = ?,
+              justification = ?,
+              id_validator  = ?
+          WHERE id = ?;
+      `,
+      [expense.status, expense.justification, expense.id_validator, expense.id],
     );
     return result;
   }

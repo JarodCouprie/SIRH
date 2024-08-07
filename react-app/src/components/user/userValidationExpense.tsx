@@ -29,7 +29,6 @@ import {
   ExpenseType,
 } from "@/models/ExpenseModel.ts";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { MdOutlineDelete, MdOutlineEuroSymbol } from "react-icons/md";
 import { Badge } from "@/components/ui/badge.tsx";
 import { FaBed, FaCar, FaUtensils } from "react-icons/fa";
 import { toast } from "sonner";
@@ -43,23 +42,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
-import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input.tsx";
+import { MdOutlineEuroSymbol } from "react-icons/md";
 
 interface UserAddressProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
 }
 
-export const UserValidationExpense: React.FC<UserAddressProps> = (
+export const UserValidationExpense: React.FC<UserAddressProps> = ({
   user,
   setUser,
-) => {
+}) => {
   const [expenseList, setExpenseList] = useState<ExpenseList[]>([]);
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalData, setTotalData] = useState(0);
-  const navigate = useNavigate();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -141,7 +139,7 @@ export const UserValidationExpense: React.FC<UserAddressProps> = (
         setTotalData(response.data.data.totalData);
       }
     } catch (error) {
-      console.error("Error fetching expense:", error);
+      toast.message("Erreur lors de la récuperation de la liste des frais.");
     }
   };
 
@@ -162,6 +160,7 @@ export const UserValidationExpense: React.FC<UserAddressProps> = (
   useEffect(() => {
     fetchExpense(pageSize, pageNumber);
   }, [pageSize, pageNumber]);
+
   return (
     <>
       <div className="rounded pt-4">
@@ -220,7 +219,12 @@ export const UserValidationExpense: React.FC<UserAddressProps> = (
 
                   <TableCell>
                     <div className="flex gap-2">
-                      <RefuseExpense expense={expense} navigate={navigate} />
+                      <RefuseExpense
+                        expense={expense}
+                        refreshExpenses={() =>
+                          fetchExpense(pageSize, pageNumber)
+                        }
+                      />
                       <Button
                         variant="outline"
                         onClick={() => handleConfirmClick(+expense.id, expense)}
@@ -255,7 +259,9 @@ export const UserValidationExpense: React.FC<UserAddressProps> = (
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-950 dark:text-gray-100">
-              {`${1 + pageSize * (pageNumber - 1)} - ${expenseList.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+              {`${1 + pageSize * (pageNumber - 1)} - ${
+                expenseList.length + pageSize * (pageNumber - 1)
+              } sur ${totalData}`}
             </span>
             <Button
               variant="ghost"
@@ -280,36 +286,49 @@ export const UserValidationExpense: React.FC<UserAddressProps> = (
 
 interface RefuseExpenseProps {
   expense: ExpenseList;
-  navigate: ReturnType<typeof useNavigate>;
+  refreshExpenses: () => void;
 }
 
-export function RefuseExpense({ expense, navigate }: RefuseExpenseProps) {
+export function RefuseExpense({
+  expense,
+  refreshExpenses,
+}: RefuseExpenseProps) {
   const [justification, setJustification] = useState("");
-  const fetchExpense = async () => {
-    const response = await customFetcher(
-      `http://localhost:5000/api/expense/status/invalidation/${expense.id}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ justification }),
-      },
-    );
+  const [isOpen, setIsOpen] = useState(false);
 
-    if (response.response.status === 200) {
-      toast.message(`Demande numéro ${expense.id} supprimée`);
-      navigate("/demand", { replace: true });
+  const handleRefuse = async () => {
+    try {
+      const response = await customFetcher(
+        `http://localhost:5000/api/expense/status/invalidation/${expense.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ justification }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.response.status === 200) {
+        toast.message(`Demande de frais numéro ${expense.id} rejetée.`);
+        setIsOpen(false);
+        refreshExpenses();
+      }
+    } catch (error) {
+      toast.message("Erreur lors du rejet de la demande de frais.");
     }
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
           <span className="text-red-600">Refuser</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Êtes vous vraiment sur?</AlertDialogTitle>
+          <AlertDialogTitle>Êtes vous vraiment sûr?</AlertDialogTitle>
           <AlertDialogDescription>
             Vous êtes sur le point de refuser la demande de remboursement.
           </AlertDialogDescription>
@@ -322,9 +341,11 @@ export function RefuseExpense({ expense, navigate }: RefuseExpenseProps) {
           ></Input>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogCancel onClick={() => setIsOpen(false)}>
+            Annuler
+          </AlertDialogCancel>
 
-          <Button type="submit" onClick={fetchExpense} variant="destructive">
+          <Button type="submit" onClick={handleRefuse} variant="destructive">
             Refuser
           </Button>
         </AlertDialogFooter>

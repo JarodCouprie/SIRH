@@ -134,6 +134,7 @@ router.put(
       await ExpenseService.editExpenseInvalidationDemand(
         +req.params.id,
         userId,
+        req,
       );
     res.status(code).json({ message, data });
   },
