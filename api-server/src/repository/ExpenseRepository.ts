@@ -1,5 +1,6 @@
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { Expense, ExpenseStatus } from "../model/Expense.js";
+import { ExpenseValidation } from "../dto/expense/ExpenseListDTO";
 
 export class ExpenseRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -16,6 +17,22 @@ export class ExpenseRepository {
     );
     return rows;
   }
+  public static async getExpensesValidationValues(
+    offset: number,
+    limit: number,
+    status: ExpenseStatus,
+  ) {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT *
+              FROM expense WHERE status = ?
+              ORDER BY facturation_date DESC
+              LIMIT ? OFFSET ?;
+          `,
+      [status, offset, limit],
+    );
+    return rows;
+  }
 
   public static async getExpensesCount() {
     const [rows]: any = await this.pool.query(
@@ -24,6 +41,17 @@ export class ExpenseRepository {
               FROM expense;
           `,
       [],
+    );
+    return rows[0].count;
+  }
+
+  public static async getExpensesValidationCount(status: ExpenseStatus) {
+    const [rows]: any = await this.pool.query(
+      `
+              SELECT COUNT(*) AS count
+              FROM expense WHERE status = ?;
+          `,
+      [status],
     );
     return rows[0].count;
   }
@@ -197,6 +225,21 @@ export class ExpenseRepository {
             WHERE id = ?;
             `,
       [status, validatorId, id],
+    );
+    return result;
+  }
+
+  public static async confirmExpenseValidationDemand(
+    expense: ExpenseValidation,
+  ) {
+    const [result]: any = await this.pool.query(
+      `
+            UPDATE expense
+            SET status = ?,
+            id_validator = ?
+            WHERE id = ?;
+            `,
+      [expense.status, expense.id_validator, expense.id],
     );
     return result;
   }

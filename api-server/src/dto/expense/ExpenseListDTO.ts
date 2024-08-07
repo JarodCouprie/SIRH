@@ -23,3 +23,15 @@ export class ExpenseListDTO {
     this.fileUrl = url;
   }
 }
+
+export class ExpenseValidation {
+  id: number;
+  status: ExpenseStatus;
+  id_validator: number;
+
+  constructor(id: number, status: ExpenseStatus, id_validator: number) {
+    this.id = id;
+    this.status = status;
+    this.id_validator = id_validator;
+  }
+}

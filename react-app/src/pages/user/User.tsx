@@ -43,6 +43,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/components/user/userRoles.js";
 import { UserInfos } from "@/components/user/userInfos.js";
 import { UserDetails } from "@/components/user/userDetails.js";
+import { UserValidationExpense } from "@/components/user/userValidationExpense.tsx";
 
 export function User() {
   const { id } = useParams();
@@ -200,7 +201,7 @@ export function User() {
             <UserInfos user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="expense">
-            <UserInfos user={foundUser} setUser={setFoundUser} />
+            <UserValidationExpense user={foundUser} setUser={setFoundUser} />
           </TabsContent>
         </Tabs>
       </div>

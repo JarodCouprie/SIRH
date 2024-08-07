@@ -4,6 +4,8 @@ import { ExpenseService } from "../service/ExpenseService.js";
 import { CustomRequest } from "../helper/CustomRequest.js";
 import dotenv from "dotenv";
 import multer from "multer";
+import { hasRole } from "../middleware/HasRoleMiddleware";
+import { RoleEnum } from "../enum/RoleEnum";
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -25,6 +27,16 @@ router.get("/list/all", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await ExpenseService.getExpensesValues(req);
   res.status(code).json({ message, data });
 });
+
+router.get(
+  "/validation/list",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } =
+      await ExpenseService.getExpensesValidationList(req);
+    res.status(code).json({ message, data });
+  },
+);
 
 router.get(
   "/amount-date-and-status/",
@@ -98,6 +110,17 @@ router.put(
       req,
       userId,
     );
+    res.status(code).json({ message, data });
+  },
+);
+router.put(
+  "/status/validation/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } =
+      await ExpenseService.editExpenseValidationDemand(+req.params.id, userId);
     res.status(code).json({ message, data });
   },
 );

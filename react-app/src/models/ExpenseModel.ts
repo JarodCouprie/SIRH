@@ -42,21 +42,14 @@ export enum ExpenseStatus {
 }
 
 export class ExpenseResponse {
+  id: number;
   status: ExpenseStatus;
-  motivation: string;
-  answeredAt: Date;
-  answeredBy: number;
+  answered_by: number;
 
-  constructor(
-    status: ExpenseStatus,
-    motivation: string,
-    answeredAt: Date,
-    answeredBy: number,
-  ) {
+  constructor(id: number, status: ExpenseStatus, answered_by: number) {
+    this.id = id;
     this.status = status;
-    this.motivation = motivation;
-    this.answeredAt = answeredAt;
-    this.answeredBy = answeredBy;
+    this.answered_by = answered_by;
   }
 }
 
