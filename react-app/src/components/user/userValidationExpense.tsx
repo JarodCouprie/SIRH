@@ -284,11 +284,13 @@ interface RefuseExpenseProps {
 }
 
 export function RefuseExpense({ expense, navigate }: RefuseExpenseProps) {
+  const [justification, setJustification] = useState("");
   const fetchExpense = async () => {
     const response = await customFetcher(
-      `http://localhost:5000/api/demand/${expense.id}`,
+      `http://localhost:5000/api/expense/status/invalidation/${expense.id}`,
       {
-        method: "DELETE",
+        method: "PUT",
+        body: JSON.stringify({ justification }),
       },
     );
 
@@ -311,13 +313,18 @@ export function RefuseExpense({ expense, navigate }: RefuseExpenseProps) {
           <AlertDialogDescription>
             Vous êtes sur le point de refuser la demande de remboursement.
           </AlertDialogDescription>
-          <label className="text-indigo-50">Raison du refus :</label>
-          <Input type="text" className="text-indigo-50"></Input>
+          <label className="text-indigo-50">Justification :</label>
+          <Input
+            type="text"
+            className="text-indigo-50"
+            value={justification}
+            onChange={(e) => setJustification(e.target.value)}
+          ></Input>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Annuler</AlertDialogCancel>
 
-          <Button onClick={fetchExpense} variant="destructive">
+          <Button type="submit" onClick={fetchExpense} variant="destructive">
             Refuser
           </Button>
         </AlertDialogFooter>

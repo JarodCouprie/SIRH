@@ -186,6 +186,23 @@ export class ExpenseService {
     }
   }
 
+  public static async editExpenseInvalidationDemand(id: number, userId: number){
+    try{
+      try {
+        const expense_: ExpenseValidation = {
+          id: id,
+          status: ExpenseStatus.NOT_REFUNDED,
+          id_validator: userId,
+        };
+        const statusChange =
+          await ExpenseRepository.confirmExpenseValidationDemand(expense_);
+        return new ControllerResponse(200, "", statusChange);
+    }catch (error) {
+      logger.error(`Failed to edit the expense. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the expense");
+    }
+  }
+
   public static async delExpenseDemand(id: string, userId: number) {
     try {
       const targetExpense: Expense =

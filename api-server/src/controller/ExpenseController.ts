@@ -124,6 +124,20 @@ router.put(
     res.status(code).json({ message, data });
   },
 );
+router.put(
+  "/status/invalidation/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } =
+      await ExpenseService.editExpenseInvalidationDemand(
+        +req.params.id,
+        userId,
+      );
+    res.status(code).json({ message, data });
+  },
+);
 
 router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
