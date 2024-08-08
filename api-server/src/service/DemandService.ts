@@ -18,7 +18,10 @@ import { UserService } from "./UserService";
 import { MinioClient } from "../helper/MinioClient.js";
 import { UserRepository } from "../repository/UserRepository.js";
 import { DemandValidatedDTO } from "../dto/demand/DemandValidatedDTO.js";
-import { ExpenseValidation } from "../dto/expense/ExpenseListDTO.js";
+import {
+  ExpenseListDTO,
+  ExpenseValidation,
+} from "../dto/expense/ExpenseListDTO.js";
 import { ExpenseRepository } from "../repository/ExpenseRepository.js";
 
 export function calculateNumberOfDays(
@@ -130,11 +133,16 @@ export class DemandService {
 
   public static async getDemandById(id: string) {
     try {
-      const demand: any = await DemandRepository.getDemandById(+id);
+      const demand_: any = await DemandRepository.getDemandById(+id);
+
+      const signedUrl = await MinioClient.getSignedUrl(demand_.file_key);
+      const demand: DemandDTO = new DemandDTO(demand_, signedUrl);
+
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse<DemandDTO>(200, "", new DemandDTO(demand));
+
+      return new ControllerResponse<DemandDTO>(200, "", demand);
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");

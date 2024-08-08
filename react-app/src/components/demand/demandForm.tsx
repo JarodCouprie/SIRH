@@ -52,6 +52,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
   const [file, setFile] = useState<File | null>(null);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     start_date?: string;
     end_date?: string;
@@ -64,12 +65,21 @@ const DemandForm: React.FC<DemandFormProps> = ({
     return day === 0 || day === 6;
   };
 
+  const fetchFileNameFromUrl = (url?: string) => {
+    if (!url || url === "") return "Aucun fichier";
+    let fileName = url.split("/").pop();
+    if (fileName) fileName = fileName.split("?")[0];
+    else fileName = "Aucun fichier";
+    return fileName;
+  };
+
   useEffect(() => {
     if (initialData) {
       setStartDate(new Date(initialData.start_date));
       setEndDate(new Date(initialData.end_date));
       setMotivation(initialData.motivation);
       setSelectedType(initialData.type);
+      setFileUrl(initialData.file_key || null);
     }
   }, [initialData]);
 
@@ -91,8 +101,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
           type: selectedType,
           status: initialData?.status,
         };
-      }
-      if (method === "POST") {
+      } else if (method === "POST") {
         demandData = {
           start_date: formattedStartDate,
           end_date: formattedEndDate,
@@ -123,7 +132,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
             headers: {
               "Content-Type": "application/json",
             },
-            body: formData,
+            body: JSON.stringify(demandData),
           },
           false,
         );
@@ -287,6 +296,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFile(event.target.files[0]);
+      setFileUrl(null); // Remplacer l'URL existante par le nouveau fichier sélectionné
     }
   };
 
@@ -333,13 +343,23 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
           {(selectedType === DemandType.ABSENCE ||
             selectedType === DemandType.SICKNESS) && (
-            <Input
-              className="p-6"
-              type="file"
-              id="additionalInfo"
-              placeholder="Raison de l'absence"
-              onChange={handleFileChange}
-            />
+            <div>
+              <Input
+                className="p-6"
+                type="file"
+                id="additionalInfo"
+                placeholder="Raison de l'absence"
+                onChange={handleFileChange}
+              />
+              {fileUrl && (
+                <p>
+                  Fichier existant :{" "}
+                  <a href={fileUrl} target="_blank">
+                    {fetchFileNameFromUrl(fileUrl)}
+                  </a>
+                </p>
+              )}
+            </div>
           )}
 
           {dateChanger()}

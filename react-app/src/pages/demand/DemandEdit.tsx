@@ -12,6 +12,7 @@ export function DemandEdit() {
     start_date: new Date(),
     end_date: new Date(),
     type: DemandType.CA,
+    file_key: "",
     status: "",
   });
 

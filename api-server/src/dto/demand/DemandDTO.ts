@@ -1,4 +1,4 @@
-import { Demand, DemandType } from "../../model/Demand.js";
+import { Demand, DemandType, DemandStatus } from "../../model/Demand.js";
 
 export class DemandDTO {
   id: number;
@@ -6,12 +6,14 @@ export class DemandDTO {
   end_date: Date;
   created_at: Date;
   motivation: string;
-  status: string;
+  status: DemandStatus;
   number_day: number;
   id_owner: number;
   type: DemandType;
+  file_key?: string;
+  id_validator: number;
 
-  constructor(demand: Demand) {
+  constructor(demand: Demand, url?: string) {
     this.id = demand.id;
     this.start_date = demand.start_date;
     this.end_date = demand.end_date;
@@ -21,5 +23,7 @@ export class DemandDTO {
     this.number_day = demand.number_day;
     this.id_owner = demand.id_owner;
     this.type = demand.type;
+    this.file_key = url || "";
+    this.id_validator = demand.id_validator;
   }
 }

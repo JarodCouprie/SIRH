@@ -7,6 +7,7 @@ export class Demand {
   status: DemandStatus;
   type: DemandType;
   number_day: number;
+  file_key?: string;
   id_owner: number;
   id_validator: number;
 
@@ -21,6 +22,7 @@ export class Demand {
     number_day: number,
     id_owner: number,
     id_validator: number,
+    file_key?: string,
   ) {
     this.id = id;
     this.start_date = start_date;
@@ -32,6 +34,7 @@ export class Demand {
     this.number_day = number_day;
     this.id_owner = id_owner;
     this.id_validator = id_validator;
+    this.file_key = file_key;
   }
 }
 

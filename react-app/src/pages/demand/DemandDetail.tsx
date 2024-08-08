@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineVisibility } from "react-icons/md";
 import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 
@@ -26,6 +26,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+export enum DemandType {
+  RTT = "RTT",
+  TT = "TT",
+  CA = "CA",
+  ABSENCE = "ABSENCE",
+  SICKNESS = "SICKNESS",
+}
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -39,11 +46,19 @@ export function DemandDetail() {
     status: DemandStatus.DRAFT,
     created_at: new Date(),
     id_owner: 0,
+    file_key: "",
     number_day: 0,
   });
 
   const handleClick = () => {
-    navigate(-1);
+    if (
+      (window.history?.length && window.history.length > 1) ||
+      window.history.state?.idx
+    ) {
+      navigate(-1);
+    } else {
+      navigate("/", { replace: true });
+    }
   };
 
   const fetchDemand = async () => {
@@ -139,7 +154,28 @@ export function Detail({ demand }: DetailProps) {
       navigate("/demand", { replace: true });
     }
   };
+  const fetchFileNameFromUrl = (url?: string) => {
+    if (!url || url === "") return "Aucun fichier";
+    let fileName = url.split("/").pop();
+    if (fileName) fileName = fileName.split("?")[0];
+    else fileName = "Aucun fichier";
 
+    return fileName;
+  };
+
+  const previewButton = (url?: string) => {
+    if (url && url !== "")
+      return (
+        <Button variant="default" onClick={handlePreviewFile}>
+          <MdOutlineVisibility className="mr-2 size-6" />
+          Voir le document
+        </Button>
+      );
+  };
+
+  const handlePreviewFile = () => {
+    window.open(demand.file_key, "_blank");
+  };
   const handleButton = () => {
     if (
       demand.status === DemandStatus.DRAFT &&
@@ -202,6 +238,12 @@ export function Detail({ demand }: DetailProps) {
             )}
           </UserInfoRow>
           <UserInfoRow title="Total jour(s)">{demand.number_day}</UserInfoRow>
+          <UserInfoRow title="Fichier">
+            <div className="flex flex-wrap gap-2">
+              {fetchFileNameFromUrl(demand.file_key)}
+              <div className="">{previewButton(demand.file_key)}</div>
+            </div>
+          </UserInfoRow>
         </CardContent>
       </Card>
     </div>
@@ -277,12 +319,4 @@ export function UserInfoRow({ title, children }: UserInfoRowProps) {
       </div>
     </div>
   );
-}
-
-export enum DemandType {
-  RTT = "RTT",
-  TT = "TT",
-  CA = "CA",
-  SICKNESS = "SICKNESS",
-  ABSENCE = "ABSENCE",
 }
