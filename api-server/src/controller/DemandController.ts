@@ -116,7 +116,7 @@ router.put(
 );
 
 router.put(
-  "/confirm-demand/:id",
+  "/reject-demand/:id",
   verifyToken,
   hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {

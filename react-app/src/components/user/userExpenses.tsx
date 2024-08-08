@@ -148,12 +148,12 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
 
     if (response.response.status === 200) {
       toast.message(`Frais de ${expense.type} numéro ${id} validé`);
-      fetchExpense(pageSize, pageNumber);
+      await fetchExpense(pageSize, pageNumber);
     }
   };
 
   useEffect(() => {
-    fetchExpense(pageSize, pageNumber);
+    fetchExpense(pageSize, pageNumber).then();
   }, [pageSize, pageNumber]);
 
   return (

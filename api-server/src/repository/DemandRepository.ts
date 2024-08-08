@@ -209,6 +209,6 @@ export class DemandRepository {
       `,
       [userId, limit, offset],
     );
-    return rows[0];
+    return rows;
   }
 }

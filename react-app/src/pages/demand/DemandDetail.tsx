@@ -6,7 +6,12 @@ import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button.tsx";
-import { DemandAll, DemandDTO, DemandStatus } from "@/models/Demand.model.ts";
+import {
+  DemandAll,
+  DemandDTO,
+  DemandStatus,
+  DemandType,
+} from "@/models/Demand.model.ts";
 import {
   Card,
   CardContent,
@@ -26,13 +31,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
-export enum DemandType {
-  RTT = "RTT",
-  TT = "TT",
-  CA = "CA",
-  ABSENCE = "ABSENCE",
-  SICKNESS = "SICKNESS",
-}
 
 export function DemandDetail() {
   const navigate = useNavigate();

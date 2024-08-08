@@ -343,7 +343,7 @@ export class DemandService {
       const demandsCount: number =
         await DemandRepository.geCountByUserId(userId);
 
-      const demandListDto = demands.map(
+      const demandListDto = demands?.map(
         (demand) => new DemandValidatedDTO(demand),
       );
 
