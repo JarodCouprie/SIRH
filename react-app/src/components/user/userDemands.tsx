@@ -39,7 +39,7 @@ interface UserDemandProps {
 
 export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
   const [demandList, setDemandList] = useState<DemandValidatedList[]>([]);
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalData, setTotalData] = useState<number>(0);
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
     const response = await customFetcher(
       `http://localhost:5000/api/demand/validation/list/${user.id}?` +
         new URLSearchParams({
-          pageSize: pageSize.toString() || "5",
+          pageSize: pageSize.toString() || "10",
           pageNumber: pageNumber.toString() || "1",
         }),
     );
@@ -146,17 +146,18 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
     }
   };
 
-  const template = (
+  return (
     <>
       <div className="rounded pt-4">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="text-left">Demande</TableHead>
-              <TableHead className="text-left">Date de début</TableHead>
-              <TableHead className="text-left">Date de fin</TableHead>
-              <TableHead className="text-left">Jours</TableHead>
-              <TableHead className="text-left">Status</TableHead>
+              <TableHead className="text-right">Date de début</TableHead>
+              <TableHead className="text-right">Date de fin</TableHead>
+              <TableHead className="text-right">Jours</TableHead>
+              <TableHead className="text-right">Statut</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -184,21 +185,39 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-left">
+                  <TableCell align="right">
                     {new Date(
                       demand?.start_date?.toString(),
                     ).toLocaleDateString("fr-FR")}
                   </TableCell>
-                  <TableCell className="text-left">
+                  <TableCell align="right">
                     {new Date(demand?.end_date?.toString()).toLocaleDateString(
                       "fr-FR",
                     )}
                   </TableCell>
-                  <TableCell className="text-left">
-                    {demand.number_day}
-                  </TableCell>
-                  <TableCell className={`text-left`}>
+                  <TableCell align="right">{demand.number_day}</TableCell>
+                  <TableCell align="right">
                     {getClassForStatus(demand.status)}
+                  </TableCell>
+                  <TableCell>
+                    {demand.status === DemandStatus.WAITING && (
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          className="text-red-600"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          Refuser
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="text-indigo-700"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          Accepter
+                        </Button>
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
               ))
@@ -249,5 +268,4 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
       </div>
     </>
   );
-  return template;
 };
