@@ -132,7 +132,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(demandData),
+            body: formData,
           },
           false,
         );
