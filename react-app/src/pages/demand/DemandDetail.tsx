@@ -49,14 +49,7 @@ export function DemandDetail() {
   });
 
   const handleClick = () => {
-    if (
-      (window.history?.length && window.history.length > 1) ||
-      window.history.state?.idx
-    ) {
-      navigate(-1);
-    } else {
-      navigate("/", { replace: true });
-    }
+    navigate("/demand");
   };
 
   const fetchDemand = async () => {
@@ -73,7 +66,7 @@ export function DemandDetail() {
       <div>
         <Button variant="link" onClick={handleClick}>
           <FaArrowLeft className="mr-2" />
-          <div>Retour</div>
+          <div>Demandes</div>
         </Button>
       </div>
       {id ? <Detail demand={demand} /> : <div> Cette demande n'existe pas</div>}

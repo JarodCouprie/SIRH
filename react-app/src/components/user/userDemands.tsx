@@ -83,7 +83,9 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
   };
 
   const handleGoToDemandDetail = (demandId: number) => {
-    navigate(`/demand/detail/${demandId}`);
+    navigate(`demand/${demandId}`, {
+      state: { previousRoute: window.location.pathname, user },
+    });
   };
 
   const getStatusOption = (status: DemandType) => {

@@ -287,7 +287,7 @@ export class DemandService {
         if (number_day === -1) {
           return new ControllerResponse(
             400,
-            "Il est impossibe de selectionner un jour du week end",
+            "Il est impossible de sélectionner un jour du week end",
           );
         }
       }
