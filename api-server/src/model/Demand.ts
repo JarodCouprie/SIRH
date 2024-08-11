@@ -106,7 +106,7 @@ export class RejectDemand {
     this.id = id;
     this.validatorId = validatorId;
     this.justification = justification;
-    this.status = DemandStatus.ACCEPTED;
+    this.status = DemandStatus.DENIED;
   }
 }
 

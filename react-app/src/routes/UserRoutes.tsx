@@ -1,7 +1,7 @@
 import { Users } from "@/pages/user/Users.tsx";
 import { User } from "@/pages/user/User.tsx";
 import { NewUser } from "@/pages/user/NewUser.tsx";
-import { UserDemandDetails } from "@/components/user/userDemandDetails.js";
+import { UserDemandDetails } from "@/components/user/demand/userDemandDetails.js";
 
 export const userRoutes = {
   path: "user",

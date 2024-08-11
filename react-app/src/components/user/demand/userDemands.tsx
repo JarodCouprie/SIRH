@@ -1,7 +1,7 @@
 import { UserModel } from "@/models/user/User.model.js";
 import React, { useEffect, useState } from "react";
 import { customFetcher } from "@/helper/fetchInstance.js";
-import { DemandValidatedList } from "@/type/demand/validated-demand-list.type.js";
+import { DemandValidated } from "@/type/demand/validated-demand-list.type.js";
 import { Label } from "@/components/ui/label.js";
 import {
   Select,
@@ -32,13 +32,15 @@ import { MdOutlineLaptop } from "react-icons/md";
 import { FaRegCalendarXmark } from "react-icons/fa6";
 import { GiMedicalThermometer } from "react-icons/gi";
 import { Badge } from "@/components/ui/badge.js";
+import { UserRejectDemand } from "@/components/user/demand/userRejectDemand.js";
+import { UserConfirmDemand } from "@/components/user/demand/userConfirmDemand.js";
 
 interface UserDemandProps {
   user: UserModel;
 }
 
 export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
-  const [demandList, setDemandList] = useState<DemandValidatedList[]>([]);
+  const [demandList, setDemandList] = useState<DemandValidated[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalData, setTotalData] = useState<number>(0);
@@ -168,13 +170,13 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                 </TableCell>
               </TableRow>
             ) : (
-              demandList.map((demand: DemandValidatedList) => (
+              demandList.map((demand: DemandValidated) => (
                 <TableRow
                   key={demand.id}
                   className="hover:cursor-pointer"
                   onClick={() => handleGoToDemandDetail(demand.id)}
                 >
-                  <TableCell className="flex gap-2 text-left">
+                  <TableCell className="flex gap-2 text-nowrap text-left">
                     {getStatusOption(demand.type).icon}
                     <div>
                       <div>{getStatusOption(demand.type).label}</div>
@@ -202,20 +204,18 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                   <TableCell>
                     {demand.status === DemandStatus.WAITING && (
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          className="text-red-600"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          Refuser
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="text-indigo-700"
-                          onClick={(event) => event.stopPropagation()}
-                        >
-                          Accepter
-                        </Button>
+                        <UserRejectDemand
+                          demand={demand}
+                          refreshUserDemands={() =>
+                            fetchDemand(pageSize, pageNumber)
+                          }
+                        />
+                        <UserConfirmDemand
+                          demand={demand}
+                          refreshUserDemands={() =>
+                            fetchDemand(pageSize, pageNumber)
+                          }
+                        />
                       </div>
                     )}
                   </TableCell>

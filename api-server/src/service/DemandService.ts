@@ -364,10 +364,10 @@ export class DemandService {
     try {
       const demand = new ConfirmDemand(id, userId);
       await DemandRepository.confirmDemand(demand);
-      return new ControllerResponse(200, "Demande confirmée");
+      return new ControllerResponse(200, "Demande acceptée avec succès");
     } catch (error) {
       logger.error(`Failed to confirm demand. Error: ${error}`);
-      return new ControllerResponse(500, "Impossible de valider la demande");
+      return new ControllerResponse(500, "Validation de la demande impossible");
     }
   }
 
@@ -379,10 +379,10 @@ export class DemandService {
     try {
       const demand = new RejectDemand(id, userId, justification);
       await DemandRepository.rejectDemand(demand);
-      return new ControllerResponse(200, "Demande rejetée");
+      return new ControllerResponse(200, "Demande rejetée avec succès");
     } catch (error) {
       logger.error(`Failed to reject demand. Error: ${error}`);
-      return new ControllerResponse(500, "Impossible de rejeter la demande");
+      return new ControllerResponse(500, "Refus de la demande impossible");
     }
   }
 }

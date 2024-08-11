@@ -1,6 +1,6 @@
 import { DemandStatus, DemandType } from "@/models/Demand.model.js";
 
-export type DemandValidatedList = {
+export type DemandValidated = {
   id: number;
   start_date: Date;
   end_date: Date;
