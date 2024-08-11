@@ -77,7 +77,7 @@ export const AgencyCreate = () => {
     if (errors[e.target.name as keyof Errors]) {
       setErrors({
         ...errors,
-        [e.target.name]: undefined, // Mettre à jour l'erreur pour ce champ
+        [e.target.name]: undefined,
       });
     }
   };
