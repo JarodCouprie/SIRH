@@ -14,6 +14,10 @@ import { FieldRow } from "@/components/user/fieldRow.js";
 import { getDemandBadge } from "@/components/demand/demandBadge.js";
 import { Demand } from "@/models/demand/Demand.model.js";
 import { dateOptions, dateTimeOptions } from "@/helper/DateHelper.js";
+import { MdOutlineVisibility } from "react-icons/md";
+import { UserConfirmDemand } from "@/components/user/demand/userConfirmDemand.js";
+import { UserRejectDemand } from "@/components/user/demand/userRejectDemand.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
 
 export const UserDemandDetails = () => {
   const navigate = useNavigate();
@@ -42,18 +46,43 @@ export const UserDemandDetails = () => {
     fetchDemand().then();
   }, []);
 
+  const getFileNameFromUrl = (url?: string) => {
+    if (!url) {
+      return "Aucun fichier";
+    }
+    return url?.split("/")?.pop()?.split("?")[0];
+  };
+
+  const handlePreviewFile = () => {
+    window.open(demand.file_url, "_blank");
+  };
+
   return (
     <div className="flex flex-col items-start gap-4">
-      <Button variant="link" onClick={handleClick}>
-        <FaArrowLeft className="mr-2" />
-        <div>
-          {user ? `${user?.firstname} ${user?.lastname}` : "Utilisateur"}
-        </div>
-      </Button>
+      <div className="flex w-full flex-wrap justify-between gap-2">
+        <Button variant="link" onClick={handleClick}>
+          <FaArrowLeft className="mr-2" />
+          <div>
+            {user ? `${user?.firstname} ${user?.lastname}` : "Utilisateur"}
+          </div>
+        </Button>
+        {demand.status === DemandStatus.WAITING && (
+          <div className="flex gap-2">
+            <UserRejectDemand
+              demand={demand}
+              refreshUserDemands={() => fetchDemand()}
+            />
+            <UserConfirmDemand
+              demand={demand}
+              refreshUserDemands={() => fetchDemand()}
+            />
+          </div>
+        )}
+      </div>
       <div className="flex w-full gap-4 max-md:flex-col">
         <Card className="flex-1">
           <CardHeader>
-            <CardTitle>Demande initiale</CardTitle>
+            <CardTitle>Détails de la demande</CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
             <FieldRow title="Type">{getDemandTypeLabel(demand.type)}</FieldRow>
@@ -81,15 +110,41 @@ export const UserDemandDetails = () => {
               </span>
             </FieldRow>
             <FieldRow title="Jours pris">{demand.number_day}</FieldRow>
-            <FieldRow title="Fichier">{demand.file_key}</FieldRow>
+            <FieldRow title="Fichier">
+              <div className="flex flex-wrap gap-2">
+                {getFileNameFromUrl(demand.file_url)}
+                {demand.file_url && (
+                  <Button variant="default" onClick={handlePreviewFile}>
+                    <MdOutlineVisibility className="mr-2 size-6" />
+                    Voir le document
+                  </Button>
+                )}
+              </div>
+            </FieldRow>
           </CardContent>
         </Card>
         <Card className="flex-1">
           <CardHeader>
-            <CardTitle>Validation</CardTitle>
+            <CardTitle>Validation de la demande</CardTitle>
           </CardHeader>
           <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
             <FieldRow title="Statut">{getDemandBadge(demand.status)}</FieldRow>
+            {demand.validated_at && (
+              <FieldRow title="Date de validation">
+                {new Date(demand.validated_at).toLocaleDateString(
+                  "fr-FR",
+                  dateOptions,
+                )}
+              </FieldRow>
+            )}
+            {(demand.validator_lastname || demand.validator_lastname) && (
+              <FieldRow title="Validé par">
+                {demand.validator_firstname} {demand.validator_lastname}
+              </FieldRow>
+            )}
+            {demand.justification && (
+              <FieldRow title="Justification">{demand.justification}</FieldRow>
+            )}
           </CardContent>
         </Card>
       </div>

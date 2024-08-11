@@ -138,7 +138,7 @@ export function Detail({ demand }: DetailProps) {
   };
 
   const handlePreviewFile = () => {
-    window.open(demand.file_key, "_blank");
+    window.open(demand.file_url, "_blank");
   };
   const handleButton = () => {
     if (
@@ -202,8 +202,8 @@ export function Detail({ demand }: DetailProps) {
           <FieldRow title="Total jour(s)">{demand.number_day}</FieldRow>
           <FieldRow title="Fichier">
             <div className="flex flex-wrap gap-2">
-              {fetchFileNameFromUrl(demand.file_key)}
-              <div className="">{previewButton(demand.file_key)}</div>
+              {fetchFileNameFromUrl(demand.file_url)}
+              <div className="">{previewButton(demand.file_url)}</div>
             </div>
           </FieldRow>
         </CardContent>

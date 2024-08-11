@@ -77,9 +77,10 @@ export class DemandRepository {
   public static async getDemandById(id: number) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT demand.*, users.firstname as validator_firstname, users.lastname as validator_lastname
           FROM demand
-          WHERE id = ?
+                   LEFT JOIN users ON demand.id_validator = users.id
+          WHERE demand.id = ?
       `,
       [id],
     );

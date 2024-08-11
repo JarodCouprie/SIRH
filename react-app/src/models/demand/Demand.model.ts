@@ -16,7 +16,6 @@ export class Demand {
   validator_firstname: string;
   validator_lastname: string;
   validated_at: Date;
-  file_key: string;
   file_url: string;
 
   constructor(
@@ -34,7 +33,6 @@ export class Demand {
     validator_firstname: string = "",
     validator_lastname: string = "",
     validated_at: Date = new Date(),
-    file_key: string = "",
     file_url: string = "",
   ) {
     this.id = id;
@@ -51,7 +49,6 @@ export class Demand {
     this.validator_firstname = validator_firstname;
     this.validator_lastname = validator_lastname;
     this.validated_at = validated_at;
-    this.file_key = file_key;
     this.file_url = file_url;
   }
 }

@@ -7,7 +7,7 @@ export class DemandDTO {
   motivation: string;
   type: DemandType;
   status: string;
-  file_key?: string;
+  file_url?: string;
 
   constructor(
     start_date: Date,
@@ -15,14 +15,14 @@ export class DemandDTO {
     motivation: string,
     type: DemandType,
     status: string,
-    file_key?: string,
+    file_url?: string,
   ) {
     this.start_date = start_date;
     this.end_date = end_date;
     this.motivation = motivation;
     this.type = type;
     this.status = status;
-    this.file_key = file_key;
+    this.file_url = file_url;
   }
 }
 
@@ -35,7 +35,7 @@ export class DemandList {
   status: DemandStatus;
   number_day: number;
   id_owner: number;
-  file_key: string;
+  file_url: string;
   type: DemandType;
 
   constructor(
@@ -47,7 +47,7 @@ export class DemandList {
     status: DemandStatus = DemandStatus.DRAFT,
     number_day: number = 0,
     id_owner: number = 0,
-    file_key: string = "",
+    file_url: string = "",
     type: DemandType = DemandType.CA,
   ) {
     this.id = id;
@@ -58,7 +58,7 @@ export class DemandList {
     this.status = status;
     this.number_day = number_day;
     this.id_owner = id_owner;
-    this.file_key = file_key;
+    this.file_url = file_url;
     this.type = type;
   }
 }
