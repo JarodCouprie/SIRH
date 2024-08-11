@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge.js";
 import { DemandStatus } from "@/enum/DemandStatus.enum.js";
 
-export const getDemandBadge = (status: DemandStatus) => {
+export const getDemandBadge = (status?: DemandStatus) => {
   switch (status) {
     case DemandStatus.ACCEPTED:
       return <Badge variant="accepted">Acceptée</Badge>;

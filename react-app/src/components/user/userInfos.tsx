@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { BsFillInfoSquareFill } from "react-icons/bs";
 import { Button } from "@/components/ui/button.js";
-import { UserField } from "@/components/user/userField.js";
+import { FieldRow } from "@/components/user/fieldRow.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
@@ -80,14 +80,14 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
 
   const userFields = (
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-      <UserField title="Nom">{userUpdated.lastname}</UserField>
-      <UserField title="Prénom">{userUpdated.firstname}</UserField>
-      <UserField title="Email">{userUpdated.email}</UserField>
-      <UserField title="Téléphone">{userUpdated.phone}</UserField>
-      <UserField title="Nationalité">{userUpdated.nationality}</UserField>
-      <UserField title="Date de création">
+      <FieldRow title="Nom">{userUpdated.lastname}</FieldRow>
+      <FieldRow title="Prénom">{userUpdated.firstname}</FieldRow>
+      <FieldRow title="Email">{userUpdated.email}</FieldRow>
+      <FieldRow title="Téléphone">{userUpdated.phone}</FieldRow>
+      <FieldRow title="Nationalité">{userUpdated.nationality}</FieldRow>
+      <FieldRow title="Date de création">
         {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
-      </UserField>
+      </FieldRow>
     </CardContent>
   );
 

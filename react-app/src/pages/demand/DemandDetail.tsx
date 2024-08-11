@@ -1,12 +1,11 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { MdOutlineDelete, MdOutlineVisibility } from "react-icons/md";
 import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button.tsx";
-import { DemandList, DemandDTO } from "@/models/demand/DemandList.model.ts";
+import { DemandDTO, DemandList } from "@/models/demand/DemandList.model.ts";
 import {
   Card,
   CardContent,
@@ -28,6 +27,8 @@ import {
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 import { DemandType } from "@/enum/DemandType.enum.js";
 import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { FieldRow } from "@/components/user/fieldRow.js";
+import { dateOptions, dateTimeOptions } from "@/helper/DateHelper.js";
 
 export function DemandDetail() {
   const navigate = useNavigate();
@@ -67,20 +68,6 @@ interface DetailProps {
 export function Detail({ demand }: DetailProps) {
   const navigate = useNavigate();
   const { currentUser } = useCurrentUser();
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
 
   const getClassForStatus = (status: string) => {
     switch (status) {
@@ -191,36 +178,34 @@ export function Detail({ demand }: DetailProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-          <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
-          <UserInfoRow title="Status">
-            {getClassForStatus(demand.status)}
-          </UserInfoRow>
-          <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
-          <UserInfoRow title="Date de création">
+          <FieldRow title="Type">{TypeDemand(demand.type)}</FieldRow>
+          <FieldRow title="Statut">{getClassForStatus(demand.status)}</FieldRow>
+          <FieldRow title="Description">{demand.motivation}</FieldRow>
+          <FieldRow title="Date de création">
             {new Date(demand.created_at.toString()).toLocaleDateString(
               "fr-FR",
               dateTimeOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Date de début">
+          </FieldRow>
+          <FieldRow title="Date de début">
             {new Date(demand.start_date.toString()).toLocaleDateString(
               "fr-FR",
               dateOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Date de fin">
+          </FieldRow>
+          <FieldRow title="Date de fin">
             {new Date(demand.end_date.toString()).toLocaleDateString(
               "fr-FR",
               dateOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Total jour(s)">{demand.number_day}</UserInfoRow>
-          <UserInfoRow title="Fichier">
+          </FieldRow>
+          <FieldRow title="Total jour(s)">{demand.number_day}</FieldRow>
+          <FieldRow title="Fichier">
             <div className="flex flex-wrap gap-2">
               {fetchFileNameFromUrl(demand.file_key)}
               <div className="">{previewButton(demand.file_key)}</div>
             </div>
-          </UserInfoRow>
+          </FieldRow>
         </CardContent>
       </Card>
     </div>
@@ -279,21 +264,5 @@ export function ConfirmDeleteItem({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-}
-
-interface UserInfoRowProps {
-  title: string;
-  children: ReactNode;
-}
-
-export function UserInfoRow({ title, children }: UserInfoRowProps) {
-  return (
-    <div className="flex flex-col gap-1 p-4">
-      <div className="text-xs text-slate-800 dark:text-slate-300">{title}</div>
-      <div className="font-bold text-slate-950 dark:text-slate-50">
-        {children}
-      </div>
-    </div>
   );
 }
