@@ -47,7 +47,6 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
   const navigate = useNavigate();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -97,19 +96,19 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
           icon: (
             <TbCalendarClock className="size-9 text-indigo-500 opacity-75" />
           ),
-          label: "Demande de congés",
+          label: "Congés",
         };
       case DemandType.RTT:
         return {
           icon: <TbCalendarRepeat className="size-9 text-red-500 opacity-75" />,
-          label: "Demande de RTT",
+          label: "RTT",
         };
       case DemandType.TT:
         return {
           icon: (
             <MdOutlineLaptop className="size-9 text-orange-500 opacity-75" />
           ),
-          label: "Demande de télétravail",
+          label: "Télétravail",
         };
       case DemandType.ABSENCE:
         return {
@@ -155,17 +154,16 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
           <TableHeader>
             <TableRow>
               <TableHead className="text-left">Demande</TableHead>
-              <TableHead className="text-right">Date de début</TableHead>
-              <TableHead className="text-right">Date de fin</TableHead>
-              <TableHead className="text-right">Jours</TableHead>
-              <TableHead className="text-right">Statut</TableHead>
+              <TableHead className="text-center">Jours</TableHead>
+              <TableHead>Période</TableHead>
+              <TableHead>Statut</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {demandList.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={5} className="h-24 text-center">
                   Aucune demande trouvée
                 </TableCell>
               </TableRow>
@@ -176,30 +174,50 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                   className="hover:cursor-pointer"
                   onClick={() => handleGoToDemandDetail(demand.id)}
                 >
-                  <TableCell className="flex gap-2 text-nowrap text-left">
-                    {getStatusOption(demand.type).icon}
-                    <div>
-                      <div>{getStatusOption(demand.type).label}</div>
-                      <div className="text-xs text-zinc-500">
-                        {new Date(
-                          demand?.created_at?.toString(),
-                        ).toLocaleDateString("fr-FR", dateOptions)}
+                  <TableCell>
+                    <div className="flex gap-2 text-nowrap text-left">
+                      {getStatusOption(demand.type).icon}
+                      <div>
+                        <div>{getStatusOption(demand.type).label}</div>
+                        <div className="text-xs text-zinc-500">
+                          {new Date(demand?.created_at).toLocaleDateString(
+                            "fr-FR",
+                            dateOptions,
+                          )}
+                        </div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell align="right">
-                    {new Date(
-                      demand?.start_date?.toString(),
-                    ).toLocaleDateString("fr-FR")}
-                  </TableCell>
-                  <TableCell align="right">
-                    {new Date(demand?.end_date?.toString()).toLocaleDateString(
+                  <TableCell align="center">{demand.number_day}</TableCell>
+                  <TableCell align="left">
+                    {new Date(demand?.start_date).toLocaleDateString(
                       "fr-FR",
+                      dateOptions,
+                    )}
+                    <span> - </span>
+                    {new Date(demand?.end_date).toLocaleDateString(
+                      "fr-FR",
+                      dateOptions,
                     )}
                   </TableCell>
-                  <TableCell align="right">{demand.number_day}</TableCell>
-                  <TableCell align="right">
-                    {getClassForStatus(demand.status)}
+                  <TableCell align="left">
+                    <div className="flex flex-col gap-1">
+                      {getClassForStatus(demand.status)}
+                      {demand.id_validator && (
+                        <div className="flex gap-1">
+                          <span className="text-xs font-semibold">
+                            <span>{demand.validator_firstname}</span>
+                            <span> {demand.validator_lastname}</span>
+                          </span>
+                          <span className="text-xs text-zinc-500">
+                            {new Date(demand?.validated_at).toLocaleDateString(
+                              "fr-FR",
+                              dateOptions,
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     {demand.status === DemandStatus.WAITING && (

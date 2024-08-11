@@ -1,3 +1,5 @@
+import src from "../index.js";
+
 export class Demand {
   id: number;
   start_date: Date;
@@ -52,6 +54,7 @@ export class ValidatedDemand {
   id_validator: number;
   validator_firstname: string;
   validator_lastname: string;
+  validated_at: Date;
 
   constructor(
     id: number,
@@ -67,6 +70,7 @@ export class ValidatedDemand {
     id_validator: number,
     validator_firstname: string,
     validator_lastname: string,
+    validated_at: Date,
   ) {
     this.id = id;
     this.start_date = start_date;
@@ -81,6 +85,7 @@ export class ValidatedDemand {
     this.id_validator = id_validator;
     this.validator_firstname = validator_firstname;
     this.validator_lastname = validator_lastname;
+    this.validated_at = validated_at;
   }
 }
 
@@ -88,11 +93,17 @@ export class ConfirmDemand {
   id: number;
   validatorId: number;
   status: DemandStatus;
+  validated_at: string;
 
   constructor(id: number, validatorId: number) {
     this.id = id;
     this.validatorId = validatorId;
     this.status = DemandStatus.ACCEPTED;
+    this.validated_at = new Date()
+      .toISOString()
+      .split("Z")[0]
+      .replace("T", " ")
+      .split(".")[0];
   }
 }
 
@@ -101,12 +112,18 @@ export class RejectDemand {
   validatorId: number;
   justification: string;
   status: DemandStatus;
+  validated_at: string;
 
   constructor(id: number, validatorId: number, justification: string) {
     this.id = id;
     this.validatorId = validatorId;
     this.justification = justification;
     this.status = DemandStatus.DENIED;
+    this.validated_at = new Date()
+      .toISOString()
+      .split("Z")[0]
+      .replace("T", " ")
+      .split(".")[0];
   }
 }
 

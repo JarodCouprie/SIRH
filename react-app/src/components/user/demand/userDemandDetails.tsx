@@ -1,11 +1,17 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { Button } from "@/components/ui/button.js";
+import { customFetcher } from "@/helper/fetchInstance.js";
+import { useEffect, useState } from "react";
+import { DemandValidated } from "@/type/demand/validated-demand-list.type.js";
 
 export const UserDemandDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = location.state.user;
+  const { demandId } = useParams<{ demandId: string }>();
+
+  const [demand, setDemand] = useState<DemandValidated>();
 
   const handleClick = () => {
     if (location.state?.previousRoute) {
@@ -14,6 +20,17 @@ export const UserDemandDetails = () => {
       navigate("/user");
     }
   };
+
+  const fetchDemand = async () => {
+    const { data } = await customFetcher(
+      `http://localhost:5000/api/demand/${demandId}`,
+    );
+    setDemand(data.data);
+  };
+
+  useEffect(() => {
+    fetchDemand().then();
+  }, []);
 
   return (
     <div className="flex flex-col items-start gap-4 ">
@@ -24,6 +41,7 @@ export const UserDemandDetails = () => {
         </div>
       </Button>
       Demand details from admin
+      {demand?.id}
     </div>
   );
 };

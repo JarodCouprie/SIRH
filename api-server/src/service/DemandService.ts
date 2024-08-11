@@ -23,6 +23,8 @@ import {
   ExpenseValidation,
 } from "../dto/expense/ExpenseListDTO.js";
 import { ExpenseRepository } from "../repository/ExpenseRepository.js";
+import { User } from "../model/User.js";
+import { DemandEntity } from "../entity/demand/demand.entity.js";
 
 export function calculateNumberOfDays(
   start_date: Date,
@@ -116,7 +118,7 @@ export class DemandService {
       );
       if (!type) {
         demands = await DemandRepository.getDemandByUser(userId, limit, offset);
-        demandCount = await DemandRepository.getDemandCount();
+        demandCount = await DemandRepository.geCountByUserId(userId);
       }
       const demandDto: DemandDTO[] = demands.map(
         (demand: Demand) => new DemandDTO(demand),
@@ -377,8 +379,35 @@ export class DemandService {
     justification: string,
   ) {
     try {
-      const demand = new RejectDemand(id, userId, justification);
-      await DemandRepository.rejectDemand(demand);
+      const user: User = await UserRepository.getUserById(userId);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'a pas été trouvé");
+      }
+      const demand: DemandEntity = await DemandRepository.getDemandById(id);
+      if (!demand) {
+        return new ControllerResponse(401, "La demande n'a pas été trouvée");
+      }
+
+      const rejectedDemand = new RejectDemand(
+        demand.id,
+        user.id,
+        justification,
+      );
+      await DemandRepository.rejectDemand(rejectedDemand);
+
+      switch (demand.type) {
+        case DemandType.CA:
+          user.ca += demand.number_day;
+          break;
+        case DemandType.RTT:
+          user.rtt += demand.number_day;
+          break;
+        case DemandType.TT:
+          user.tt += demand.number_day;
+          break;
+      }
+
+      await UserRepository.updateUserDays(user.id, user.rtt, user.ca, user.tt);
       return new ControllerResponse(200, "Demande rejetée avec succès");
     } catch (error) {
       logger.error(`Failed to reject demand. Error: ${error}`);

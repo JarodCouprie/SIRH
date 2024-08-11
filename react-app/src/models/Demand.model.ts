@@ -36,16 +36,16 @@ export class DemandAll {
   type: DemandType;
 
   constructor(
-    id: number,
-    start_date: Date,
-    end_date: Date,
-    motivation: string,
-    created_at: Date,
-    status: DemandStatus,
-    number_day: number,
-    id_owner: number,
-    file_key: string,
-    type: DemandType,
+    id: number = 0,
+    start_date: Date = new Date(),
+    end_date: Date = new Date(),
+    motivation: string = "",
+    created_at: Date = new Date(),
+    status: DemandStatus = DemandStatus.DRAFT,
+    number_day: number = 0,
+    id_owner: number = 0,
+    file_key: string = "",
+    type: DemandType = DemandType.CA,
   ) {
     this.id = id;
     this.start_date = start_date;

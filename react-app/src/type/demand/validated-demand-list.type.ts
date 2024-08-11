@@ -14,4 +14,5 @@ export type DemandValidated = {
   id_validator: number;
   validator_firstname: string;
   validator_lastname: string;
+  validated_at: Date;
 };

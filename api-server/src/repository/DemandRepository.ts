@@ -171,26 +171,33 @@ export class DemandRepository {
       `
           UPDATE demand
           SET status       = ?,
-              id_validator = ?
+              id_validator = ?,
+              validated_at = ?
           WHERE id = ?
       `,
-      [demand.status, demand.validatorId, demand.id],
+      [demand.status, demand.validatorId, demand.validated_at, demand.id],
     );
     return rows[0];
   }
 
   static async rejectDemand(demand: RejectDemand) {
-    const [rows]: any = await this.pool.query(
+    await this.pool.query(
       `
           UPDATE demand
           SET status        = ?,
               justification = ?,
-              id_validator  = ?
-          WHERE id = ?
+              id_validator  = ?,
+              validated_at  = ?
+          WHERE id = ?;
       `,
-      [demand.status, demand.justification, demand.validatorId, demand.id],
+      [
+        demand.status,
+        demand.justification,
+        demand.validatorId,
+        demand.validated_at,
+        demand.id,
+      ],
     );
-    return rows[0];
   }
 
   static async getValidatedDemands(
@@ -200,7 +207,7 @@ export class DemandRepository {
   ) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT demand.*, users.firstname as firstname_validator, users.lastname as lastname_validator
+          SELECT demand.*, users.firstname as validator_firstname, users.lastname as validator_lastname
           FROM demand
                    LEFT JOIN users ON demand.id_validator = users.id
           WHERE demand.id_owner = ?

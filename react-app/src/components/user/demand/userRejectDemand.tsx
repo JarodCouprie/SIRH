@@ -57,11 +57,10 @@ export const UserRejectDemand: React.FC<UserRejectDemandProps> = ({
             <AlertDialogDescription>
               Vous êtes sur le point de refuser la demande
             </AlertDialogDescription>
-            <div className="flex flex-col gap-2 py-4">
-              <label className="text-indigo-50">Justification</label>
+            <div className="flex flex-col gap-2 py-4 text-gray-950 dark:text-gray-50">
+              <label>Justification</label>
               <Input
                 type="text"
-                className="text-indigo-50"
                 value={justification}
                 onChange={(e) => setJustification(e.target.value)}
               ></Input>

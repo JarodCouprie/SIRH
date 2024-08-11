@@ -35,18 +35,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 export function DemandDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [demand, setDemand] = useState<DemandAll>({
-    id: 0,
-    motivation: "",
-    start_date: new Date(),
-    end_date: new Date(),
-    type: DemandType.CA,
-    status: DemandStatus.DRAFT,
-    created_at: new Date(),
-    id_owner: 0,
-    file_key: "",
-    number_day: 0,
-  });
+  const [demand, setDemand] = useState<DemandAll>(new DemandAll());
 
   const handleClick = () => {
     navigate("/demand");

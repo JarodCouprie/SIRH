@@ -18,6 +18,7 @@ export class DemandValidatedDTO {
   id_validator: number;
   validator_firstname: string;
   validator_lastname: string;
+  validated_at: Date;
 
   constructor(demand: ValidatedDemand) {
     this.id = demand.id;
@@ -33,5 +34,6 @@ export class DemandValidatedDTO {
     this.id_validator = demand.id_validator;
     this.validator_firstname = demand.validator_firstname;
     this.validator_lastname = demand.validator_lastname;
+    this.validated_at = new Date(`${demand.validated_at} UTC`);
   }
 }

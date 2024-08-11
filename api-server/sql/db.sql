@@ -48,7 +48,7 @@ CREATE TABLE demand
     start_date    DATE,
     end_date      DATE,
     motivation    VARCHAR(50),
-    justification VARCHAR(255) NULL,
+    justification VARCHAR(255)  NULL,
     created_at    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status        VARCHAR(50),
     type          VARCHAR(50),
@@ -56,6 +56,7 @@ CREATE TABLE demand
     file_key      VARCHAR(255),
     id_owner      BIGINT        NOT NULL,
     id_validator  BIGINT        NULL,
+    validated_at  DATETIME      NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_owner) REFERENCES users (id),
     FOREIGN KEY (id_validator) REFERENCES users (id)

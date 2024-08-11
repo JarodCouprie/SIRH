@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { GiMedicalThermometer } from "react-icons/gi";
 import { FaRegCalendarXmark } from "react-icons/fa6";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandAll[]>([]);
@@ -47,6 +48,11 @@ export function Demand() {
   const [type, setType] = useState("");
   const [totalData, setTotalData] = useState(0);
   const navigate = useNavigate();
+  const { refreshCurrentUser } = useCurrentUser();
+
+  useEffect(() => {
+    refreshCurrentUser();
+  }, []);
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
