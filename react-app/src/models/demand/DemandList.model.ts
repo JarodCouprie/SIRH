@@ -1,3 +1,6 @@
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
+
 export class DemandDTO {
   start_date: Date;
   end_date: Date;
@@ -23,7 +26,7 @@ export class DemandDTO {
   }
 }
 
-export class DemandAll {
+export class DemandList {
   id: number;
   start_date: Date;
   end_date: Date;
@@ -58,19 +61,4 @@ export class DemandAll {
     this.file_key = file_key;
     this.type = type;
   }
-}
-
-export enum DemandType {
-  RTT = "RTT",
-  TT = "TT",
-  CA = "CA",
-  ABSENCE = "ABSENCE",
-  SICKNESS = "SICKNESS",
-}
-
-export enum DemandStatus {
-  ACCEPTED = "ACCEPTED",
-  WAITING = "WAITING",
-  DENIED = "DENIED",
-  DRAFT = "DRAFT",
 }

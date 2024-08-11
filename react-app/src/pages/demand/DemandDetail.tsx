@@ -6,12 +6,7 @@ import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button.tsx";
-import {
-  DemandAll,
-  DemandDTO,
-  DemandStatus,
-  DemandType,
-} from "@/models/Demand.model.ts";
+import { DemandList, DemandDTO } from "@/models/demand/DemandList.model.ts";
 import {
   Card,
   CardContent,
@@ -31,11 +26,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
 
 export function DemandDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [demand, setDemand] = useState<DemandAll>(new DemandAll());
+  const [demand, setDemand] = useState<DemandList>(new DemandList());
 
   const handleClick = () => {
     navigate("/demand");
@@ -64,7 +61,7 @@ export function DemandDetail() {
 }
 
 interface DetailProps {
-  demand: DemandAll;
+  demand: DemandList;
 }
 
 export function Detail({ demand }: DetailProps) {
@@ -231,7 +228,7 @@ export function Detail({ demand }: DetailProps) {
 }
 
 interface ConfirmDeleteItemProps {
-  demand: DemandAll;
+  demand: DemandList;
   navigate: ReturnType<typeof useNavigate>;
 }
 

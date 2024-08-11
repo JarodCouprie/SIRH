@@ -1,4 +1,5 @@
-import { DemandStatus, DemandType } from "@/models/Demand.model.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
 
 export type DemandValidated = {
   id: number;

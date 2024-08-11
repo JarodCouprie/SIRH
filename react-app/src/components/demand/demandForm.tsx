@@ -19,7 +19,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { customFetcher } from "@/helper/fetchInstance";
-import { DemandDTO, DemandType } from "@/models/Demand.model.ts";
+import { DemandDTO } from "@/models/demand/DemandList.model.ts";
 import {
   Card,
   CardContent,
@@ -27,6 +27,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
 
 interface DemandFormProps {
   initialData?: DemandDTO;

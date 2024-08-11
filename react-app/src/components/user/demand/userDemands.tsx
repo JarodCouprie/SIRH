@@ -12,11 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.js";
 import { Button } from "@/components/ui/button.js";
-import {
-  CaretLeftIcon,
-  CaretRightIcon,
-  MinusIcon,
-} from "@radix-ui/react-icons";
+import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 import {
   Table,
   TableBody,
@@ -25,15 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.js";
-import { DemandStatus, DemandType } from "@/models/Demand.model.js";
 import { useNavigate } from "react-router-dom";
-import { TbCalendarClock, TbCalendarRepeat } from "react-icons/tb";
-import { MdOutlineLaptop } from "react-icons/md";
-import { FaRegCalendarXmark } from "react-icons/fa6";
-import { GiMedicalThermometer } from "react-icons/gi";
-import { Badge } from "@/components/ui/badge.js";
 import { UserRejectDemand } from "@/components/user/demand/userRejectDemand.js";
 import { UserConfirmDemand } from "@/components/user/demand/userConfirmDemand.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { getDemandBadge } from "@/components/demand/demandBadge.js";
+import { DemandListLabel } from "@/components/demand/demandListLabel.js";
 
 interface UserDemandProps {
   user: UserModel;
@@ -89,64 +82,6 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
     });
   };
 
-  const getStatusOption = (status: DemandType) => {
-    switch (status) {
-      case DemandType.CA:
-        return {
-          icon: (
-            <TbCalendarClock className="size-9 text-indigo-500 opacity-75" />
-          ),
-          label: "Congés",
-        };
-      case DemandType.RTT:
-        return {
-          icon: <TbCalendarRepeat className="size-9 text-red-500 opacity-75" />,
-          label: "RTT",
-        };
-      case DemandType.TT:
-        return {
-          icon: (
-            <MdOutlineLaptop className="size-9 text-orange-500 opacity-75" />
-          ),
-          label: "Télétravail",
-        };
-      case DemandType.ABSENCE:
-        return {
-          icon: (
-            <FaRegCalendarXmark className="size-8 text-amber-500 opacity-75" />
-          ),
-          label: "Absence",
-        };
-      case DemandType.SICKNESS:
-        return {
-          icon: (
-            <GiMedicalThermometer className="size-8 text-red-500 opacity-75" />
-          ),
-          label: "Arrêt maladie",
-        };
-      default:
-        return {
-          icon: <MinusIcon />,
-          label: "???",
-        };
-    }
-  };
-
-  const getClassForStatus = (status: DemandStatus) => {
-    switch (status) {
-      case DemandStatus.ACCEPTED:
-        return <Badge variant="accepted">Acceptée</Badge>;
-      case DemandStatus.WAITING:
-        return <Badge variant="waiting">En attente</Badge>;
-      case DemandStatus.DENIED:
-        return <Badge variant="denied">Refusée</Badge>;
-      case DemandStatus.DRAFT:
-        return <Badge variant="draft">A confirmer</Badge>;
-      default:
-        return <Badge variant="outline">Erreur</Badge>;
-    }
-  };
-
   return (
     <>
       <div className="rounded pt-4">
@@ -175,18 +110,10 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                   onClick={() => handleGoToDemandDetail(demand.id)}
                 >
                   <TableCell>
-                    <div className="flex gap-2 text-nowrap text-left">
-                      {getStatusOption(demand.type).icon}
-                      <div>
-                        <div>{getStatusOption(demand.type).label}</div>
-                        <div className="text-xs text-zinc-500">
-                          {new Date(demand?.created_at).toLocaleDateString(
-                            "fr-FR",
-                            dateOptions,
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <DemandListLabel
+                      type={demand.type}
+                      created_at={demand.created_at}
+                    />
                   </TableCell>
                   <TableCell align="center">{demand.number_day}</TableCell>
                   <TableCell align="left">
@@ -202,7 +129,7 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
                   </TableCell>
                   <TableCell align="left">
                     <div className="flex flex-col gap-1">
-                      {getClassForStatus(demand.status)}
+                      {getDemandBadge(demand.status)}
                       {demand.id_validator && (
                         <div className="flex gap-1">
                           <span className="text-xs font-semibold">

@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 import { useEffect, useState } from "react";
 import { DemandValidated } from "@/type/demand/validated-demand-list.type.js";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.js";
 
 export const UserDemandDetails = () => {
   const navigate = useNavigate();
@@ -40,8 +46,12 @@ export const UserDemandDetails = () => {
           {user ? `${user?.firstname} ${user?.lastname}` : "Utilisateur"}
         </div>
       </Button>
-      Demand details from admin
-      {demand?.id}
+      <Card>
+        <CardHeader>
+          <CardTitle>Demande</CardTitle>
+        </CardHeader>
+        <CardContent>{demand?.id}</CardContent>
+      </Card>
     </div>
   );
 };
