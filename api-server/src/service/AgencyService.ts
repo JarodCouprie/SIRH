@@ -2,11 +2,11 @@ import { ControllerResponse } from "../helper/ControllerResponse.js";
 import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
 import { AddressRepository } from "../repository/AddressRepository.js";
 import { Request } from "express";
-import { CreateAgency } from "../model/Organisation.js";
+import { CreateAgency } from "../model/Agency.js";
 import { logger } from "../helper/Logger.js";
 import { AgencyRepository } from "../repository/AgencyRepository.js";
 
-export class OrganisationService {
+export class AgencyService {
   public static async createAgency(req: Request) {
     try {
       console.log(req);

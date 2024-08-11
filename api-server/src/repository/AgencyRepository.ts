@@ -1,4 +1,4 @@
-import { CreateAgency } from "../model/Organisation.js";
+import { CreateAgency } from "../model/Agency.js";
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 
 export class AgencyRepository {

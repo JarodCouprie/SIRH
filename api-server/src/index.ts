@@ -6,7 +6,7 @@ import users from "./controller/UserController.js";
 import demand from "./controller/DemandController.js";
 import expense from "./controller/ExpenseController.js";
 import role from "./controller/RoleController.js";
-import organisation from "./controller/OrganisationController.js";
+import agency from "./controller/AgencyController.js";
 import cors from "cors";
 
 dotenv.config();
@@ -26,7 +26,7 @@ app.use("/api/user", users);
 app.use("/api/expense", expense);
 app.use("/api/demand", demand);
 app.use("/api/role", role);
-app.use("/api/organisation", organisation);
+app.use("/api/agency", agency);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

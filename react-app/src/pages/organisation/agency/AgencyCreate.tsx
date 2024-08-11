@@ -21,14 +21,12 @@ export const AgencyCreate = () => {
   ) => {
     event.preventDefault();
 
-    console.log(agency);
-
     const config = {
       method: "POST",
       body: JSON.stringify(agency),
     };
     const newAgencyFetch = await customFetcher(
-      "http://localhost:5000/api/organisation/agency/create",
+      "http://localhost:5000/api/agency/create",
       config,
     );
 
