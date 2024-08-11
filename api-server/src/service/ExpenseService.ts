@@ -184,7 +184,6 @@ export class ExpenseService {
         req.body.justification,
         userId,
       );
-      console.log(expense_);
       const statusChange = await ExpenseRepository.rejectExpense(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
