@@ -151,7 +151,7 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
               <TableHead className="text-left"> Frais </TableHead>
               <TableHead className="text-left"> Date de facturation </TableHead>
               <TableHead className="text-left"> Status </TableHead>
-              <TableHead className="text-left"> Actions </TableHead>
+              <TableHead className="text-right"> Actions </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -210,7 +210,7 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
 
                   <TableCell>
                     {expense.status === ExpenseStatus.WAITING && (
-                      <div className="flex gap-2">
+                      <div className="flex justify-end gap-2">
                         <UserRejectExpense
                           expense={expense}
                           refreshExpenses={() =>
