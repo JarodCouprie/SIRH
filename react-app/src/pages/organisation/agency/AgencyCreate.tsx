@@ -12,14 +12,45 @@ import React, { useState } from "react";
 import { CreateOrganisationFormDataModel } from "@/models/organisation/CreateOrganisationFormData.model.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 
+// Définir une interface pour les erreurs
+interface Errors {
+  label?: string;
+  street?: string;
+  streetNumber?: string;
+  city?: string;
+  zipcode?: string;
+  country?: string;
+}
+
 export const AgencyCreate = () => {
   const [agency, setAgency] = useState(new CreateOrganisationFormDataModel());
+  const [errors, setErrors] = useState<Errors>({});
   const navigate = useNavigate();
+
+  const validateForm = (): Errors => {
+    const newErrors: Errors = {};
+
+    if (!agency.label) newErrors.label = "Le nom est requis.";
+    if (!agency.street) newErrors.street = "L'adresse est requise.";
+    if (!agency.streetNumber)
+      newErrors.streetNumber = "Le numéro d'adresse est requis.";
+    if (!agency.city) newErrors.city = "La ville est requise.";
+    if (!agency.zipcode) newErrors.zipcode = "Le code postal est requis.";
+    if (!agency.country) newErrors.country = "Le pays est requis.";
+
+    return newErrors;
+  };
 
   const handleClickSubmitButton = async (
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     const config = {
       method: "POST",
@@ -42,6 +73,13 @@ export const AgencyCreate = () => {
       ...agency,
       [e.target.name]: e.target.value,
     });
+
+    if (errors[e.target.name as keyof Errors]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: undefined, // Mettre à jour l'erreur pour ce champ
+      });
+    }
   };
 
   return (
@@ -64,6 +102,7 @@ export const AgencyCreate = () => {
               name="label"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.label && <p className="text-red-500">{errors.label}</p>}
 
             <Label htmlFor="address">Adresse</Label>
             <Input
@@ -74,6 +113,7 @@ export const AgencyCreate = () => {
               name="street"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.street && <p className="text-red-500">{errors.street}</p>}
 
             <Label htmlFor="address">Numéro adresse</Label>
             <Input
@@ -84,6 +124,9 @@ export const AgencyCreate = () => {
               name="streetNumber"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.streetNumber && (
+              <p className="text-red-500">{errors.streetNumber}</p>
+            )}
 
             <Label htmlFor="city">Ville</Label>
             <Input
@@ -94,6 +137,7 @@ export const AgencyCreate = () => {
               name="city"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.city && <p className="text-red-500">{errors.city}</p>}
 
             <Label htmlFor="zip_code">Code postal</Label>
             <Input
@@ -104,6 +148,7 @@ export const AgencyCreate = () => {
               name="zipcode"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
 
             <Label htmlFor="state">Pays</Label>
             <Input
@@ -114,6 +159,7 @@ export const AgencyCreate = () => {
               name="country"
               onChange={handleOrganisationFormDataChange}
             />
+            {errors.country && <p className="text-red-500">{errors.country}</p>}
 
             <div className="flex justify-end gap-2 pt-6">
               <Button
