@@ -28,10 +28,11 @@ export class ExpenseRepository {
   ) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT expense.*, users.firstname as validator_firstname, users.lastname as validator_lastname
           FROM expense
-          WHERE id_owner = ?
-          ORDER BY created_at DESC
+                   LEFT JOIN users ON expense.id_validator = users.id
+          WHERE expense.id_owner = ?
+          ORDER BY expense.created_at DESC
           LIMIT ? OFFSET ?;
       `,
       [id, offset, limit],

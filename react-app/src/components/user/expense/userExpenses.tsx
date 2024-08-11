@@ -31,19 +31,11 @@ import { customFetcher } from "@/helper/fetchInstance.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { FaBed, FaCar, FaUtensils } from "react-icons/fa";
 import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { MdOutlineEuroSymbol } from "react-icons/md";
 import { UserModel } from "@/models/user/User.model.js";
+import { UserRejectExpense } from "@/components/user/expense/userRejectExpense.js";
+import { UserConfirmExpense } from "@/components/user/expense/userConfirmExpense.js";
+import { useNavigate } from "react-router-dom";
 
 interface UserExpenseProps {
   user: UserModel;
@@ -54,6 +46,7 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalData, setTotalData] = useState(0);
+  const navigate = useNavigate();
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -138,18 +131,10 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
     }
   };
 
-  const handleConfirmClick = async (id: number, expense: ExpenseList) => {
-    const response = await customFetcher(
-      `http://localhost:5000/api/expense/status/validation/${id}`,
-      {
-        method: "PUT",
-      },
-    );
-
-    if (response.response.status === 200) {
-      toast.message(`Frais de ${expense.type} numéro ${id} validé`);
-      await fetchExpense(pageSize, pageNumber);
-    }
+  const handleDetailsDisplay = (id: string) => {
+    navigate(`expense/${id}`, {
+      state: { previousRoute: window.location.pathname, user },
+    });
   };
 
   useEffect(() => {
@@ -181,7 +166,7 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
                 <TableRow
                   key={expense.id}
                   className="hover:cursor-pointer"
-                  //onClick={() => handleClick(expense.id)}
+                  onClick={() => handleDetailsDisplay(expense.id)}
                 >
                   <TableCell className="flex gap-2 text-left">
                     {getStatusOption(expense.type).icon}
@@ -205,25 +190,39 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
                     ).toLocaleDateString("fr-FR", dateOptions)}
                   </TableCell>
 
-                  <TableCell>{getClassForStatus(expense.status)}</TableCell>
+                  <TableCell>
+                    {getClassForStatus(expense.status)}
+                    {expense.id_validator && (
+                      <div className="flex gap-1">
+                        <span className="text-xs font-semibold">
+                          <span>{expense.validator_firstname}</span>
+                          <span> {expense.validator_lastname}</span>
+                        </span>
+                        <span className="text-xs text-zinc-500">
+                          {new Date(expense?.validated_at).toLocaleDateString(
+                            "fr-FR",
+                            dateOptions,
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </TableCell>
 
                   <TableCell>
                     {expense.status === ExpenseStatus.WAITING && (
                       <div className="flex gap-2">
-                        <RefuseExpense
+                        <UserRejectExpense
                           expense={expense}
                           refreshExpenses={() =>
                             fetchExpense(pageSize, pageNumber)
                           }
                         />
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            handleConfirmClick(+expense.id, expense)
+                        <UserConfirmExpense
+                          expense={expense}
+                          refreshExpenses={() =>
+                            fetchExpense(pageSize, pageNumber)
                           }
-                        >
-                          <span className="text-indigo-700">Accepter</span>
-                        </Button>
+                        />
                       </div>
                     )}
                   </TableCell>
@@ -277,73 +276,3 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
     </>
   );
 };
-
-interface RefuseExpenseProps {
-  expense: ExpenseList;
-  refreshExpenses: () => void;
-}
-
-export function RefuseExpense({
-  expense,
-  refreshExpenses,
-}: RefuseExpenseProps) {
-  const [justification, setJustification] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleRefuse = async () => {
-    try {
-      const response = await customFetcher(
-        `http://localhost:5000/api/expense/status/invalidation/${expense.id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({ justification }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (response.response.status === 200) {
-        toast.message(`Demande de frais numéro ${expense.id} rejetée.`);
-        setIsOpen(false);
-        refreshExpenses();
-      }
-    } catch (error) {
-      toast.message("Erreur lors du rejet de la demande de frais.");
-    }
-  };
-
-  return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsOpen(true)}>
-          <span className="text-red-600">Refuser</span>
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Êtes vous vraiment sûr?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Vous êtes sur le point de refuser la demande de remboursement.
-          </AlertDialogDescription>
-          <label className="text-indigo-50">Justification :</label>
-          <Input
-            type="text"
-            className="text-indigo-50"
-            value={justification}
-            onChange={(e) => setJustification(e.target.value)}
-          ></Input>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setIsOpen(false)}>
-            Annuler
-          </AlertDialogCancel>
-
-          <Button type="submit" onClick={handleRefuse} variant="destructive">
-            Refuser
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}

@@ -177,7 +177,7 @@ export function Demand() {
   const newDemand = (
     <Button variant="callToAction" onClick={handleClickCreate}>
       <PlusIcon className="mr-2 size-4" />
-      Faire une demande
+      Créer une demande
     </Button>
   );
 

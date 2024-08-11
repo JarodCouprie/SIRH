@@ -7,15 +7,24 @@ export class ExpenseList {
   facturation_date: Date;
   status: ExpenseStatus;
   fileUrl?: string;
+  id_validator: number;
+  validator_firstname: string;
+  validator_lastname: string;
+  validated_at: Date;
+
   constructor(
-    id: string,
-    type: ExpenseType,
-    amount: number,
-    motivation: string,
-    created_at: Date,
-    facturation_date: Date,
-    status: ExpenseStatus,
-    fileUrl?: string,
+    id: string = "",
+    type: ExpenseType = ExpenseType.FOOD,
+    amount: number = 0,
+    motivation: string = "",
+    created_at: Date = new Date(),
+    facturation_date: Date = new Date(),
+    status: ExpenseStatus = ExpenseStatus.WAITING,
+    fileUrl: string = "",
+    id_validator: number = 0,
+    validator_firstname: string = "",
+    validator_lastname: string = "",
+    validated_at: Date = new Date(),
   ) {
     this.id = id;
     this.type = type;
@@ -25,6 +34,10 @@ export class ExpenseList {
     this.facturation_date = facturation_date;
     this.status = status;
     this.fileUrl = fileUrl;
+    this.id_validator = id_validator;
+    this.validator_firstname = validator_firstname;
+    this.validator_lastname = validator_lastname;
+    this.validated_at = validated_at;
   }
 }
 
@@ -74,6 +87,7 @@ export class ExpenseCardModel {
     this.invoicesAmount = invoicesAmount;
   }
 }
+
 export enum selectedTypeEnum {
   "ALL" = "ALL",
   TRAVEL = "TRAVEL",

@@ -1,10 +1,15 @@
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
-import { InProgress } from "@/components/navigation/InProgress.tsx";
+import { OrganisationMap } from "@/components/organisation/OrganisationMap.js";
 
 export const Organisation = () => {
   return (
     <MainRoot title="Organisation">
-      <InProgress />
+      <div className="grid h-full grid-cols-4">
+        <div className="col-span-1"></div>
+        <div className="col-span-3">
+          <OrganisationMap />
+        </div>
+      </div>
     </MainRoot>
   );
 };

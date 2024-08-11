@@ -10,6 +10,10 @@ export class ExpenseListDTO {
   status: ExpenseStatus;
   id_owner: number;
   fileUrl?: string;
+  id_validator: number;
+  validator_firstname: string;
+  validator_lastname: string;
+  validated_at: Date;
 
   constructor(expense: Expense, url?: string) {
     this.id = expense.id;
@@ -21,6 +25,10 @@ export class ExpenseListDTO {
     this.status = expense.status;
     this.id_owner = expense.id_owner;
     this.fileUrl = url;
+    this.id_validator = expense.id_validator;
+    this.validator_firstname = expense.validator_firstname;
+    this.validator_lastname = expense.validator_lastname;
+    this.validated_at = expense.validated_at;
   }
 }
 

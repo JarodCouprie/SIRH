@@ -42,7 +42,7 @@ import {
 import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/components/user/userRoles.js";
 import { UserDetails } from "@/components/user/userDetails.js";
-import { UserExpenses } from "@/components/user/userExpenses.tsx";
+import { UserExpenses } from "@/components/user/expense/userExpenses.tsx";
 import { UserDemands } from "@/components/user/demand/userDemands.js";
 
 export function User() {

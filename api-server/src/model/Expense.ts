@@ -8,7 +8,10 @@ export class Expense {
   status: ExpenseStatus;
   id_owner: number;
   fileKey?: string;
-  userValidateId?: number;
+  id_validator: number;
+  validator_firstname: string;
+  validator_lastname: string;
+  validated_at: Date;
 
   constructor(
     id: string,
@@ -19,7 +22,10 @@ export class Expense {
     facturation_date: Date,
     status: ExpenseStatus,
     ownerId: number,
-    userValidateId?: number,
+    id_validator: number,
+    validator_firstname: string,
+    validator_lastname: string,
+    validated_at: Date,
     fileKey?: string,
   ) {
     this.id = id;
@@ -30,8 +36,11 @@ export class Expense {
     this.facturation_date = created_at;
     this.status = status || ExpenseStatus.WAITING;
     this.id_owner = ownerId;
-    this.userValidateId = userValidateId;
     this.fileKey = fileKey;
+    this.id_validator = id_validator;
+    this.validator_firstname = validator_firstname;
+    this.validator_lastname = validator_lastname;
+    this.validated_at = validated_at;
   }
 }
 

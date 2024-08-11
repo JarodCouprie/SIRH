@@ -2,6 +2,7 @@ import { Users } from "@/pages/user/Users.tsx";
 import { User } from "@/pages/user/User.tsx";
 import { NewUser } from "@/pages/user/NewUser.tsx";
 import { UserDemandDetails } from "@/components/user/demand/userDemandDetails.js";
+import { UserExpenseDetails } from "@/components/user/expense/userExpenseDetails.js";
 
 export const userRoutes = {
   path: "user",
@@ -19,7 +20,7 @@ export const userRoutes = {
         },
         {
           path: "expense/:expenseId",
-          element: <div>Hello</div>,
+          element: <UserExpenseDetails />,
         },
         {
           path: "demand/:demandId",

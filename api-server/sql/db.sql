@@ -75,6 +75,7 @@ CREATE TABLE expense
     id_owner         BIGINT        NOT NULL,
     id_validator     BIGINT        NULL,
     file_key         VARCHAR(255)  NULL,
+    validated_at  DATETIME      NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_owner) REFERENCES users (id),
     FOREIGN KEY (id_validator) REFERENCES users (id)
