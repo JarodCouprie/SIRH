@@ -11,6 +11,7 @@ export class ExpenseList {
   validator_firstname: string;
   validator_lastname: string;
   validated_at: Date;
+  justification: string;
 
   constructor(
     id: string = "",
@@ -25,6 +26,7 @@ export class ExpenseList {
     validator_firstname: string = "",
     validator_lastname: string = "",
     validated_at: Date = new Date(),
+    justification: string = "",
   ) {
     this.id = id;
     this.type = type;
@@ -38,6 +40,7 @@ export class ExpenseList {
     this.validator_firstname = validator_firstname;
     this.validator_lastname = validator_lastname;
     this.validated_at = validated_at;
+    this.justification = justification;
   }
 }
 

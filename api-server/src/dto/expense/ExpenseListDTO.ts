@@ -11,6 +11,7 @@ export class ExpenseListDTO {
   id_owner: number;
   fileUrl?: string;
   id_validator: number;
+  justification: string;
   validator_firstname: string;
   validator_lastname: string;
   validated_at: Date;
@@ -26,6 +27,7 @@ export class ExpenseListDTO {
     this.id_owner = expense.id_owner;
     this.fileUrl = url;
     this.id_validator = expense.id_validator;
+    this.justification = expense.justification;
     this.validator_firstname = expense.validator_firstname;
     this.validator_lastname = expense.validator_lastname;
     this.validated_at = expense.validated_at;
@@ -35,20 +37,33 @@ export class ExpenseListDTO {
 export class ExpenseValidation {
   id: number;
   id_validator: number;
+  validated_at: string;
 
   constructor(id: number, id_validator: number) {
     this.id = id;
     this.id_validator = id_validator;
+    this.validated_at = new Date()
+      .toISOString()
+      .split("Z")[0]
+      .replace("T", " ")
+      .split(".")[0];
   }
 }
+
 export class ExpenseInvalidation {
   id: number;
   justification: string;
   id_validator: number;
+  validated_at: string;
 
   constructor(id: number, justification: string, id_validator: number) {
     this.id = id;
     this.justification = justification;
     this.id_validator = id_validator;
+    this.validated_at = new Date()
+      .toISOString()
+      .split("Z")[0]
+      .replace("T", " ")
+      .split(".")[0];
   }
 }

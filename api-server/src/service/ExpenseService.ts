@@ -168,10 +168,7 @@ export class ExpenseService {
 
   public static async confirmExpense(id: number, userId: number) {
     try {
-      const expense_: ExpenseValidation = {
-        id: id,
-        id_validator: userId,
-      };
+      const expense_ = new ExpenseValidation(id, userId);
       const statusChange = await ExpenseRepository.confirmExpense(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
@@ -182,11 +179,12 @@ export class ExpenseService {
 
   public static async rejectExpense(id: number, userId: number, req: Request) {
     try {
-      const expense_: ExpenseInvalidation = {
-        id: id,
-        justification: req.body.justification,
-        id_validator: userId,
-      };
+      const expense_ = new ExpenseInvalidation(
+        id,
+        req.body.justification,
+        userId,
+      );
+      console.log(expense_);
       const statusChange = await ExpenseRepository.rejectExpense(expense_);
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
@@ -213,7 +211,7 @@ export class ExpenseService {
   public static async getExpenseDemand(id: string, userId: number) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
-
+      console.log(expenseTemp);
       const expense: ExpenseListDTO = new ExpenseListDTO(
         expenseTemp,
         await MinioClient.getSignedUrl(expenseTemp.file_key),

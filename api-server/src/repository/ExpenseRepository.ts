@@ -218,9 +218,10 @@ export class ExpenseRepository {
   public static async getExpenseDemand(id: string) {
     const [row]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT expense.*, users.firstname as validator_firstname, users.lastname as validator_lastname
           FROM expense
-          WHERE id = ?;
+                   LEFT JOIN users ON expense.id_validator = users.id
+          WHERE expense.id = ?
       `,
       [id],
     );
@@ -249,10 +250,16 @@ export class ExpenseRepository {
       `
           UPDATE expense
           SET status       = ?,
-              id_validator = ?
+              id_validator = ?,
+              validated_at  = ?
           WHERE id = ?;
       `,
-      [ExpenseStatus.REFUNDED, expense.id_validator, expense.id],
+      [
+        ExpenseStatus.REFUNDED,
+        expense.id_validator,
+        expense.validated_at,
+        expense.id,
+      ],
     );
     return result;
   }
@@ -263,13 +270,15 @@ export class ExpenseRepository {
           UPDATE expense
           SET status        = ?,
               justification = ?,
-              id_validator  = ?
+              id_validator  = ?,
+              validated_at  = ?
           WHERE id = ?;
       `,
       [
         ExpenseStatus.NOT_REFUNDED,
         expense.justification,
         expense.id_validator,
+        expense.validated_at,
         expense.id,
       ],
     );

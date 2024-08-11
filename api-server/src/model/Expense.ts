@@ -9,6 +9,7 @@ export class Expense {
   id_owner: number;
   fileKey?: string;
   id_validator: number;
+  justification: string;
   validator_firstname: string;
   validator_lastname: string;
   validated_at: Date;
@@ -23,6 +24,7 @@ export class Expense {
     status: ExpenseStatus,
     ownerId: number,
     id_validator: number,
+    justification: string,
     validator_firstname: string,
     validator_lastname: string,
     validated_at: Date,
@@ -38,6 +40,7 @@ export class Expense {
     this.id_owner = ownerId;
     this.fileKey = fileKey;
     this.id_validator = id_validator;
+    this.justification = justification;
     this.validator_firstname = validator_firstname;
     this.validator_lastname = validator_lastname;
     this.validated_at = validated_at;
