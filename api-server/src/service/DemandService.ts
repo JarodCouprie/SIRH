@@ -1,10 +1,13 @@
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { DemandRepository } from "../repository/DemandRepository";
 import {
+  ConfirmDemand,
   Demand,
   DemandStatus,
   DemandType,
+  RejectDemand,
   StatusDemand,
+  ValidatedDemand,
 } from "../model/Demand";
 import { logger } from "../helper/Logger";
 import { DemandDTO } from "../dto/demand/DemandDTO";
@@ -14,6 +17,14 @@ import { Request } from "express";
 import { UserService } from "./UserService";
 import { MinioClient } from "../helper/MinioClient.js";
 import { UserRepository } from "../repository/UserRepository.js";
+import { DemandValidatedDTO } from "../dto/demand/DemandValidatedDTO.js";
+import {
+  ExpenseListDTO,
+  ExpenseValidation,
+} from "../dto/expense/ExpenseListDTO.js";
+import { ExpenseRepository } from "../repository/ExpenseRepository.js";
+import { User } from "../model/User.js";
+import { DemandEntity } from "../entity/demand/demand.entity.js";
 
 export function calculateNumberOfDays(
   start_date: Date,
@@ -107,7 +118,7 @@ export class DemandService {
       );
       if (!type) {
         demands = await DemandRepository.getDemandByUser(userId, limit, offset);
-        demandCount = await DemandRepository.getDemandCount();
+        demandCount = await DemandRepository.geCountByUserId(userId);
       }
       const demandDto: DemandDTO[] = demands.map(
         (demand: Demand) => new DemandDTO(demand),
@@ -124,19 +135,31 @@ export class DemandService {
 
   public static async getDemandById(id: string) {
     try {
-      const demand: any = await DemandRepository.getDemandById(+id);
+      const demand_: any = await DemandRepository.getDemandById(+id);
+
+      const signedUrl = await MinioClient.getSignedUrl(demand_.file_key);
+      const demand: DemandDTO = new DemandDTO(demand_, signedUrl);
+
       if (!demand) {
         return new ControllerResponse(401, "Demand doesn't exist");
       }
-      return new ControllerResponse<DemandDTO>(200, "", new DemandDTO(demand));
+
+      return new ControllerResponse<DemandDTO>(200, "", demand);
     } catch (error) {
       logger.error(`Failed to get the demand. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get the demand");
     }
   }
 
-  public static async changeStatusDemand(id: string) {
+  public static async changeStatusDemand(id: string, userId: number) {
     try {
+      const demand: any = await DemandRepository.getDemandById(+id);
+      if (demand.id_owner !== userId) {
+        return new ControllerResponse(
+          401,
+          "Vous n'êtes pas autorisé à modifier cette demande",
+        );
+      }
       const demand_: StatusDemand = {
         id: +id,
         status: DemandStatus.WAITING,
@@ -156,6 +179,12 @@ export class DemandService {
   ) {
     try {
       const demand: any = await DemandRepository.getDemandById(+idDemand);
+      if (demand.id_owner !== userId) {
+        return new ControllerResponse(
+          401,
+          "Vous n'êtes pas autorisé à modifier cette demande",
+        );
+      }
       const body = JSON.parse(req.body.body);
       if (demand.status !== DemandStatus.DRAFT) {
         return new ControllerResponse(400, "Not allowed");
@@ -260,7 +289,7 @@ export class DemandService {
         if (number_day === -1) {
           return new ControllerResponse(
             400,
-            "Il est impossibe de selectionner un jour du week end",
+            "Il est impossible de sélectionner un jour du week end",
           );
         }
       }
@@ -299,9 +328,90 @@ export class DemandService {
       const demand: any = await DemandRepository.createDemand(newDemand);
       return new ControllerResponse(201, "", demand);
     } catch (error) {
-      return new ControllerResponse(500, "Failed to create the demand");
+      return new ControllerResponse(500, "Impossible de créer la demande");
+    }
+  }
+
+  public static async getValidatedDemand(req: Request, userId: number) {
+    try {
+      const pageSize = req.query.pageSize || "0";
+      const pageNumber = req.query.pageNumber || "10";
+      const limit = +pageSize;
+      const offset = (+pageNumber - 1) * +pageSize;
+
+      const demands: ValidatedDemand[] =
+        await DemandRepository.getValidatedDemands(userId, limit, offset);
+
+      const demandsCount: number =
+        await DemandRepository.geCountByUserId(userId);
+
+      const demandListDto = demands?.map(
+        (demand) => new DemandValidatedDTO(demand),
+      );
+
+      return new ControllerResponse(200, "", {
+        totalData: demandsCount,
+        list: demandListDto,
+      });
+    } catch (error) {
+      logger.error(`Get demands failed. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de récupérer les demandes",
+      );
+    }
+  }
+
+  public static async confirmDemand(id: number, userId: number) {
+    try {
+      const demand = new ConfirmDemand(id, userId);
+      await DemandRepository.confirmDemand(demand);
+      return new ControllerResponse(200, "Demande acceptée avec succès");
+    } catch (error) {
+      logger.error(`Failed to confirm demand. Error: ${error}`);
+      return new ControllerResponse(500, "Validation de la demande impossible");
+    }
+  }
+
+  public static async rejectDemand(
+    id: number,
+    userId: number,
+    justification: string,
+  ) {
+    try {
+      const user: User = await UserRepository.getUserById(userId);
+      if (!user) {
+        return new ControllerResponse(401, "L'utilisateur n'a pas été trouvé");
+      }
+      const demand: DemandEntity = await DemandRepository.getDemandById(id);
+      if (!demand) {
+        return new ControllerResponse(401, "La demande n'a pas été trouvée");
+      }
+
+      const rejectedDemand = new RejectDemand(
+        demand.id,
+        user.id,
+        justification,
+      );
+      await DemandRepository.rejectDemand(rejectedDemand);
+
+      switch (demand.type) {
+        case DemandType.CA:
+          user.ca += demand.number_day;
+          break;
+        case DemandType.RTT:
+          user.rtt += demand.number_day;
+          break;
+        case DemandType.TT:
+          user.tt += demand.number_day;
+          break;
+      }
+
+      await UserRepository.updateUserDays(user.id, user.rtt, user.ca, user.tt);
+      return new ControllerResponse(200, "Demande rejetée avec succès");
+    } catch (error) {
+      logger.error(`Failed to reject demand. Error: ${error}`);
+      return new ControllerResponse(500, "Refus de la demande impossible");
     }
   }
 }
-
-export default DemandService;

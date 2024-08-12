@@ -4,6 +4,8 @@ import { DemandService } from "../service/DemandService.js";
 
 import { CustomRequest } from "../helper/CustomRequest.js";
 import multer from "multer";
+import { hasRole } from "../middleware/HasRoleMiddleware.js";
+import { RoleEnum } from "../enum/RoleEnum.js";
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -61,8 +63,10 @@ router.put(
   "/status/:id_demand",
   verifyToken,
   async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
     const { code, message, data } = await DemandService.changeStatusDemand(
       req.params.id_demand,
+      userId,
     );
     res.status(code).json({ message, data });
   },
@@ -81,4 +85,50 @@ router.delete(
     res.status(code).json({ message, data });
   },
 );
+
+router.get(
+  "/validation/list/:id",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const { code, message, data } = await DemandService.getValidatedDemand(
+      req,
+      +userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.put(
+  "/confirm/:id",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } = await DemandService.confirmDemand(
+      +req.params.id,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
+router.put(
+  "/reject/:id",
+  verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } = await DemandService.rejectDemand(
+      +req.params.id,
+      userId,
+      req.body.justification,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+
 export default router;

@@ -226,7 +226,7 @@ export class UserService {
     try {
       const user = await UserRepository.getUserById(id);
       if (!user) {
-        return new ControllerResponse(404, "User not found");
+        return new ControllerResponse(404, "Utilisateur non trouvé");
       }
 
       user.rtt = rtt;
@@ -236,12 +236,15 @@ export class UserService {
       await UserRepository.updateUserDays(id, rtt, ca, tt);
       return new ControllerResponse(
         200,
-        "User days updated",
+        "Soldes de l'utilisateur modifiés",
         new UserDTO(user),
       );
     } catch (error) {
       logger.error(`Failed to update user days. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to update user days");
+      return new ControllerResponse(
+        500,
+        "Impossible de modifier les soldes de l'utilisateur",
+      );
     }
   }
 

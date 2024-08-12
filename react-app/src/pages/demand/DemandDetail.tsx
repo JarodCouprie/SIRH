@@ -1,12 +1,11 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineVisibility } from "react-icons/md";
 import { CheckIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button.tsx";
-import { DemandAll, DemandDTO, DemandStatus } from "@/models/Demand.model.ts";
+import { DemandDTO, DemandList } from "@/models/demand/DemandList.model.ts";
 import {
   Card,
   CardContent,
@@ -25,20 +24,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { FieldRow } from "@/components/user/fieldRow.js";
+import { dateOptions, dateTimeOptions } from "@/helper/DateHelper.js";
 
 export function DemandDetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [demand, setDemand] = useState<DemandAll>({
-    id: 0,
-    motivation: "",
-    start_date: new Date(),
-    end_date: new Date(),
-    type: DemandType.CA,
-    status: DemandStatus.DRAFT,
-    created_at: new Date(),
-    number_day: 0,
-  });
+  const [demand, setDemand] = useState<DemandList>(new DemandList());
 
   const handleClick = () => {
     navigate("/demand");
@@ -67,25 +62,12 @@ export function DemandDetail() {
 }
 
 interface DetailProps {
-  demand: DemandAll;
+  demand: DemandList;
 }
 
 export function Detail({ demand }: DetailProps) {
   const navigate = useNavigate();
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
+  const { currentUser } = useCurrentUser();
 
   const getClassForStatus = (status: string) => {
     switch (status) {
@@ -136,9 +118,33 @@ export function Detail({ demand }: DetailProps) {
       navigate("/demand", { replace: true });
     }
   };
+  const fetchFileNameFromUrl = (url?: string) => {
+    if (!url || url === "") return "Aucun fichier";
+    let fileName = url.split("/").pop();
+    if (fileName) fileName = fileName.split("?")[0];
+    else fileName = "Aucun fichier";
 
+    return fileName;
+  };
+
+  const previewButton = (url?: string) => {
+    if (url && url !== "")
+      return (
+        <Button variant="default" onClick={handlePreviewFile}>
+          <MdOutlineVisibility className="mr-2 size-6" />
+          Voir le document
+        </Button>
+      );
+  };
+
+  const handlePreviewFile = () => {
+    window.open(demand.file_url, "_blank");
+  };
   const handleButton = () => {
-    if (demand.status === "DRAFT") {
+    if (
+      demand.status === DemandStatus.DRAFT &&
+      demand.id_owner === currentUser.id
+    ) {
       return (
         <div>
           <ConfirmDeleteItem demand={demand} navigate={navigate} />
@@ -172,30 +178,34 @@ export function Detail({ demand }: DetailProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-          <UserInfoRow title="Type">{TypeDemand(demand.type)}</UserInfoRow>
-          <UserInfoRow title="Status">
-            {getClassForStatus(demand.status)}
-          </UserInfoRow>
-          <UserInfoRow title="Description">{demand.motivation}</UserInfoRow>
-          <UserInfoRow title="Date de création">
+          <FieldRow title="Type">{TypeDemand(demand.type)}</FieldRow>
+          <FieldRow title="Statut">{getClassForStatus(demand.status)}</FieldRow>
+          <FieldRow title="Description">{demand.motivation}</FieldRow>
+          <FieldRow title="Date de création">
             {new Date(demand.created_at.toString()).toLocaleDateString(
               "fr-FR",
               dateTimeOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Date de début">
+          </FieldRow>
+          <FieldRow title="Date de début">
             {new Date(demand.start_date.toString()).toLocaleDateString(
               "fr-FR",
               dateOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Date de fin">
+          </FieldRow>
+          <FieldRow title="Date de fin">
             {new Date(demand.end_date.toString()).toLocaleDateString(
               "fr-FR",
               dateOptions,
             )}
-          </UserInfoRow>
-          <UserInfoRow title="Total jour(s)">{demand.number_day}</UserInfoRow>
+          </FieldRow>
+          <FieldRow title="Total jour(s)">{demand.number_day}</FieldRow>
+          <FieldRow title="Fichier">
+            <div className="flex flex-wrap gap-2">
+              {fetchFileNameFromUrl(demand.file_url)}
+              <div className="">{previewButton(demand.file_url)}</div>
+            </div>
+          </FieldRow>
         </CardContent>
       </Card>
     </div>
@@ -203,7 +213,7 @@ export function Detail({ demand }: DetailProps) {
 }
 
 interface ConfirmDeleteItemProps {
-  demand: DemandAll;
+  demand: DemandList;
   navigate: ReturnType<typeof useNavigate>;
 }
 
@@ -211,6 +221,8 @@ export function ConfirmDeleteItem({
   demand,
   navigate,
 }: ConfirmDeleteItemProps) {
+  const { refreshCurrentUser } = useCurrentUser();
+
   const fetchDemand = async () => {
     const response = await customFetcher(
       `http://localhost:5000/api/demand/${demand.id}`,
@@ -223,6 +235,8 @@ export function ConfirmDeleteItem({
       toast.message(`Demande numéro ${demand.id} supprimée`);
       navigate("/demand", { replace: true });
     }
+
+    refreshCurrentUser();
   };
 
   return (
@@ -251,28 +265,4 @@ export function ConfirmDeleteItem({
       </AlertDialogContent>
     </AlertDialog>
   );
-}
-
-interface UserInfoRowProps {
-  title: string;
-  children: ReactNode;
-}
-
-export function UserInfoRow({ title, children }: UserInfoRowProps) {
-  return (
-    <div className="flex flex-col gap-1 p-4">
-      <div className="text-xs text-slate-800 dark:text-slate-300">{title}</div>
-      <div className="font-bold text-slate-950 dark:text-slate-50">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-export enum DemandType {
-  RTT = "RTT",
-  TT = "TT",
-  CA = "CA",
-  SICKNESS = "SICKNESS",
-  ABSENCE = "ABSENCE",
 }

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { Button } from "@/components/ui/button.js";
-import { UserField } from "@/components/user/userField.js";
+import { FieldRow } from "@/components/user/fieldRow.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 import { Label } from "@/components/ui/label.js";
 import { Input } from "@/components/ui/input.js";
@@ -67,12 +67,12 @@ export const UserAddress: React.FC<UserAddressProps> = ({ user, setUser }) => {
 
   const userFields = (
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-      <UserField title="Pays de résidence">{user.country}</UserField>
-      <UserField title="Adresse">
+      <FieldRow title="Pays de résidence">{user.country}</FieldRow>
+      <FieldRow title="Adresse">
         {user.address.streetNumber} {user.address.street}
-      </UserField>
-      <UserField title="Code postal">{user.address.zipcode}</UserField>
-      <UserField title="Ville">{user.address.locality}</UserField>
+      </FieldRow>
+      <FieldRow title="Code postal">{user.address.zipcode}</FieldRow>
+      <FieldRow title="Ville">{user.address.locality}</FieldRow>
     </CardContent>
   );
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
-import { DemandAll, DemandStatus, DemandType } from "@/models/Demand.model.ts";
+import { DemandList } from "@/models/demand/DemandList.model.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -39,14 +39,22 @@ import {
 } from "@/components/ui/tabs.tsx";
 import { GiMedicalThermometer } from "react-icons/gi";
 import { FaRegCalendarXmark } from "react-icons/fa6";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { DemandStatus } from "@/enum/DemandStatus.enum.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
 
 export function Demand() {
-  const [demandList, setDemandList] = useState<DemandAll[]>([]);
+  const [demandList, setDemandList] = useState<DemandList[]>([]);
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [type, setType] = useState("");
   const [totalData, setTotalData] = useState(0);
   const navigate = useNavigate();
+  const { refreshCurrentUser } = useCurrentUser();
+
+  useEffect(() => {
+    refreshCurrentUser();
+  }, []);
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -169,7 +177,7 @@ export function Demand() {
   const newDemand = (
     <Button variant="callToAction" onClick={handleClickCreate}>
       <PlusIcon className="mr-2 size-4" />
-      Faire une demande
+      Créer une demande
     </Button>
   );
 
@@ -194,7 +202,7 @@ export function Demand() {
                 </TableCell>
               </TableRow>
             ) : (
-              demandList.map((demand: DemandAll) => (
+              demandList.map((demand: DemandList) => (
                 <TableRow
                   key={demand.id}
                   className="hover:cursor-pointer"

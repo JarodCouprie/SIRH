@@ -19,13 +19,15 @@ import { Calendar } from "@/components/ui/calendar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { customFetcher } from "@/helper/fetchInstance";
-import { DemandDTO, DemandType } from "@/models/Demand.model.ts";
+import { DemandDTO } from "@/models/demand/DemandList.model.ts";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { useCurrentUser } from "@/hooks/useCurrentUser.js";
+import { DemandType } from "@/enum/DemandType.enum.js";
 
 interface DemandFormProps {
   initialData?: DemandDTO;
@@ -51,15 +53,25 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const [motivation, setMotivation] = useState("");
   const [selectedType, setSelectedType] = useState(DemandType.CA);
   const [file, setFile] = useState<File | null>(null);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     start_date?: string;
     end_date?: string;
     type?: string;
   }>({});
+  const { refreshCurrentUser } = useCurrentUser();
 
   const isWeekday = (date: Date) => {
     const day = date.getDay();
     return day === 0 || day === 6;
+  };
+
+  const fetchFileNameFromUrl = (url?: string) => {
+    if (!url || url === "") return "Aucun fichier";
+    let fileName = url.split("/").pop();
+    if (fileName) fileName = fileName.split("?")[0];
+    else fileName = "Aucun fichier";
+    return fileName;
   };
 
   useEffect(() => {
@@ -68,6 +80,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
       setEndDate(new Date(initialData.end_date));
       setMotivation(initialData.motivation);
       setSelectedType(initialData.type);
+      setFileUrl(initialData.file_key || null);
     }
   }, [initialData]);
 
@@ -89,8 +102,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
           type: selectedType,
           status: initialData?.status,
         };
-      }
-      if (method === "POST") {
+      } else if (method === "POST") {
         demandData = {
           start_date: formattedStartDate,
           end_date: formattedEndDate,
@@ -142,6 +154,8 @@ const DemandForm: React.FC<DemandFormProps> = ({
       } else {
         toast.error(`${response.data.message}`);
       }
+
+      refreshCurrentUser();
     }
   };
 
@@ -283,6 +297,7 @@ const DemandForm: React.FC<DemandFormProps> = ({
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFile(event.target.files[0]);
+      setFileUrl(null); // Remplacer l'URL existante par le nouveau fichier sélectionné
     }
   };
 
@@ -329,13 +344,23 @@ const DemandForm: React.FC<DemandFormProps> = ({
 
           {(selectedType === DemandType.ABSENCE ||
             selectedType === DemandType.SICKNESS) && (
-            <Input
-              className="p-6"
-              type="file"
-              id="additionalInfo"
-              placeholder="Raison de l'absence"
-              onChange={handleFileChange}
-            />
+            <div>
+              <Input
+                className="p-6"
+                type="file"
+                id="additionalInfo"
+                placeholder="Raison de l'absence"
+                onChange={handleFileChange}
+              />
+              {fileUrl && (
+                <p>
+                  Fichier existant :{" "}
+                  <a href={fileUrl} target="_blank">
+                    {fetchFileNameFromUrl(fileUrl)}
+                  </a>
+                </p>
+              )}
+            </div>
           )}
 
           {dateChanger()}

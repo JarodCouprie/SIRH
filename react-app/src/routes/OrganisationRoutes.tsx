@@ -1,4 +1,4 @@
-import { Organisation } from "@/pages/Organisation.tsx";
+import { Organisation } from "@/pages/organisation/Organisation.tsx";
 
 export const organisationRoutes = {
   path: "organisation",

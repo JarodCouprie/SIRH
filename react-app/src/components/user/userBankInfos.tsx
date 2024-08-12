@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { RiBankFill } from "react-icons/ri";
 import { Button } from "@/components/ui/button.js";
-import { UserField } from "@/components/user/userField.js";
+import { FieldRow } from "@/components/user/fieldRow.js";
 import { customFetcher } from "@/helper/fetchInstance.js";
 import { Label } from "@/components/ui/label.js";
 import { Input } from "@/components/ui/input.js";
@@ -64,8 +64,8 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
 
   const userFields = (
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-      <UserField title="IBAN">{user.iban}</UserField>
-      <UserField title="BIC">{user.bic}</UserField>
+      <FieldRow title="IBAN">{user.iban}</FieldRow>
+      <FieldRow title="BIC">{user.bic}</FieldRow>
     </CardContent>
   );
 
