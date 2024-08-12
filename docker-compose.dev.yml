@@ -22,6 +22,7 @@ services:
     platform: linux/amd64
     image: mysql:latest
     container_name: mysql-sirh-dev
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: sirh-db
@@ -30,9 +31,25 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - sirh_data_dev:/var/lib/mysql
+      - "sirh_data_dev:/var/lib/mysql"
     networks:
       - sirh-app-dev
+  minio:
+    platform: linux/amd64
+    image: 'minio/minio:latest'
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: password
+    ports:
+      - "9000:9000"
+      - "8900:8900"
+    container_name: minio-sirh-dev
+    restart: unless-stopped
+    volumes:
+      - "sirh_data_dev:/data/minio"
+    networks:
+      - sirh-app-dev
+    command: "minio server /data/minio --console-address ':8900'"
 networks:
   sirh-app-dev:
     driver: bridge

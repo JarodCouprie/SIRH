@@ -1,0 +1,53 @@
+import { DatabaseClient } from "../helper/DatabaseClient.js";
+import { UserAddress } from "../model/Address.js";
+import { CreateOrUpdateAddressDTO } from "../dto/address/CreateOrUpdateAddressDTO.js";
+
+export class AddressRepository {
+  private static pool = DatabaseClient.mysqlPool;
+
+  public static async createAddress(address: CreateOrUpdateAddressDTO) {
+    const [result] = await this.pool.query(
+      `
+          INSERT INTO address (street, streetNumber, locality, zipcode, lat, lng)
+          VALUES (?, ?, ?, ?, ?, ?)
+      `,
+      [
+        address.street,
+        address.streetNumber,
+        address.locality,
+        address.zipcode,
+        address.lat,
+        address.lng,
+      ],
+    );
+    return result;
+  }
+
+  public static async updateAddress(
+    address: CreateOrUpdateAddressDTO | UserAddress,
+    id: number,
+  ) {
+    const [result] = await this.pool.query(
+      `
+          UPDATE address
+          SET street       = ?,
+              streetNumber = ?,
+              locality     = ?,
+              zipcode      = ?,
+              lat          = ?,
+              lng          = ?
+          WHERE id = ?
+      `,
+      [
+        address.street,
+        address.streetNumber,
+        address.locality,
+        address.zipcode,
+        address.lat,
+        address.lng,
+        id,
+      ],
+    );
+    return result;
+  }
+}
