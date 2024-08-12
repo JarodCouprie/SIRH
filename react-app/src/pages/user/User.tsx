@@ -41,8 +41,9 @@ import {
 } from "@/components/ui/tooltip.js";
 import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/components/user/userRoles.js";
-import { UserInfos } from "@/components/user/userInfos.js";
 import { UserDetails } from "@/components/user/userDetails.js";
+import { UserExpenses } from "@/components/user/expense/userExpenses.tsx";
+import { UserDemands } from "@/components/user/demand/userDemands.js";
 
 export function User() {
   const { id } = useParams();
@@ -197,10 +198,10 @@ export function User() {
             <UserRoles user={foundUser} setUser={setFoundUser} />
           </TabsContent>
           <TabsContent value="demand">
-            <UserInfos user={foundUser} setUser={setFoundUser} />
+            <UserDemands user={foundUser} />
           </TabsContent>
           <TabsContent value="expense">
-            <UserInfos user={foundUser} setUser={setFoundUser} />
+            <UserExpenses user={foundUser} />
           </TabsContent>
         </Tabs>
       </div>

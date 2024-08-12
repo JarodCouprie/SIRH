@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { DemandDTO } from "@/models/Demand.model.ts";
-import { DemandType } from "@/pages/demand/DemandDetail.tsx";
+import { DemandDTO } from "@/models/demand/DemandList.model.ts";
 import { useParams } from "react-router-dom";
 import { customFetcher } from "@/helper/fetchInstance.ts";
 import DemandForm from "@/components/demand/demandForm.tsx";
+import { DemandType } from "@/enum/DemandType.enum.js";
 
 export function DemandEdit() {
   const { id } = useParams();
@@ -12,6 +12,7 @@ export function DemandEdit() {
     start_date: new Date(),
     end_date: new Date(),
     type: DemandType.CA,
+    file_key: "",
     status: "",
   });
 

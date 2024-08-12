@@ -44,20 +44,22 @@ CREATE TABLE users
 
 CREATE TABLE demand
 (
-    id                      BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    start_date               DATE,
-    end_date                 DATE,
-    motivation              VARCHAR(50),
-    created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status                  VARCHAR(50),
-    type                    VARCHAR(50),
-    number_day              INT,
-    file_key   VARCHAR(255),
-    id_user_create_demand   BIGINT        NOT NULL,
-    id_user_validate_demand BIGINT        NULL,
+    id            BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    start_date    DATE,
+    end_date      DATE,
+    motivation    VARCHAR(50),
+    justification VARCHAR(255)  NULL,
+    created_at    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status        VARCHAR(50),
+    type          VARCHAR(50),
+    number_day    INT,
+    file_key      VARCHAR(255),
+    id_owner      BIGINT        NOT NULL,
+    id_validator  BIGINT        NULL,
+    validated_at  DATETIME      NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id_user_create_demand) REFERENCES users (id),
-    FOREIGN KEY (id_user_validate_demand) REFERENCES users (id)
+    FOREIGN KEY (id_owner) REFERENCES users (id),
+    FOREIGN KEY (id_validator) REFERENCES users (id)
 );
 
 CREATE TABLE expense
@@ -66,12 +68,14 @@ CREATE TABLE expense
     type             VARCHAR(50),
     amount           FLOAT,
     motivation       VARCHAR(50),
+    justification    VARCHAR(50)   NULL,
     created_at       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     facturation_date DATE          NOT NULL,
     status           VARCHAR(50)   NOT NULL DEFAULT 'WAITING',
     id_owner         BIGINT        NOT NULL,
     id_validator     BIGINT        NULL,
     file_key         VARCHAR(255)  NULL,
+    validated_at  DATETIME      NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_owner) REFERENCES users (id),
     FOREIGN KEY (id_validator) REFERENCES users (id)

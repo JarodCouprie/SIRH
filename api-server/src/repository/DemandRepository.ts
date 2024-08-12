@@ -1,7 +1,12 @@
 import { DatabaseClient } from "../helper/DatabaseClient.js";
 import { EditDemandDTO } from "../dto/demand/EditDemandDTO.js";
 import { CreateDemand } from "../dto/demand/CreateDemandDTO.js";
-import { StatusDemand } from "../model/Demand.js";
+import {
+  ConfirmDemand,
+  DemandStatus,
+  RejectDemand,
+  StatusDemand,
+} from "../model/Demand.js";
 
 export class DemandRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -28,11 +33,12 @@ export class DemandRepository {
     );
     return rows;
   }
+
   public static async getDemandByUser(userId: number, limit = 10, offset = 0) {
     const [rows] = await this.pool.query(
       `SELECT *
        FROM demand
-       WHERE id_user_create_demand = ?
+       WHERE id_owner = ?
        ORDER BY created_at
        LIMIT ? OFFSET ? `,
       [userId, limit, offset],
@@ -58,12 +64,23 @@ export class DemandRepository {
     return rows[0].count;
   }
 
+  public static async geCountByUserId(userId: number) {
+    const [rows]: any = await this.pool.query(
+      `SELECT COUNT(*) as count
+       FROM demand
+       WHERE demand.id_owner = ?`,
+      [userId],
+    );
+    return rows[0].count;
+  }
+
   public static async getDemandById(id: number) {
     const [rows]: any = await this.pool.query(
       `
-          SELECT *
+          SELECT demand.*, users.firstname as validator_firstname, users.lastname as validator_lastname
           FROM demand
-          WHERE id = ?
+                   LEFT JOIN users ON demand.id_validator = users.id
+          WHERE demand.id = ?
       `,
       [id],
     );
@@ -75,12 +92,12 @@ export class DemandRepository {
       `
           UPDATE demand
           SET start_date=?,
-              end_date    = ?,
+              end_date   = ?,
               motivation = ?,
               type       = ?,
               status     = ?,
               number_day = ?,
-              file_key = ?
+              file_key   = ?
           WHERE id = ?
           LIMIT 1;
 
@@ -121,7 +138,7 @@ export class DemandRepository {
                               type,
                               number_day,
                               file_key,
-                              id_user_create_demand)
+                              id_owner)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
@@ -148,5 +165,58 @@ export class DemandRepository {
       [demand.status, demand.id],
     );
     return rows[0];
+  }
+
+  static async confirmDemand(demand: ConfirmDemand) {
+    const [rows]: any = await this.pool.query(
+      `
+          UPDATE demand
+          SET status       = ?,
+              id_validator = ?,
+              validated_at = ?
+          WHERE id = ?
+      `,
+      [demand.status, demand.validatorId, demand.validated_at, demand.id],
+    );
+    return rows[0];
+  }
+
+  static async rejectDemand(demand: RejectDemand) {
+    await this.pool.query(
+      `
+          UPDATE demand
+          SET status        = ?,
+              justification = ?,
+              id_validator  = ?,
+              validated_at  = ?
+          WHERE id = ?;
+      `,
+      [
+        demand.status,
+        demand.justification,
+        demand.validatorId,
+        demand.validated_at,
+        demand.id,
+      ],
+    );
+  }
+
+  static async getValidatedDemands(
+    userId: number,
+    limit: number,
+    offset: number,
+  ) {
+    const [rows]: any = await this.pool.query(
+      `
+          SELECT demand.*, users.firstname as validator_firstname, users.lastname as validator_lastname
+          FROM demand
+                   LEFT JOIN users ON demand.id_validator = users.id
+          WHERE demand.id_owner = ?
+          ORDER BY demand.created_at DESC
+          LIMIT ? OFFSET ?;
+      `,
+      [userId, limit, offset],
+    );
+    return rows;
   }
 }

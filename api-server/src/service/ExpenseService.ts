@@ -1,11 +1,14 @@
 import { ExpenseRepository } from "../repository/ExpenseRepository";
-import { Expense, ExpenseStatus, ExpenseType } from "../model/Expense";
-import { ExpenseListDTO } from "../dto/expense/ExpenseListDTO";
+import { Expense, ExpenseStatus } from "../model/Expense";
+import {
+  ExpenseInvalidation,
+  ExpenseListDTO,
+  ExpenseValidation,
+} from "../dto/expense/ExpenseListDTO";
 import { ControllerResponse } from "../helper/ControllerResponse";
 import { logger } from "../helper/Logger";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "../dto/expense/ExpenseAmountDateAndStatusDTO";
-import { CustomRequest } from "../helper/CustomRequest";
 import { MinioClient } from "../helper/MinioClient";
 
 export class ExpenseService {
@@ -42,6 +45,34 @@ export class ExpenseService {
         (expense: Expense) => new ExpenseListDTO(expense),
       );
       return new ControllerResponse<ExpenseListDTO[]>(200, "", expensesListDto);
+    } catch (error) {
+      logger.error(`Failed to get expenses. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to get expenses");
+    }
+  }
+
+  public static async getExpensesValidationList(req: Request, id: number) {
+    try {
+      const pageSize = req.query.pageSize || "0";
+      const pageNumber = req.query.pageNumber || "10";
+      const limit = +pageSize;
+      const offset = (+pageNumber - 1) * +pageSize;
+
+      const expenses = await ExpenseRepository.getExpensesValidationValues(
+        limit,
+        offset,
+        id,
+      );
+      const expenseCount =
+        await ExpenseRepository.getExpensesValidationCount(id);
+
+      const expenseDTO: ExpenseListDTO[] = expenses.map(
+        (expense: Expense) => new ExpenseListDTO(expense),
+      );
+      return new ControllerResponse(200, "", {
+        totalData: expenseCount,
+        list: expenseDTO,
+      });
     } catch (error) {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get expenses");
@@ -135,6 +166,32 @@ export class ExpenseService {
     }
   }
 
+  public static async confirmExpense(id: number, userId: number) {
+    try {
+      const expense_ = new ExpenseValidation(id, userId);
+      const statusChange = await ExpenseRepository.confirmExpense(expense_);
+      return new ControllerResponse(200, "", statusChange);
+    } catch (error) {
+      logger.error(`Failed to edit the expense. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the expense");
+    }
+  }
+
+  public static async rejectExpense(id: number, userId: number, req: Request) {
+    try {
+      const expense_ = new ExpenseInvalidation(
+        id,
+        req.body.justification,
+        userId,
+      );
+      const statusChange = await ExpenseRepository.rejectExpense(expense_);
+      return new ControllerResponse(200, "", statusChange);
+    } catch (error) {
+      logger.error(`Failed to edit the expense. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the expense");
+    }
+  }
+
   public static async delExpenseDemand(id: string, userId: number) {
     try {
       const targetExpense: Expense =
@@ -153,7 +210,7 @@ export class ExpenseService {
   public static async getExpenseDemand(id: string, userId: number) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
-
+      console.log(expenseTemp);
       const expense: ExpenseListDTO = new ExpenseListDTO(
         expenseTemp,
         await MinioClient.getSignedUrl(expenseTemp.file_key),

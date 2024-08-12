@@ -27,6 +27,17 @@ router.get("/list/all", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.get(
+  "/validation/list/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { code, message, data } =
+      await ExpenseService.getExpensesValidationList(req, +id);
+    res.status(code).json({ message, data });
+  },
+);
+
+router.get(
   "/amount-date-and-status/",
   verifyToken,
   async (req: Request, res: Response) => {
@@ -97,6 +108,33 @@ router.put(
     const { code, message, data } = await ExpenseService.editExpenseDemand(
       req,
       userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+router.put(
+  "/status/validation/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } = await ExpenseService.confirmExpense(
+      +req.params.id,
+      userId,
+    );
+    res.status(code).json({ message, data });
+  },
+);
+router.put(
+  "/status/invalidation/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    let userId = (req as CustomRequest).token.userId;
+
+    const { code, message, data } = await ExpenseService.rejectExpense(
+      +req.params.id,
+      userId,
+      req,
     );
     res.status(code).json({ message, data });
   },

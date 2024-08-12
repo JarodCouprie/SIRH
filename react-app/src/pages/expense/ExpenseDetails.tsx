@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { MdOutlineVisibility } from "react-icons/md";
+import { undefined } from "zod";
 
 export function ExpenseDetails() {
   const navigate = useNavigate();
@@ -73,6 +74,11 @@ export function ExpenseDetails() {
           response.data.data.created_at.split("T")[0],
         );
         setExpense({
+          justification: "",
+          id_validator: 0,
+          validated_at: new Date(),
+          validator_firstname: "",
+          validator_lastname: "",
           id: response.data.data.id,
           type: convertFromStringToExpenseTypeEnum(response.data.data.type),
           amount: response.data.data.amount,
@@ -153,22 +159,30 @@ export function ExpenseDetails() {
   };
 
   const fetchFileNameFromUrl = (url?: string) => {
-    if (!url || url === "") return "Aucun fichier";
+    if (typeof url !== "string" || !url) {
+      return "Aucun fichier";
+    }
+
     let fileName = url.split("/").pop();
-    if (fileName) fileName = fileName.split("?")[0];
-    else fileName = "Aucun fichier";
+    if (fileName) {
+      fileName = fileName.split("?")[0];
+    } else {
+      fileName = "Aucun fichier";
+    }
 
     return fileName;
   };
 
   const previewButton = (url?: string) => {
-    if (url && url !== "")
+    if (typeof url === "string" && url !== "") {
       return (
         <Button variant="default" onClick={handlePreviewFile}>
           <MdOutlineVisibility className="mr-2 size-6" />
           Voir le document
         </Button>
       );
+    }
+    return null;
   };
 
   const handlePreviewFile = () => {
