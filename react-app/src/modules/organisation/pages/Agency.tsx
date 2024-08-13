@@ -10,7 +10,6 @@ import { AgencyModel } from "@/models/organisation/agency/Agency.model.js";
 import { AgencyDetails } from "@/modules/organisation/components/agencyDetails.js";
 import { Button } from "@/components/ui/button.js";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { FaBuilding } from "react-icons/fa";
 import {
   Card,
   CardDescription,
@@ -18,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { TbBuildingEstate } from "react-icons/tb";
 
 export const Agency = () => {
   const { id } = useParams();
@@ -60,7 +60,7 @@ export const Agency = () => {
     <div className="w-full">
       <Card className="flex items-center">
         <CardHeader className="flex items-center">
-          <FaBuilding className="size-10 text-gray-500" />
+          <TbBuildingEstate className="size-8 text-gray-300" />
         </CardHeader>
         <div className="flex flex-grow flex-col">
           <CardTitle className="text-lg font-semibold">

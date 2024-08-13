@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.js";
-import { FaBuilding, FaCompass } from "react-icons/fa";
+import { FaCompass } from "react-icons/fa";
 import { Label } from "@/components/ui/label.js";
 import {
   Select,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select.js";
 import { OrganisationMap } from "@/modules/organisation/components/organisationMap.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { TbBuildingEstate } from "react-icons/tb";
 
 export const Organisation = () => {
   const [agencyList, setAgencyList] = useState<AgencyList[]>([]);
@@ -86,7 +87,7 @@ export const Organisation = () => {
   return (
     <MainRoot title="Organisation" action={newOrg}>
       <div className="grid h-full grid-cols-4">
-        <div className="col-span-1 me-3">
+        <div className="col-span-1 flex flex-col gap-2  pr-4">
           {agencyList.length === 0 ? (
             <Card>
               <CardHeader>
@@ -98,12 +99,12 @@ export const Organisation = () => {
           ) : (
             agencyList.map((agency: AgencyList) => (
               <Card
-                className="mt-1 flex items-center pe-2 hover:cursor-pointer hover:bg-red-900"
+                className="flex items-center pr-2 hover:cursor-pointer hover:bg-red-900"
                 key={agency.id}
                 onClick={() => handleClick(agency.id)}
               >
                 <CardHeader className="flex items-center">
-                  <FaBuilding className="size-10 text-gray-500" />
+                  <TbBuildingEstate className="size-8 text-gray-300" />
                 </CardHeader>
                 <div className="flex flex-grow flex-col">
                   <CardTitle className="text-lg font-semibold">
@@ -115,14 +116,14 @@ export const Organisation = () => {
                 </div>
 
                 <Button
-                  variant="ghost"
+                  variant="callToAction"
                   size="icon"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleFocusMap(+agency.lat, +agency.lng);
                   }}
                 >
-                  <FaCompass className="size-6 text-gray-500" />
+                  <FaCompass className="size-6" />
                 </Button>
               </Card>
             ))
