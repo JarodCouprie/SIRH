@@ -1,5 +1,6 @@
 import { Organisation } from "@/pages/organisation/Organisation.tsx";
 import { AgencyCreate } from "@/pages/organisation/agency/AgencyCreate.js";
+import { Agency } from "@/pages/organisation/agency/Agency.js";
 
 export const organisationRoutes = {
   path: "organisation",
@@ -14,6 +15,15 @@ export const organisationRoutes = {
         {
           path: "agency/create",
           element: <AgencyCreate />,
+        },
+        {
+          path: "agency/:id",
+          children: [
+            {
+              path: "",
+              element: <Agency />,
+            },
+          ],
         },
       ],
     },

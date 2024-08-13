@@ -1,4 +1,5 @@
 import { User } from "./User.js";
+import { Agency } from "./Agency.js";
 
 export class UserAddress {
   street: string;
@@ -15,5 +16,23 @@ export class UserAddress {
     this.zipcode = user.zipcode;
     this.lat = user.lat;
     this.lng = user.lng;
+  }
+}
+
+export class AgencyAddress {
+  street: string;
+  streetNumber: string;
+  locality: string;
+  zipcode: string;
+  lat: string;
+  lng: string;
+
+  constructor(agency: Agency) {
+    this.street = agency.street;
+    this.streetNumber = agency.streetNumber;
+    this.locality = agency.locality;
+    this.zipcode = agency.zipcode;
+    this.lat = agency.lat;
+    this.lng = agency.lng;
   }
 }
