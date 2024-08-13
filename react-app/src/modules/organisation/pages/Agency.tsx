@@ -58,7 +58,7 @@ export const Agency = () => {
 
   const agencyMainPage = (
     <div className="w-full">
-      <Card className="my-4 flex items-center pe-2">
+      <Card className="flex items-center">
         <CardHeader className="flex items-center">
           <FaBuilding className="size-10 text-gray-500" />
         </CardHeader>
@@ -72,7 +72,7 @@ export const Agency = () => {
           </CardDescription>
         </div>
       </Card>
-      <div>
+      <div className="py-4">
         <Tabs defaultValue="details">
           <TabsList className="flex flex-wrap">
             <TabsTrigger value="details">Agence</TabsTrigger>

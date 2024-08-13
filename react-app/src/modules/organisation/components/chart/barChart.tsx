@@ -49,7 +49,7 @@ const chartConfig = {
 
 export function BarChartAgency() {
   return (
-    <Card>
+    <Card className="size-full">
       <CardHeader>
         <CardTitle>Bar Chart - Custom Label</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

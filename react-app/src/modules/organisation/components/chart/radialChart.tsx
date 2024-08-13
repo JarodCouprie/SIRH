@@ -34,7 +34,7 @@ export function RadialChartAgency() {
   const totalVisitors = chartData[0].desktop + chartData[0].mobile;
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex size-full flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Radial Chart - Stacked</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

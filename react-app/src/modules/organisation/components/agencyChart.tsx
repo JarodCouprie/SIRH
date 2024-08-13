@@ -5,9 +5,9 @@ import { RadialChartAgency } from "@/modules/organisation/components/chart/radia
 
 export const AgencyChart: React.FC = () => {
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-col gap-4">
       <AreaChartAgency />
-      <div className="flex flex-row">
+      <div className="flex flex-row gap-4">
         <div className="flex w-full">
           <BarChartAgency />
         </div>
