@@ -4,22 +4,16 @@ import { useEffect, useState } from "react";
 import { AgencyCoord } from "@/models/organisation/agency/Agency.model.js";
 
 interface OrganisationMapProps {
-  center: [number, number]; // Typage de la prop 'center'
+  center: [number, number];
 }
 
-function MapUpdater({ center }: { center: [number, number] }) {
+function MapUpdater(props: OrganisationMapProps) {
   const map = useMap();
-
-  useEffect(() => {
-    if (center) {
-      map.setView(center, map.getZoom());
-    }
-  }, [center, map]);
-
+  map.setView(props.center, map.getZoom());
   return null;
 }
 
-export function OrganisationMap({ center }: OrganisationMapProps) {
+export function OrganisationMap(props: OrganisationMapProps) {
   const [agencyList, setAgencyList] = useState<AgencyCoord[]>([]);
 
   const fetchAgencyCoord = async () => {
@@ -38,9 +32,9 @@ export function OrganisationMap({ center }: OrganisationMapProps) {
   return (
     <MapContainer
       className="size-full"
-      center={center}
+      center={props.center}
       zoom={7}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -53,7 +47,7 @@ export function OrganisationMap({ center }: OrganisationMapProps) {
         </Marker>
       ))}
 
-      <MapUpdater center={center} />
+      <MapUpdater center={props.center} />
     </MapContainer>
   );
 }

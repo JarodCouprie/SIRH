@@ -28,9 +28,9 @@ export const Organisation = () => {
   const [totalData, setTotalData] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
-  const [selectedCoord, setSelectedCoord] = useState<[number, number] | null>(
-    null,
-  );
+  const [selectedCoord, setSelectedCoord] = useState<[number, number]>([
+    49.1068, 6.1764,
+  ]);
   const navigate = useNavigate();
 
   const fetchAgency = async (pageSize: number, pageNumber: number) => {
@@ -91,14 +91,14 @@ export const Organisation = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="h-24 text-center">
-                  Aucune demande trouvée
+                  Aucune agence trouvée
                 </CardTitle>
               </CardHeader>
             </Card>
           ) : (
             agencyList.map((agency: AgencyList) => (
               <Card
-                className="mt-1 flex items-center pe-2 hover:cursor-pointer"
+                className="mt-1 flex items-center pe-2 hover:cursor-pointer hover:bg-red-900"
                 key={agency.id}
                 onClick={() => handleClick(agency.id)}
               >
@@ -169,7 +169,7 @@ export const Organisation = () => {
         </div>
 
         <div className="col-span-3">
-          <OrganisationMap center={selectedCoord || [49.1068, 6.1764]} />
+          <OrganisationMap center={selectedCoord} />
         </div>
       </div>
     </MainRoot>
