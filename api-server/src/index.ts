@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { verifyToken } from "./middleware/AuthMiddleware.js";
-import auth from "./controller/AuthController.js";
-import users from "./controller/UserController.js";
-import demand from "./controller/DemandController.js";
-import expense from "./controller/ExpenseController.js";
-import role from "./controller/RoleController.js";
-import agency from "./controller/AgencyController.js";
+import { verifyToken } from "./common/middleware/AuthMiddleware.js";
+import auth from "./resources/auth/AuthController.js";
+import users from "./resources/user/UserController.js";
+import demand from "./resources/demand/DemandController.js";
+import expense from "./resources/expense/ExpenseController.js";
+import role from "./resources/role/RoleController.js";
+import agency from "./resources/agency/AgencyController.js";
 import cors from "cors";
 
 dotenv.config();
