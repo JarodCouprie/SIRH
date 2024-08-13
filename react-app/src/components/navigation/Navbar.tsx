@@ -6,8 +6,8 @@ import React from "react";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { BsPersonRaisedHand } from "react-icons/bs";
 import { GrGroup } from "react-icons/gr";
-import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
-import { RoleEnum } from "@/enum/Role.enum.js";
+import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
+import { RoleEnum } from "@/common/enum/Role.enum.js";
 
 export function NavBar() {
   const { currentUser } = useCurrentUser();
