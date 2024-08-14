@@ -26,10 +26,14 @@ export class UserService {
   public static async getUsers() {
     try {
       const users: any = await UserRepository.getUsers();
-      const usersDto: UserDTO[] = users.map(async (user: User) => {
-        return await this.getUserDTO(user);
+      const userListMapped: UserListDTO[] = await Promise.all(
+        users.map(async (user: User) => {
+          return await this.getUserDTO(user);
+        }),
+      );
+      return new ControllerResponse(200, "", {
+        list: userListMapped,
       });
-      return new ControllerResponse<UserDTO[]>(200, "", usersDto);
     } catch (error) {
       logger.error(`Failed to get users. Error: ${error}`);
       return new ControllerResponse(

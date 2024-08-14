@@ -56,8 +56,13 @@ export class AgencyService {
       return new ControllerResponse(200, "", agencyDto);
     } catch (error) {
       logger.error(`Failed to get agency. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get demand");
+      return new ControllerResponse(500, "Failed to get agency coordinate");
     }
+  }
+
+  public static async getDemandGroupedByMonthData(req: Request) {
+    const agencyData: any = await AgencyRepository.getDemandGroupedByMonth();
+    return new ControllerResponse(200, "", agencyData);
   }
 
   public static async createAgency(req: Request) {

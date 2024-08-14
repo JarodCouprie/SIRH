@@ -72,6 +72,18 @@ export class AgencyRepository {
     return rows[0].count;
   }
 
+  public static async getDemandGroupedByMonth() {
+    const [rows] = await this.pool.query(
+      `SELECT DATE_FORMAT(created_at, '%Y-%m') AS date,
+              COUNT(*)                         AS count
+       FROM demand
+       WHERE status = 'ACCEPTED'
+       GROUP BY date
+       ORDER BY date`,
+    );
+    return rows;
+  }
+
   public static async createAgency(agency: CreateAgency) {
     const [rows]: any = await this.pool.query(
       `

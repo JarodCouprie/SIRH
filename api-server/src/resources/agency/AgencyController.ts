@@ -1,9 +1,6 @@
 import { Request, Response, Router } from "express";
 import { verifyToken } from "../../common/middleware/AuthMiddleware.js";
 import { AgencyService } from "./AgencyService.js";
-import { hasRole } from "../../common/middleware/HasRoleMiddleware.js";
-import { RoleEnum } from "../../common/enum/RoleEnum.js";
-import { UserService } from "../user/UserService.js";
 
 const router = Router();
 
@@ -14,6 +11,12 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
 
 router.get("/coordinates", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await AgencyService.getAgencyCoord(req);
+  res.status(code).json({ message, data });
+});
+
+router.get("/data", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } =
+    await AgencyService.getDemandGroupedByMonthData(req);
   res.status(code).json({ message, data });
 });
 

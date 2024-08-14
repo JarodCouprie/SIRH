@@ -136,7 +136,7 @@ export class DemandService {
   public static async getDemandById(id: string) {
     try {
       const demand_: any = await DemandRepository.getDemandById(+id);
-
+      console.log(demand_);
       const signedUrl = await MinioClient.getSignedUrl(demand_.file_key);
       const demand: DemandDTO = new DemandDTO(demand_, signedUrl);
 

@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/card.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { TbBuildingEstate } from "react-icons/tb";
+import { AgencyDepartment } from "@/modules/organisation/components/agencyDepartment.js";
+import { AgencyTeam } from "@/modules/organisation/components/agencyTeam.js";
 
 export const Agency = () => {
   const { id } = useParams();
@@ -76,11 +78,17 @@ export const Agency = () => {
         <Tabs defaultValue="details">
           <TabsList className="flex flex-wrap">
             <TabsTrigger value="details">Agence</TabsTrigger>
-            <TabsTrigger value="demand">Services</TabsTrigger>
-            <TabsTrigger value="expense">Équipes</TabsTrigger>
+            <TabsTrigger value="service">Services</TabsTrigger>
+            <TabsTrigger value="team">Équipes</TabsTrigger>
           </TabsList>
           <TabsContent value="details">
             <AgencyDetails agency={foundAgency} setAgency={setFoundAgency} />
+          </TabsContent>
+          <TabsContent value="service">
+            <AgencyDepartment agency={foundAgency} />
+          </TabsContent>
+          <TabsContent value="team">
+            <AgencyTeam agency={foundAgency} />
           </TabsContent>
         </Tabs>
       </div>
