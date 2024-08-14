@@ -41,7 +41,7 @@ export function LoginForm() {
     <div className="flex h-dvh w-dvw flex-col items-center justify-center gap-12 bg-black text-gray-950 dark:text-gray-100">
       <div className="grid size-full grid-cols-3 rounded-xl">
         <div className="relative col-span-2 rounded max-lg:hidden">
-          <div className="absolute size-full bg-[url('@/assets/pompidou.jpg')] bg-fixed bg-center opacity-50"></div>
+          <div className="absolute size-full bg-[url('@/assets/pompidou.jpg')] bg-cover bg-fixed bg-center bg-no-repeat opacity-50"></div>
           <div className="relative z-10 grid size-full place-items-center p-20">
             <div className="flex flex-col items-start gap-4">
               <h1 className="bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-center text-8xl text-transparent">
