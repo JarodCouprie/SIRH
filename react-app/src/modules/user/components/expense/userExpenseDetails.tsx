@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { dateOptions, dateTimeOptions } from "@/common/helper/DateHelper.js";
 import { MdOutlineVisibility } from "react-icons/md";
 import {

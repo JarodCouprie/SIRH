@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { RiBankFill } from "react-icons/ri";
 import { Button } from "@/components/ui/button.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { Label } from "@/components/ui/label.js";
 import { Input } from "@/components/ui/input.js";
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input.js";
 interface UserBankInfosProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
+  resource?: string;
 }
 
 class UserBankInfosData {
@@ -32,6 +33,7 @@ class UserBankInfosData {
 export const UserBankInfos: React.FC<UserBankInfosProps> = ({
   user,
   setUser,
+  resource = "user",
 }) => {
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserBankInfosData(user));
@@ -47,7 +49,7 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
       body: JSON.stringify(userUpdated),
     };
     await customFetcher(
-      `http://localhost:5000/api/user/update-bank-infos/${user.id}`,
+      `http://localhost:5000/api/${resource}/update-bank-infos/${user.id}`,
       config,
     ).then((response) => {
       setUser(response.data.data);

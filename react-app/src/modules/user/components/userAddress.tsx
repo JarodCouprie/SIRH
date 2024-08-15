@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { Button } from "@/components/ui/button.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { Label } from "@/components/ui/label.js";
 import { Input } from "@/components/ui/input.js";
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input.js";
 interface UserAddressProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
+  resource?: string;
 }
 
 class UserAddressData {
@@ -35,7 +36,11 @@ class UserAddressData {
   }
 }
 
-export const UserAddress: React.FC<UserAddressProps> = ({ user, setUser }) => {
+export const UserAddress: React.FC<UserAddressProps> = ({
+  user,
+  setUser,
+  resource = "user",
+}) => {
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserAddressData(user));
 
@@ -50,7 +55,7 @@ export const UserAddress: React.FC<UserAddressProps> = ({ user, setUser }) => {
       body: JSON.stringify(userUpdated),
     };
     await customFetcher(
-      `http://localhost:5000/api/user/update-address/${user.id}`,
+      `http://localhost:5000/api/${resource}/update-address/${user.id}`,
       config,
     ).then((response) => {
       setUser(response.data.data);

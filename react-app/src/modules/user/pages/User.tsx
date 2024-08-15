@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { UserModel } from "@/models/user/User.model.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -9,49 +9,23 @@ import {
 } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge.js";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar.tsx";
-import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog.js";
-import { Input } from "@/components/ui/input.js";
-import { FaPen } from "react-icons/fa";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip.js";
-import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 import { UserRoles } from "@/modules/user/components/userRoles.js";
 import { UserDetails } from "@/modules/user/components/userDetails.js";
 import { UserExpenses } from "@/modules/user/components/expense/userExpenses.tsx";
 import { UserDemands } from "@/modules/user/components/demand/userDemands.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { UserAvatar } from "@/modules/user/components/userAvatar.js";
 
 export function User() {
   const { id } = useParams();
   const [userLoaded, setUserLoaded] = useState<boolean>(false);
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
   const [foundUser, setFoundUser] = useState<UserModel>(new UserModel());
-  const [file, setFile] = useState<File | null>(null);
-  const { currentUser, refreshCurrentUser } = useCurrentUser();
   useEffect(() => {
     fetchUser().then();
   }, []);
@@ -80,88 +54,11 @@ export function User() {
     navigate("/user");
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
-    }
-  };
-
-  const handleSubmitPicture = async () => {
-    if (!file) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", file);
-    const config = {
-      method: "PUT",
-      body: formData,
-    };
-    await customFetcher(
-      `http://localhost:5000/api/user/set-picture/${id}`,
-      config,
-      false,
-    ).then((response) => {
-      if (response.response.status !== 200) {
-        return;
-      }
-      if (!response.data.data) {
-        return setUserLoaded(false);
-      }
-      setUserLoaded(true);
-      setFoundUser(response.data.data);
-
-      if (currentUser.id === foundUser.id) {
-        refreshCurrentUser();
-      }
-    });
-  };
-
   const userMainPage = (
     <div className="w-full">
       <div className="flex flex-wrap justify-between gap-2 py-4">
         <div className="flex gap-2">
-          <AlertDialog>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <AlertDialogTrigger asChild>
-                    <Avatar className="size-14 cursor-pointer">
-                      <AvatarImage src={foundUser?.avatar_url} />
-                      <AvatarFallback>
-                        {foundUser?.firstname?.charAt(0)}
-                        {foundUser?.lastname?.charAt(0)}
-                      </AvatarFallback>
-                      <div className="absolute left-0 top-0 grid size-full place-items-center bg-slate-700 opacity-0 transition duration-200 hover:opacity-90">
-                        <FaPen className="size-6 text-gray-50" />
-                      </div>
-                    </Avatar>
-                  </AlertDialogTrigger>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Modifier la photo</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Nouvelle image de profil</AlertDialogTitle>
-                <AlertDialogDescription></AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="grid w-full items-center gap-1.5">
-                <Input
-                  type="file"
-                  className="cursor-pointer bg-gray-50"
-                  onChange={handleFileChange}
-                />
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction onClick={handleSubmitPicture}>
-                  Modifier
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <UserAvatar user={foundUser} setUser={setFoundUser} />
           <div>
             <div className="flex items-center gap-4">
               <span className="text-3xl font-bold text-gray-950 dark:text-slate-200">
