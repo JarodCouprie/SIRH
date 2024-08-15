@@ -1,5 +1,5 @@
-import { DemandStatus } from "@/enum/DemandStatus.enum.js";
-import { DemandType } from "@/enum/DemandType.enum.js";
+import { DemandStatus } from "@/common/enum/DemandStatus.enum.js";
+import { DemandType } from "@/common/enum/DemandType.enum.js";
 
 export class DemandDTO {
   start_date: Date;

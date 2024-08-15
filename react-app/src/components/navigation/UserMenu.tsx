@@ -24,9 +24,9 @@ import {
   SunIcon,
 } from "@radix-ui/react-icons";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useTheme } from "@/hooks/useTheme.ts";
-import { useAuth } from "@/hooks/useAuth.ts";
-import { AuthTokens } from "@/type/context/auth-tokens.type.ts";
+import { useTheme } from "@/common/hooks/useTheme.ts";
+import { useAuth } from "@/common/hooks/useAuth.ts";
+import { AuthTokens } from "@/common/type/context/auth-tokens.type.ts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +38,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useCurrentUser } from "@/hooks/useCurrentUser.ts";
+import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 
 export function UserMenu() {
