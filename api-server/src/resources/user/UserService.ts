@@ -146,7 +146,7 @@ export class UserService {
 
   public static async createUser(req: Request) {
     try {
-      if (req.body.roles.length === 0) {
+      if (!Array.isArray(req.body.roles) || req.body.roles.length === 0) {
         return new ControllerResponse(
           400,
           "Un utilisateur doit avoir au minimum un rôle",
