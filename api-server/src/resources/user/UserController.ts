@@ -55,7 +55,7 @@ router.post(
   verifyToken,
   hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
-    const { code, message, data } = await UserService.setNewRole(
+    const { code, message, data } = await UserService.updateRoles(
       req,
       +req.params.id,
     );
