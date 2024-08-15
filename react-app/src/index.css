@@ -19,3 +19,16 @@
         --chart-5: 340 75% 55%;
     }
 }
+
+.leaflet-container {
+    background: #000
+}
+
+.dark {
+    .leaflet-layer,
+    .leaflet-control-zoom-in,
+    .leaflet-control-zoom-out,
+    .leaflet-control-attribution {
+        filter: invert(100%) hue-rotate(180deg);
+    }
+}

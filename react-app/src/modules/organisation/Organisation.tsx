@@ -99,12 +99,12 @@ export const Organisation = () => {
           ) : (
             agencyList.map((agency: AgencyList) => (
               <Card
-                className="flex items-center pr-2 hover:cursor-pointer hover:bg-red-900"
+                className="flex items-center pr-2 hover:cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-800"
                 key={agency.id}
                 onClick={() => handleClick(agency.id)}
               >
                 <CardHeader className="flex items-center">
-                  <TbBuildingEstate className="size-8 text-gray-300" />
+                  <TbBuildingEstate className="size-8 text-slate-500" />
                 </CardHeader>
                 <div className="flex flex-grow flex-col">
                   <CardTitle className="text-lg font-semibold">
