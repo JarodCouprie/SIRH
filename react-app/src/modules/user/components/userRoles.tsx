@@ -40,7 +40,7 @@ export const UserRoles: React.FC<UserProps> = ({ user, setUser }) => {
       body: JSON.stringify({ roles: newRoles }),
     };
     await customFetcher(
-      `http://localhost:5000/api/user/set-roles/${user.id}`,
+      `http://localhost:5000/api/user/update-roles/${user.id}`,
       config,
     ).then((response) => {
       setUser(response.data.data);

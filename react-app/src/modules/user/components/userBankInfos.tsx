@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input.js";
 interface UserBankInfosProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
-  resource?: string;
+  path?: string;
 }
 
 class UserBankInfosData {
@@ -33,7 +33,7 @@ class UserBankInfosData {
 export const UserBankInfos: React.FC<UserBankInfosProps> = ({
   user,
   setUser,
-  resource = "user",
+  path = `user/update-bank-infos/${user.id}`,
 }) => {
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserBankInfosData(user));
@@ -48,13 +48,12 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
       method: "POST",
       body: JSON.stringify(userUpdated),
     };
-    await customFetcher(
-      `http://localhost:5000/api/${resource}/update-bank-infos/${user.id}`,
-      config,
-    ).then((response) => {
-      setUser(response.data.data);
-      setUserCanBeUpdated(!userCanBeUpdated);
-    });
+    await customFetcher(`http://localhost:5000/api/${path}`, config).then(
+      (response) => {
+        setUser(response.data.data);
+        setUserCanBeUpdated(!userCanBeUpdated);
+      },
+    );
   };
 
   const handleUserFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +110,8 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
               Annuler
             </Button>
           ) : (
-            <Button variant="callToAction" onClick={handleUpdateUser}>
-              Modifier
+            <Button variant="outline" onClick={handleUpdateUser}>
+              <span className="text-indigo-700">Modifier</span>
             </Button>
           )}
         </CardTitle>

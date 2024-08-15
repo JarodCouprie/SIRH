@@ -19,7 +19,7 @@ export const Profile = () => {
         <UserAvatar
           user={currentUser}
           setUser={refreshCurrentUser}
-          resource="user"
+          path="profile/update-picture"
         />
         <div className="flex flex-col">
           <span className="text-3xl font-bold text-gray-950 dark:text-slate-200">
@@ -33,19 +33,19 @@ export const Profile = () => {
           <UserInfos
             user={currentUser}
             setUser={refreshCurrentUser}
-            resource="user"
+            path="profile/update-infos"
           />
         </div>
         <div className="col-span-2 flex flex-col gap-4 max-2xl:col-span-3">
           <UserAddress
             user={currentUser}
             setUser={refreshCurrentUser}
-            resource="user"
+            path="profile/update-address"
           />
           <UserBankInfos
             user={currentUser}
             setUser={refreshCurrentUser}
-            resource="user"
+            path="profile/update-bank-infos"
           />
         </div>
       </div>

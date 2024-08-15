@@ -55,9 +55,6 @@ export const UserSecurity: React.FC<UserSecurityProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Button variant="outline" className="text-red-600">
-          Un bouton pour faire des trucs pas cool
-        </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             {user.active ? (

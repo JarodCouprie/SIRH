@@ -256,7 +256,7 @@ export class UserService {
     }
   }
 
-  public static async setNewProfilePicture(req: Request, id: number) {
+  public static async updateProfilePicture(req: Request, id: number) {
     try {
       const file = req.file;
       if (!file) {

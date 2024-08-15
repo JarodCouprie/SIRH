@@ -18,7 +18,7 @@ import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 interface UserInfosProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
-  resource?: string;
+  path?: string;
 }
 
 class UserInfosData {
@@ -40,7 +40,7 @@ class UserInfosData {
 export const UserInfos: React.FC<UserInfosProps> = ({
   user,
   setUser,
-  resource = "user",
+  path = `user/update-infos/${user.id}`,
 }) => {
   const { currentUser, refreshCurrentUser } = useCurrentUser();
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
@@ -71,16 +71,15 @@ export const UserInfos: React.FC<UserInfosProps> = ({
       method: "POST",
       body: JSON.stringify(userUpdated),
     };
-    await customFetcher(
-      `http://localhost:5000/api/${resource}/update-infos/${user.id}`,
-      config,
-    ).then((response) => {
-      setUser(response.data.data);
-      setUserCanBeUpdated(!userCanBeUpdated);
-      if (user.id === currentUser.id) {
-        refreshCurrentUser();
-      }
-    });
+    await customFetcher(`http://localhost:5000/api/${path}`, config).then(
+      (response) => {
+        setUser(response.data.data);
+        setUserCanBeUpdated(!userCanBeUpdated);
+        if (user.id === currentUser.id) {
+          refreshCurrentUser();
+        }
+      },
+    );
   };
 
   const userFields = (
@@ -169,8 +168,8 @@ export const UserInfos: React.FC<UserInfosProps> = ({
               Annuler
             </Button>
           ) : (
-            <Button variant="callToAction" onClick={handleUpdateUser}>
-              Modifier
+            <Button variant="outline" onClick={handleUpdateUser}>
+              <span className="text-indigo-700">Modifier</span>
             </Button>
           )}
         </CardTitle>

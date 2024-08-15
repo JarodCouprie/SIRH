@@ -9,6 +9,7 @@ import role from "./resources/role/RoleController.js";
 import agency from "./resources/agency/AgencyController.js";
 import department from "./resources/department/DepartmentController.js";
 import team from "./resources/team/TeamController.js";
+import userProfile from "./resources/userProfile/UserProfileController.js";
 import cors from "cors";
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use("/api/role", role);
 app.use("/api/agency", agency);
 app.use("/api/service", department);
 app.use("/api/team", team);
+app.use("/api/profile", userProfile);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

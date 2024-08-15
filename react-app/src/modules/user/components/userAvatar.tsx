@@ -26,13 +26,13 @@ import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
 interface UserAvatarProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
-  resource?: string;
+  path?: string;
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
   user,
   setUser,
-  resource = "user",
+  path = `user/update-picture/${user.id}`,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const { currentUser, refreshCurrentUser } = useCurrentUser();
@@ -53,7 +53,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       body: formData,
     };
     await customFetcher(
-      `http://localhost:5000/api/${resource}/set-picture/${user.id}`,
+      `http://localhost:5000/api/${path}`,
       config,
       false,
     ).then((response) => {

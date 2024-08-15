@@ -87,14 +87,13 @@ router.delete(
 );
 
 router.get(
-  "/validation/list/:id",
+  "/validation/list/:userId",
   verifyToken,
   hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
-    const userId = req.params.id;
     const { code, message, data } = await DemandService.getValidatedDemand(
       req,
-      +userId,
+      +req.params.userId,
     );
     res.status(code).json({ message, data });
   },
@@ -105,7 +104,7 @@ router.put(
   verifyToken,
   hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
-    let userId = (req as CustomRequest).token.userId;
+    const userId = (req as CustomRequest).token.userId;
 
     const { code, message, data } = await DemandService.confirmDemand(
       +req.params.id,

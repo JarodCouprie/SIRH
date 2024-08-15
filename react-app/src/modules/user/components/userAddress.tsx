@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input.js";
 interface UserAddressProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
-  resource?: string;
+  path?: string;
 }
 
 class UserAddressData {
@@ -39,7 +39,7 @@ class UserAddressData {
 export const UserAddress: React.FC<UserAddressProps> = ({
   user,
   setUser,
-  resource = "user",
+  path = `user/update-address/${user.id}`,
 }) => {
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserAddressData(user));
@@ -54,13 +54,12 @@ export const UserAddress: React.FC<UserAddressProps> = ({
       method: "POST",
       body: JSON.stringify(userUpdated),
     };
-    await customFetcher(
-      `http://localhost:5000/api/${resource}/update-address/${user.id}`,
-      config,
-    ).then((response) => {
-      setUser(response.data.data);
-      setUserCanBeUpdated(!userCanBeUpdated);
-    });
+    await customFetcher(`http://localhost:5000/api/${path}`, config).then(
+      (response) => {
+        setUser(response.data.data);
+        setUserCanBeUpdated(!userCanBeUpdated);
+      },
+    );
   };
 
   const handleUserFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,8 +153,8 @@ export const UserAddress: React.FC<UserAddressProps> = ({
               Annuler
             </Button>
           ) : (
-            <Button variant="callToAction" onClick={handleUpdateUser}>
-              Modifier
+            <Button variant="outline" onClick={handleUpdateUser}>
+              <span className="text-indigo-700">Modifier</span>
             </Button>
           )}
         </CardTitle>
