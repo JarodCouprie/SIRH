@@ -110,8 +110,8 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
               Annuler
             </Button>
           ) : (
-            <Button variant="outline" onClick={handleUpdateUser}>
-              <span className="text-indigo-700">Modifier</span>
+            <Button variant="ghost" onClick={handleUpdateUser}>
+              <span className="text-indigo-500">Modifier</span>
             </Button>
           )}
         </CardTitle>
