@@ -81,9 +81,9 @@ export const AgencyTeam: React.FC<AgencyDetailsProps> = (agency) => {
         <TableHeader>
           <TableRow>
             <TableHead className="text-left">Equipe</TableHead>
-            <TableHead className="text-left">Service</TableHead>
-            <TableHead className="text-left">Collaborateur</TableHead>
-            <TableHead className="text-left">Status</TableHead>
+            <TableHead className="text-left">Chef d'équipe</TableHead>
+            <TableHead className="text-left">Collaborateurs</TableHead>
+            <TableHead className="text-left">Statut</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -103,14 +103,14 @@ export const AgencyTeam: React.FC<AgencyDetailsProps> = (agency) => {
                 <TableCell className="flex gap-2 text-left">
                   {team.label}
                 </TableCell>
-                <TableCell className="text-left">
-                  {team.service_label}
-                </TableCell>
-                <TableCell className={`text-left`}>///</TableCell>
                 <TableCell className={`text-left`}>
-                  {/* {getClassForStatus(department.status)} */}
-                  {team.minimum_users}
+                  {team.id_user_lead_team}
                 </TableCell>
+                <TableCell className={`text-left`}>
+                  {/* {getClassForStatus(department.status)} */}4 présent(s) sur
+                  7
+                </TableCell>
+                <TableCell>///</TableCell>
               </TableRow>
             ))
           )}
@@ -118,7 +118,7 @@ export const AgencyTeam: React.FC<AgencyDetailsProps> = (agency) => {
       </Table>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
-          <Label>Demandes par page</Label>
+          <Label>Équipes par page</Label>
           <Select
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}

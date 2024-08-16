@@ -20,6 +20,17 @@ export class DepartmentRepository {
     return rows;
   }
 
+  public static async getDepartmentByAgencyIdWithoutCount(agencyId: number) {
+    const [rows] = await this.pool.query(
+      `SELECT *
+       FROM service
+       WHERE id_agency = ?
+       ORDER BY label `,
+      [agencyId],
+    );
+    return rows;
+  }
+
   public static async getCountByAgencyId(agencyId: number) {
     const [rows]: any = await this.pool.query(
       `SELECT COUNT(*) as count

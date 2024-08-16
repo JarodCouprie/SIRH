@@ -77,7 +77,7 @@ export const Agency = () => {
       <div className="py-4">
         <Tabs defaultValue="details">
           <TabsList className="flex flex-wrap">
-            <TabsTrigger value="details">Agence</TabsTrigger>
+            <TabsTrigger value="details">Général</TabsTrigger>
             <TabsTrigger value="service">Services</TabsTrigger>
             <TabsTrigger value="team">Équipes</TabsTrigger>
           </TabsList>
@@ -99,7 +99,7 @@ export const Agency = () => {
     <div className="flex flex-col items-start gap-4 ">
       <Button onClick={handleGoBackToList} variant="link">
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
-        <span>Agence</span>
+        <span>Organisation</span>
       </Button>
       {agencyLoaded && agencyMainPage}
       {agencyNotFound && noAgency}

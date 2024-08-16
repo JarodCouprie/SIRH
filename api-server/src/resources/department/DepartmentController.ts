@@ -15,6 +15,17 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   });
 });
 
+router.get("list/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } =
+    await DepartmentService.getDepartmentByAgencyWithoutPagination(
+      +req.params.id,
+    );
+  res.status(code).json({
+    message,
+    data,
+  });
+});
+
 router.post("/create/:id", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await DepartmentService.createDepartment(
     +req.params.id,

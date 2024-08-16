@@ -14,4 +14,12 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   });
 });
 
+router.post("/create", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await TeamService.createTeam(req);
+  res.status(code).json({
+    message,
+    data,
+  });
+});
+
 export default router;

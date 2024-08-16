@@ -74,15 +74,14 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
       <div className="flex justify-end">
         <Button variant="callToAction" onClick={handleClickCreate}>
           <PlusIcon className="mr-2 size-4" />
-          Créer un département
+          Créer un service
         </Button>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="text-left">Service</TableHead>
-            <TableHead className="text-left">Collaborateur</TableHead>
-            <TableHead className="text-left">Status</TableHead>
+            <TableHead className="text-left">Chef de service</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -101,6 +100,7 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
               >
                 <TableCell className="flex gap-2 text-left">
                   {department.label}
+                  nombre totale d'équipe
                 </TableCell>
                 <TableCell className="text-left">
                   {department.id_user_lead_service}
@@ -116,7 +116,7 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
       </Table>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
-          <Label>Demandes par page</Label>
+          <Label>Services par page</Label>
           <Select
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
