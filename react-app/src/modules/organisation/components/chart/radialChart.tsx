@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 
 import {
@@ -17,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.js";
+
 const chartData = [{ month: "january", desktop: 1260, mobile: 570 }];
 
 const chartConfig = {
@@ -30,14 +30,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function RadialChartAgency() {
+export function RadialChartAgency({
+  title = "Area Chart - Interactive",
+  description = "Showing total visitors for the last 3 months",
+}) {
   const totalVisitors = chartData[0].desktop + chartData[0].mobile;
 
   return (
     <Card className="flex size-full flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Radial Chart - Stacked</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
@@ -97,14 +100,7 @@ export function RadialChartAgency() {
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
   );
 }

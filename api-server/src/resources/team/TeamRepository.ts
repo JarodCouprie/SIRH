@@ -4,8 +4,8 @@ import { CreateTeam } from "../../common/model/Team.js";
 export class TeamRepository {
   private static pool = DatabaseClient.mysqlPool;
 
-  public static async getTeamByAgencyId(
-    agencyId: number,
+  public static async getTeamByService(
+    serviceId: number,
     limit = 10,
     offset = 0,
   ) {
@@ -13,15 +13,15 @@ export class TeamRepository {
       `SELECT team.*, service.label as service_label
        FROM team
                 JOIN service ON team.id_service = service.id
-       WHERE service.id_agency = ?
+       WHERE team.id_service = ?
        ORDER BY team.label
        LIMIT ? OFFSET ? `,
-      [agencyId, limit, offset],
+      [serviceId, limit, offset],
     );
     return rows;
   }
 
-  public static async getCountByAgencyId(agencyId: number) {
+  public static async getCountByService(agencyId: number) {
     const [rows]: any = await this.pool.query(
       `SELECT COUNT(*) as count
        FROM team

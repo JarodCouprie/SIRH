@@ -30,6 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 import { Badge } from "@/components/ui/badge.tsx";
 import { UserList } from "@/common/type/user/user-list.type.ts";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { Card } from "@/components/ui/card";
 
 export function Users() {
   const [users, setUsers] = useState<UserList[]>([]);
@@ -90,15 +91,13 @@ export function Users() {
 
   const usersTable = (
     <MainRoot title="Utilisateurs" action={newUser}>
-      <div className="rounded border border-slate-700">
+      <Card>
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Collaborateur</TableHead>
-              <TableHead>Ville</TableHead>
-              <TableHead>Téléphone</TableHead>
-              <TableHead>Actif</TableHead>
-            </TableRow>
+            <TableHead>Collaborateur</TableHead>
+            <TableHead>Ville</TableHead>
+            <TableHead>Téléphone</TableHead>
+            <TableHead>Actif</TableHead>
           </TableHeader>
           <TableBody>
             {users?.length ? (
@@ -151,7 +150,7 @@ export function Users() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
           <Label>Utilisateurs par page</Label>
@@ -173,7 +172,7 @@ export function Users() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-950 dark:text-gray-100">
-            {`${1 + pageSize * (pageNumber - 1)} - ${users.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+            {`${users.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${users.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
           </span>
           <Button
             variant="ghost"

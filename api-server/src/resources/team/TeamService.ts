@@ -43,10 +43,10 @@ export class TeamService {
     }
   }
 
-  public static async getTeamByAgency(agencyId: number) {
+  public static async getTeamByAgency(serviceId: number) {
     try {
-      const teams: any = await TeamRepository.getTeamByAgencyId(agencyId);
-      const teamsCount = await TeamRepository.getCountByAgencyId(agencyId);
+      const teams: any = await TeamRepository.getTeamByService(serviceId);
+      const teamsCount = await TeamRepository.getCountByService(serviceId);
 
       if (!teams) {
         return new ControllerResponse(401, "Teams doesn't exist");

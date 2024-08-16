@@ -31,6 +31,16 @@ export class DepartmentRepository {
     return rows;
   }
 
+  public static async getDepartmentById(id: number) {
+    const [rows]: any = await this.pool.query(
+      `SELECT *
+       FROM service
+       WHERE id = ?`,
+      [id],
+    );
+    return rows[0];
+  }
+
   public static async getCountByAgencyId(agencyId: number) {
     const [rows]: any = await this.pool.query(
       `SELECT COUNT(*) as count

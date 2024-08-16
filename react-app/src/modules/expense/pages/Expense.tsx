@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { Card } from "@/components/ui/card.js";
 
 export function Expense() {
   const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
@@ -173,23 +174,28 @@ export function Expense() {
         </Breadcrumb>
       </div>
       <div className="py-2">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead />
-              <TableHead className="text-left"> Type de demande </TableHead>
-              <TableHead className="text-left"> Frais </TableHead>
-              <TableHead className="text-left"> Date de facturation </TableHead>
-              <TableHead className="text-left"> Status </TableHead>
-              <TableHead />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {expenses.map((expense) => (
-              <ExpenseListCard expense={expense} key={expense.id} />
-            ))}
-          </TableBody>
-        </Table>
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead />
+                <TableHead className="text-left"> Type de demande </TableHead>
+                <TableHead className="text-left"> Frais </TableHead>
+                <TableHead className="text-left">
+                  {" "}
+                  Date de facturation{" "}
+                </TableHead>
+                <TableHead className="text-left"> Status </TableHead>
+                <TableHead />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {expenses.map((expense) => (
+                <ExpenseListCard expense={expense} key={expense.id} />
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
         <div className="flex w-full justify-between py-2">
           <div className="flex items-center gap-2">
             <Label>Demande de frais par page</Label>
@@ -211,7 +217,7 @@ export function Expense() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-950 dark:text-gray-100">
-              {`${limit * (pageNumber - 1) + 1} - ${maxValue()} sur ${expensesCount}`}
+              {`${expenses.length === 0 ? 0 : limit * (pageNumber - 1) + 1} - ${maxValue()} sur ${expensesCount}`}
             </span>
             <Button
               variant="ghost"

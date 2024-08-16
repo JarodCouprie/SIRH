@@ -7,7 +7,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AgencyModel } from "@/models/organisation/agency/Agency.model.js";
-import { AgencyDetails } from "@/modules/organisation/components/agencyDetails.js";
+import { AgencyDetails } from "@/modules/organisation/components/agency/agencyDetails.js";
 import { Button } from "@/components/ui/button.js";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import {
@@ -18,11 +18,10 @@ import {
 } from "@/components/ui/card.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { TbBuildingEstate } from "react-icons/tb";
-import { AgencyDepartment } from "@/modules/organisation/components/agencyDepartment.js";
-import { AgencyTeam } from "@/modules/organisation/components/agencyTeam.js";
+import { AgencyDepartment } from "@/modules/organisation/components/service/agencyDepartment.js";
 
 export const Agency = () => {
-  const { id } = useParams();
+  const { id_agency } = useParams();
   const [agencyLoaded, setAgencyLoaded] = useState<boolean>(false);
   const [agencyNotFound, setAgencyNotFound] = useState<boolean>(false);
   const [foundAgency, setFoundAgency] = useState<AgencyModel>(
@@ -31,7 +30,7 @@ export const Agency = () => {
   const navigate = useNavigate();
 
   const fetchUser = async () => {
-    await customFetcher(`http://localhost:5000/api/agency/${id}`).then(
+    await customFetcher(`http://localhost:5000/api/agency/${id_agency}`).then(
       (response) => {
         if (response.response.status !== 200) {
           return setAgencyNotFound(true);
@@ -79,16 +78,12 @@ export const Agency = () => {
           <TabsList className="flex flex-wrap">
             <TabsTrigger value="details">Général</TabsTrigger>
             <TabsTrigger value="service">Services</TabsTrigger>
-            <TabsTrigger value="team">Équipes</TabsTrigger>
           </TabsList>
           <TabsContent value="details">
             <AgencyDetails agency={foundAgency} setAgency={setFoundAgency} />
           </TabsContent>
           <TabsContent value="service">
             <AgencyDepartment agency={foundAgency} />
-          </TabsContent>
-          <TabsContent value="team">
-            <AgencyTeam agency={foundAgency} />
           </TabsContent>
         </Tabs>
       </div>

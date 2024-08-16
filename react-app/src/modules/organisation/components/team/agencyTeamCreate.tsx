@@ -24,7 +24,7 @@ import { DepartmentList } from "@/models/organisation/DepartmentList.model.js";
 
 export const AgencyTeamCreate = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id_agency } = useParams();
   const [team, setTeam] = useState(new CreateTeamFormDataModel());
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [users, setUsers] = useState<UserList[]>([]);
@@ -33,7 +33,7 @@ export const AgencyTeamCreate = () => {
   useEffect(() => {
     const fetchService = async () => {
       const response = await customFetcher(
-        `http://localhost:5000/api/service/${id}`,
+        `http://localhost:5000/api/service/${id_agency}`,
       );
       if (response.response.status === 200) {
         setService(response.data.data.list);

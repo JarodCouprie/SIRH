@@ -5,6 +5,7 @@ import { logger } from "../../common/helper/Logger.js";
 import { DepartmentRepository } from "./DepartmentRepository.js";
 import { CreateDepartment, Department } from "../../common/model/Department.js";
 import { DepartmentDTO } from "./dto/DepartmentDTO.js";
+import { DemandDTO } from "../demand/dto/DemandDTO.js";
 
 export class DepartmentService {
   public static async getDepartmentByAgencyWithoutPagination(idAgency: number) {
@@ -46,6 +47,23 @@ export class DepartmentService {
         totalData: departmentsCount,
         list: departmentsDto,
       });
+    } catch (error) {
+      logger.error(`Failed to get the departments. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to get departments");
+    }
+  }
+
+  public static async getDepartmentById(id: number) {
+    try {
+      const department: any = await DepartmentRepository.getDepartmentById(id);
+
+      if (!department) {
+        return new ControllerResponse(401, "Departments doesn't exist");
+      }
+
+      const department_: DepartmentDTO = new DepartmentDTO(department);
+      console.log(department_);
+      return new ControllerResponse(200, "", department_);
     } catch (error) {
       logger.error(`Failed to get the departments. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get departments");

@@ -8,7 +8,7 @@ export function DemandCard() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4 max-md:grid-cols-1">
+      <div className="grid grid-cols-3 gap-4 max-md:grid-cols-1 ">
         <Card className="flex">
           <CardHeader className="flex flex-row">
             <TbCalendarClock className="size-14 text-indigo-500 opacity-75" />
