@@ -91,10 +91,10 @@ export class UserService {
     }
   }
 
-  public static async setNewRole(req: Request, id: number) {
+  public static async updateRoles(req: Request, id: number) {
     try {
       const roles: number[] = req.body.roles;
-      if (roles.length === 0) {
+      if (Array.isArray(roles) && roles.length === 0) {
         return new ControllerResponse(400, "Nombre de rôle insuffisant");
       }
       await UserRepository.setUserNewRoles(roles, id);
@@ -146,7 +146,7 @@ export class UserService {
 
   public static async createUser(req: Request) {
     try {
-      if (req.body.roles.length === 0) {
+      if (!Array.isArray(req.body.roles) || req.body.roles.length === 0) {
         return new ControllerResponse(
           400,
           "Un utilisateur doit avoir au minimum un rôle",
@@ -256,7 +256,7 @@ export class UserService {
     }
   }
 
-  public static async setNewProfilePicture(req: Request, id: number) {
+  public static async updateProfilePicture(req: Request, id: number) {
     try {
       const file = req.file;
       if (!file) {

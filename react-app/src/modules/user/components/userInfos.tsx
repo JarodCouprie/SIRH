@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.js";
 import { BsFillInfoSquareFill } from "react-icons/bs";
 import { Button } from "@/components/ui/button.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { Input } from "@/components/ui/input.js";
 import { Label } from "@/components/ui/label.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
@@ -18,6 +18,7 @@ import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 interface UserInfosProps {
   user: UserModel;
   setUser: Dispatch<SetStateAction<UserModel>>;
+  path?: string;
 }
 
 class UserInfosData {
@@ -36,7 +37,11 @@ class UserInfosData {
   }
 }
 
-export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
+export const UserInfos: React.FC<UserInfosProps> = ({
+  user,
+  setUser,
+  path = `user/update-infos/${user.id}`,
+}) => {
   const { currentUser, refreshCurrentUser } = useCurrentUser();
   const [userCanBeUpdated, setUserCanBeUpdated] = useState(false);
   const [userUpdated, setUserUpdated] = useState(new UserInfosData(user));
@@ -66,25 +71,24 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
       method: "POST",
       body: JSON.stringify(userUpdated),
     };
-    await customFetcher(
-      `http://localhost:5000/api/user/update-infos/${user.id}`,
-      config,
-    ).then((response) => {
-      setUser(response.data.data);
-      setUserCanBeUpdated(!userCanBeUpdated);
-      if (user.id === currentUser.id) {
-        refreshCurrentUser();
-      }
-    });
+    await customFetcher(`http://localhost:5000/api/${path}`, config).then(
+      (response) => {
+        setUser(response.data.data);
+        setUserCanBeUpdated(!userCanBeUpdated);
+        if (user.id === currentUser.id) {
+          refreshCurrentUser();
+        }
+      },
+    );
   };
 
   const userFields = (
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
-      <FieldRow title="Nom">{userUpdated.lastname}</FieldRow>
-      <FieldRow title="Prénom">{userUpdated.firstname}</FieldRow>
-      <FieldRow title="Email">{userUpdated.email}</FieldRow>
-      <FieldRow title="Téléphone">{userUpdated.phone}</FieldRow>
-      <FieldRow title="Nationalité">{userUpdated.nationality}</FieldRow>
+      <FieldRow title="Nom">{user.lastname}</FieldRow>
+      <FieldRow title="Prénom">{user.firstname}</FieldRow>
+      <FieldRow title="Email">{user.email}</FieldRow>
+      <FieldRow title="Téléphone">{user.phone}</FieldRow>
+      <FieldRow title="Nationalité">{user.nationality}</FieldRow>
       <FieldRow title="Date de création">
         {new Date(user.created_at).toLocaleString("fr-FR", dateOptions)}
       </FieldRow>
@@ -164,8 +168,8 @@ export const UserInfos: React.FC<UserInfosProps> = ({ user, setUser }) => {
               Annuler
             </Button>
           ) : (
-            <Button variant="callToAction" onClick={handleUpdateUser}>
-              Modifier
+            <Button variant="ghost" onClick={handleUpdateUser}>
+              <span className="text-indigo-500">Modifier</span>
             </Button>
           )}
         </CardTitle>

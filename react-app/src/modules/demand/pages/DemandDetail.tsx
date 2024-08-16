@@ -26,7 +26,7 @@ import {
 import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
 import { DemandType } from "@/common/enum/DemandType.enum.js";
 import { DemandStatus } from "@/common/enum/DemandStatus.enum.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { dateOptions, dateTimeOptions } from "@/common/helper/DateHelper.js";
 

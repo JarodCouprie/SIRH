@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { Button } from "@/components/ui/button.js";
-import { FieldRow } from "@/modules/user/components/fieldRow.js";
+import { FieldRow } from "@/components/fieldRow.js";
 import { Label } from "@/components/ui/label.js";
 import { Input } from "@/components/ui/input.js";
 import { AgencyModel } from "@/models/organisation/agency/Agency.model.js";

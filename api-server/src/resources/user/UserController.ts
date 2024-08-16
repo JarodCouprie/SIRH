@@ -51,11 +51,11 @@ router.post(
 );
 
 router.post(
-  "/set-roles/:id",
+  "/update-roles/:id",
   verifyToken,
   hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   async (req: Request, res: Response) => {
-    const { code, message, data } = await UserService.setNewRole(
+    const { code, message, data } = await UserService.updateRoles(
       req,
       +req.params.id,
     );
@@ -103,11 +103,12 @@ router.post(
 );
 
 router.put(
-  "/set-picture/:id",
+  "/update-picture/:id",
   verifyToken,
+  hasRole([RoleEnum.ADMIN, RoleEnum.HR]),
   upload.single("file"),
   async (req: Request, res: Response) => {
-    const { code, message, data } = await UserService.setNewProfilePicture(
+    const { code, message, data } = await UserService.updateProfilePicture(
       req,
       +req.params.id,
     );

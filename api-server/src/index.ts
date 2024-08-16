@@ -9,7 +9,9 @@ import role from "./resources/role/RoleController.js";
 import agency from "./resources/agency/AgencyController.js";
 import department from "./resources/department/DepartmentController.js";
 import team from "./resources/team/TeamController.js";
+import userProfile from "./resources/userProfile/UserProfileController.js";
 import cors from "cors";
+import helmet from "helmet";
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ const corsOptions = {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors(corsOptions));
+app.use(helmet());
+app.disable("x-powered-by");
 app.use("/api", auth);
 app.use("/api/user", users);
 app.use("/api/expense", expense);
@@ -31,6 +35,7 @@ app.use("/api/role", role);
 app.use("/api/agency", agency);
 app.use("/api/service", department);
 app.use("/api/team", team);
+app.use("/api/profile", userProfile);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

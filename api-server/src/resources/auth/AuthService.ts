@@ -40,6 +40,9 @@ export class AuthService {
       if (user instanceof ControllerResponse) {
         return user;
       }
+      if (!user.active) {
+        return new ControllerResponse(500, "Échec de connexion");
+      }
       const accessToken = generateAccessToken(user);
       const refreshToken = generateRefreshToken(user);
       return new ControllerResponse(200, "", { accessToken, refreshToken });
