@@ -1,5 +1,5 @@
 import { AddressModel } from "@/models/Address.model.ts";
-import { RoleEnum } from "@/enum/Role.enum.ts";
+import { RoleEnum } from "@/common/enum/Role.enum.ts";
 
 export class UserModel {
   id: number;
