@@ -19,6 +19,18 @@ import {
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { TbBuildingEstate } from "react-icons/tb";
 import { AgencyDepartment } from "@/modules/organisation/components/service/agencyDepartment.js";
+import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.js";
+import { MdOutlineDelete } from "react-icons/md";
 
 export const Agency = () => {
   const { id_agency } = useParams();
@@ -59,7 +71,7 @@ export const Agency = () => {
 
   const agencyMainPage = (
     <div className="w-full">
-      <Card className="flex items-center">
+      <Card className="flex items-center px-4">
         <CardHeader className="flex items-center">
           <TbBuildingEstate className="size-8 text-gray-300" />
         </CardHeader>
@@ -72,6 +84,7 @@ export const Agency = () => {
             {foundAgency.address.zipcode} {foundAgency.address.locality}
           </CardDescription>
         </div>
+        <ConfirmDeleteItem agency={foundAgency} navigate={navigate} />
       </Card>
       <div className="py-4">
         <Tabs defaultValue="details">
@@ -101,3 +114,57 @@ export const Agency = () => {
     </div>
   );
 };
+
+interface ConfirmDeleteItemProps {
+  agency: AgencyModel;
+  navigate: ReturnType<typeof useNavigate>;
+}
+
+export function ConfirmDeleteItem({
+  agency,
+  navigate,
+}: ConfirmDeleteItemProps) {
+  const { refreshCurrentUser } = useCurrentUser();
+
+  const fetchAgency = async () => {
+    const response = await customFetcher(
+      `http://localhost:5000/api/agency/${agency.id}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (response.response.status === 200) {
+      navigate("/organisation", { replace: true });
+    }
+
+    refreshCurrentUser();
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="ghost">
+          <MdOutlineDelete className="mr-2 size-5 text-red-600" />
+          <span className="text-red-600">Supprimer</span>
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Êtes vous vraiment sur?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Vous êtes sur le point de supprimer de manière definitive l'agence
+            sélectionnée, cette action est irréversible.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
+
+          <Button onClick={fetchAgency} variant="destructive">
+            Supprimer
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}

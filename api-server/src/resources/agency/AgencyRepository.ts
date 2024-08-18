@@ -95,4 +95,16 @@ export class AgencyRepository {
     );
     return rows[0];
   }
+
+  public static async deleteAgency(id: number) {
+    const [rows]: any = await this.pool.query(
+      `
+          DELETE
+          FROM agency
+          WHERE id = ?;
+      `,
+      [id],
+    );
+    return rows[0];
+  }
 }

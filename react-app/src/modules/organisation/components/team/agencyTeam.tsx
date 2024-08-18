@@ -21,12 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.js";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card.js";
+import { Card } from "@/components/ui/card.js";
 
 export const AgencyTeam = () => {
   const [teamList, setTeamList] = useState<TeamList[]>([]);

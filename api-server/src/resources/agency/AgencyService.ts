@@ -7,6 +7,9 @@ import { logger } from "../../common/helper/Logger.js";
 import { AgencyRepository } from "./AgencyRepository.js";
 import { AgencyCoord, AgencyDTO, AgencyList } from "./dto/AgencyDTO.js";
 import { AgencyEntity } from "../../common/entity/agency/agency.entity.js";
+import { DemandRepository } from "../demand/DemandRepository.js";
+import { UserService } from "../user/UserService.js";
+import { updateUserDays } from "../demand/DemandService.js";
 
 export class AgencyService {
   public static async getAgency(req: Request) {
@@ -169,6 +172,21 @@ export class AgencyService {
         500,
         "Impossible de modifier l'adresse de l'utilisateur",
       );
+    }
+  }
+
+  public static async deleteAgency(id: number) {
+    try {
+      const agency: any = await AgencyRepository.getAgencyById(+id);
+
+      if (!agency) {
+        return new ControllerResponse(404, "pas d'agence");
+      }
+      await AgencyRepository.deleteAgency(+id);
+      return new ControllerResponse(200, "");
+    } catch (error) {
+      logger.error(`Failed to delete the agency. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to delete the agency");
     }
   }
 }
