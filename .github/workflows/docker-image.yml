@@ -15,5 +15,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      working-directory: ./app/api-server
+      working-directory: ./api-server
       run: docker build . --file api-server/Dockerfile --tag my-image-name:$(date +%s)
