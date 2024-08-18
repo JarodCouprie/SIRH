@@ -14,5 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: change file
+      run: cd api-server
     - name: Build the Docker image
       run: docker build . --file api-server/Dockerfile --tag my-image-name:$(date +%s)
