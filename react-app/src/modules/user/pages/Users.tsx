@@ -94,10 +94,12 @@ export function Users() {
       <Card>
         <Table>
           <TableHeader>
-            <TableHead>Collaborateur</TableHead>
-            <TableHead>Ville</TableHead>
-            <TableHead>Téléphone</TableHead>
-            <TableHead>Actif</TableHead>
+            <TableRow>
+              <TableHead>Collaborateur</TableHead>
+              <TableHead>Ville</TableHead>
+              <TableHead>Téléphone</TableHead>
+              <TableHead>Actif</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {users?.length ? (
@@ -109,7 +111,10 @@ export function Users() {
                 >
                   <TableCell className="flex gap-2 font-medium">
                     <Avatar>
-                      <AvatarImage src={user?.avatar_url} />
+                      <AvatarImage
+                        src={user?.avatar_url}
+                        alt={`avatar image of ${user?.firstname} ${user?.lastname}`}
+                      />
                       <AvatarFallback>
                         {user.firstname?.charAt(0)}
                         {user.lastname?.charAt(0)}
@@ -158,7 +163,7 @@ export function Users() {
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
           >
-            <SelectTrigger className="w-fit">
+            <SelectTrigger className="w-fit" aria-label="select page size">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -178,6 +183,7 @@ export function Users() {
             variant="ghost"
             onClick={handlePreviousPageNumber}
             disabled={pageNumber === 1}
+            aria-label="previous page"
           >
             <CaretLeftIcon />
           </Button>
@@ -185,6 +191,7 @@ export function Users() {
             variant="ghost"
             onClick={handleNextPageNumber}
             disabled={pageSize * pageNumber >= totalData}
+            aria-label="next page"
           >
             <CaretRightIcon />
           </Button>

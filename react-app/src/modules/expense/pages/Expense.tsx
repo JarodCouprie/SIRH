@@ -181,10 +181,7 @@ export function Expense() {
                 <TableHead />
                 <TableHead className="text-left"> Type de demande </TableHead>
                 <TableHead className="text-left"> Frais </TableHead>
-                <TableHead className="text-left">
-                  {" "}
-                  Date de facturation{" "}
-                </TableHead>
+                <TableHead className="text-left">Date de facturation</TableHead>
                 <TableHead className="text-left"> Status </TableHead>
                 <TableHead />
               </TableRow>
