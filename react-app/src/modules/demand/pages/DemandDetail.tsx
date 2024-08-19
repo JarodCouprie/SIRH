@@ -40,7 +40,9 @@ export function DemandDetail() {
   };
 
   const fetchDemand = async () => {
-    const data = await customFetcher(`http://localhost:5000/api/demand/${id}`);
+    const data = await customFetcher(
+      `http://localhost:5000/api/demand/list/${id}`,
+    );
     setDemand(data.data.data);
   };
 
@@ -182,22 +184,19 @@ export function Detail({ demand }: DetailProps) {
           <FieldRow title="Statut">{getClassForStatus(demand.status)}</FieldRow>
           <FieldRow title="Description">{demand.motivation}</FieldRow>
           <FieldRow title="Date de création">
-            {new Date(demand.created_at.toString()).toLocaleDateString(
+            {new Date(demand.created_at).toLocaleDateString(
               "fr-FR",
               dateTimeOptions,
             )}
           </FieldRow>
           <FieldRow title="Date de début">
-            {new Date(demand.start_date.toString()).toLocaleDateString(
+            {new Date(demand.start_date).toLocaleDateString(
               "fr-FR",
               dateOptions,
             )}
           </FieldRow>
           <FieldRow title="Date de fin">
-            {new Date(demand.end_date.toString()).toLocaleDateString(
-              "fr-FR",
-              dateOptions,
-            )}
+            {new Date(demand.end_date).toLocaleDateString("fr-FR", dateOptions)}
           </FieldRow>
           <FieldRow title="Total jour(s)">{demand.number_day}</FieldRow>
           <FieldRow title="Fichier">
