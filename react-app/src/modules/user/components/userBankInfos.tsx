@@ -111,7 +111,7 @@ export const UserBankInfos: React.FC<UserBankInfosProps> = ({
             </Button>
           ) : (
             <Button variant="ghost" onClick={handleUpdateUser}>
-              <span className="text-indigo-500">Modifier</span>
+              <span className="text-indigo-50">Modifier</span>
             </Button>
           )}
         </CardTitle>
