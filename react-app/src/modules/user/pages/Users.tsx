@@ -163,7 +163,7 @@ export function Users() {
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
           >
-            <SelectTrigger className="w-fit">
+            <SelectTrigger className="w-fit" aria-label="select page size">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -183,6 +183,7 @@ export function Users() {
             variant="ghost"
             onClick={handlePreviousPageNumber}
             disabled={pageNumber === 1}
+            aria-label="previous page"
           >
             <CaretLeftIcon />
           </Button>
@@ -190,6 +191,7 @@ export function Users() {
             variant="ghost"
             onClick={handleNextPageNumber}
             disabled={pageSize * pageNumber >= totalData}
+            aria-label="next page"
           >
             <CaretRightIcon />
           </Button>
