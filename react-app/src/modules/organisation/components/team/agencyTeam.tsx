@@ -77,10 +77,12 @@ export const AgencyTeam = () => {
       <Card>
         <Table>
           <TableHeader>
-            <TableHead className="text-left">Équipe</TableHead>
-            <TableHead className="text-left">Chef d'équipe</TableHead>
-            <TableHead className="text-left">Collaborateurs</TableHead>
-            <TableHead className="text-left">Statut</TableHead>
+            <TableRow>
+              <TableHead className="text-left">Équipe</TableHead>
+              <TableHead className="text-left">Chef d'équipe</TableHead>
+              <TableHead className="text-left">Collaborateurs</TableHead>
+              <TableHead className="text-left">Statut</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {teamList.length === 0 ? (

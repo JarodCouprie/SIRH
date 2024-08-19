@@ -31,7 +31,8 @@ const buttonVariants = cva(
           "justify-start hover:bg-gray-50 hover:text-gray-900 text-gray-50",
         callToAction:
           "justify-center bg-indigo-700 text-indigo-50 hover:bg-indigo-800",
-        noneLeft: "text-gray-900 justify-start",
+        noneLeft:
+          "text-gray-900 justify-start focus-visible:ring-transparent dark:focus-visible:ring-transparent",
       },
       size: {
         default: "h-9 px-4 py-2",

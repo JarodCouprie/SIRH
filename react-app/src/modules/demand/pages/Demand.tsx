@@ -187,11 +187,13 @@ export function Demand() {
       <Card>
         <Table>
           <TableHeader>
-            <TableHead className="text-left">Demande</TableHead>
-            <TableHead className="text-left">Date de début</TableHead>
-            <TableHead className="text-left">Date de fin</TableHead>
-            <TableHead className="text-left">Jours</TableHead>
-            <TableHead className="text-left">Status</TableHead>
+            <TableRow>
+              <TableHead className="text-left">Demande</TableHead>
+              <TableHead className="text-left">Date de début</TableHead>
+              <TableHead className="text-left">Date de fin</TableHead>
+              <TableHead className="text-left">Jours</TableHead>
+              <TableHead className="text-left">Status</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {demandList.length === 0 ? (

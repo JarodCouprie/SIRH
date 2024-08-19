@@ -94,10 +94,12 @@ export function Users() {
       <Card>
         <Table>
           <TableHeader>
-            <TableHead>Collaborateur</TableHead>
-            <TableHead>Ville</TableHead>
-            <TableHead>Téléphone</TableHead>
-            <TableHead>Actif</TableHead>
+            <TableRow>
+              <TableHead>Collaborateur</TableHead>
+              <TableHead>Ville</TableHead>
+              <TableHead>Téléphone</TableHead>
+              <TableHead>Actif</TableHead>
+            </TableRow>
           </TableHeader>
           <TableBody>
             {users?.length ? (
@@ -109,7 +111,10 @@ export function Users() {
                 >
                   <TableCell className="flex gap-2 font-medium">
                     <Avatar>
-                      <AvatarImage src={user?.avatar_url} />
+                      <AvatarImage
+                        src={user?.avatar_url}
+                        alt={`avatar image of ${user?.firstname} ${user?.lastname}`}
+                      />
                       <AvatarFallback>
                         {user.firstname?.charAt(0)}
                         {user.lastname?.charAt(0)}

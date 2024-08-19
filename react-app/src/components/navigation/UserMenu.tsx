@@ -55,16 +55,19 @@ export function UserMenu() {
   };
   const localTheme = localStorage.theme || "dark";
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="border-t border-gray-700 p-2">
+    <div className="border-t border-gray-700 p-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
           <Button
             variant="noneLeft"
             className="flex w-full justify-between gap-2"
           >
             <div className="flex w-full gap-2">
               <Avatar className="size-8">
-                <AvatarImage src={currentUser?.avatar_url} />
+                <AvatarImage
+                  src={currentUser?.avatar_url}
+                  alt={`avatar image of ${currentUser?.firstname} ${currentUser?.lastname}`}
+                />
                 <AvatarFallback>
                   {currentUser.firstname.charAt(0)}
                   {currentUser.lastname.charAt(0)}
@@ -79,95 +82,95 @@ export function UserMenu() {
             </div>
             <MixerVerticalIcon className="size-6 text-gray-300" />
           </Button>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>
-          {currentUser.firstname} {currentUser.lastname}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <NavLink to="/profile">
-            <DropdownMenuItem>
-              Mon profil
-              <DropdownMenuShortcut>
-                <PersonIcon />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </NavLink>
-          <NavLink to="/profile/notifications">
-            <DropdownMenuItem>
-              Notifications
-              <DropdownMenuShortcut>
-                <BellIcon />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </NavLink>
-          <NavLink to="/profile/reset-password">
-            <DropdownMenuItem>
-              Nouveau mot de passe
-              <DropdownMenuShortcut>
-                <LockClosedIcon />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </NavLink>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Thème</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <div className="flex flex-col gap-1">
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel>
+            {currentUser.firstname} {currentUser.lastname}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <NavLink to="/profile">
+              <DropdownMenuItem>
+                Mon profil
+                <DropdownMenuShortcut>
+                  <PersonIcon />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </NavLink>
+            <NavLink to="/profile/notifications">
+              <DropdownMenuItem>
+                Notifications
+                <DropdownMenuShortcut>
+                  <BellIcon />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </NavLink>
+            <NavLink to="/profile/reset-password">
+              <DropdownMenuItem>
+                Nouveau mot de passe
+                <DropdownMenuShortcut>
+                  <LockClosedIcon />
+                </DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </NavLink>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Thème</DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <div className="flex flex-col gap-1">
+                    <DropdownMenuItem
+                      onClick={handleLightTheme}
+                      className={
+                        localTheme === "light"
+                          ? "bg-gray-200 dark:bg-gray-800"
+                          : ""
+                      }
+                    >
+                      Clair
+                      <DropdownMenuShortcut>
+                        <SunIcon />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleDarkTheme}
+                      className={
+                        localTheme === "dark"
+                          ? "bg-gray-200 dark:bg-gray-800"
+                          : ""
+                      }
+                    >
+                      Foncé
+                      <DropdownMenuShortcut>
+                        <MoonIcon />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </div>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={handleLightTheme}
+                    onClick={handleSystemTheme}
                     className={
-                      localTheme === "light"
+                      localTheme === "os-default"
                         ? "bg-gray-200 dark:bg-gray-800"
                         : ""
                     }
                   >
-                    Clair
+                    Système
                     <DropdownMenuShortcut>
-                      <SunIcon />
+                      <Half2Icon />
                     </DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleDarkTheme}
-                    className={
-                      localTheme === "dark"
-                        ? "bg-gray-200 dark:bg-gray-800"
-                        : ""
-                    }
-                  >
-                    Foncé
-                    <DropdownMenuShortcut>
-                      <MoonIcon />
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleSystemTheme}
-                  className={
-                    localTheme === "os-default"
-                      ? "bg-gray-200 dark:bg-gray-800"
-                      : ""
-                  }
-                >
-                  Système
-                  <DropdownMenuShortcut>
-                    <Half2Icon />
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <ConfirmLogOutDialog />
-      </DropdownMenuContent>
-    </DropdownMenu>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <ConfirmLogOutDialog />
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
 
