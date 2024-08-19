@@ -298,7 +298,7 @@ export class ExpenseRepository {
     return rows;
   }
 
-  public static async getExpensesAmountDateAndStatusByUserId(user_id: string) {
+  public static async getExpensesAmountDateAndStatusByUserId(user_id: number) {
     const [rows]: any = await this.pool.query(
       `
           SELECT amount,

@@ -39,44 +39,24 @@ export function Expense() {
   const navigate = useNavigate();
 
   const fetchExpenses = async () => {
-    if (selectedType == selectedTypeEnum.ALL) {
-      await customFetcher(
-        "http://localhost:5000/api/expense/list?" +
-          new URLSearchParams({
-            offset: (limit * (pageNumber - 1)).toString(),
-            limit: limit.toString(),
-          }).toString(),
-      ).then((response) => {
-        if (response.response.status !== 200) {
-          toast.error("Une erreur est survenue");
-          return;
-        }
-        setExpenses(response.data.data);
-      });
-    } else {
-      await customFetcher(
-        "http://localhost:5000/api/expense/list?" +
-          new URLSearchParams({
-            offset: (limit * (pageNumber - 1)).toString(),
-            limit: limit.toString(),
-            type: selectedType,
-          }).toString(),
-      ).then((response) => {
-        if (response.response.status !== 200) {
-          toast.error("Une erreur est survenue");
-          return;
-        }
-        setExpenses(response.data.data);
-      });
-    }
+    await customFetcher(
+      `http://localhost:5000/api/expense/list/${selectedType || selectedTypeEnum.ALL}?` +
+        new URLSearchParams({
+          offset: (limit * (pageNumber - 1)).toString(),
+          limit: limit.toString(),
+        }).toString(),
+    ).then((response) => {
+      if (response.response.status !== 200) {
+        toast.error("Une erreur est survenue");
+        return;
+      }
+      setExpenses(response.data.data);
+    });
   };
 
   const fetchExpenseCount = async () => {
     await customFetcher(
-      "http://localhost:5000/api/expense/count?" +
-        new URLSearchParams({
-          type: selectedType,
-        }).toString(),
+      "http://localhost:5000/api/expense/count/" + selectedType,
     ).then((response) => {
       if (response.response.status !== 200) {
         toast.error("Une erreur est survenue");

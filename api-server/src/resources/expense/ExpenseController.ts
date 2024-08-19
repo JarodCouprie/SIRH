@@ -14,17 +14,21 @@ const upload = multer({
 dotenv.config();
 
 // Recupération des valeurs et données
-router.get("/list", verifyToken, async (req: Request, res: Response) => {
+router.get("/list/:type", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } =
     await ExpenseService.getExpensesValuesByUserId(req, userId);
   res.status(code).json({ message, data });
 });
 
-router.get("/list/all", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await ExpenseService.getExpensesValues(req);
-  res.status(code).json({ message, data });
-});
+router.get(
+  "/list/all/:type",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await ExpenseService.getExpensesValues(req);
+    res.status(code).json({ message, data });
+  },
+);
 
 router.get(
   "/validation/list/:id",
@@ -82,7 +86,7 @@ router.get(
   },
 );
 
-router.get("/count", verifyToken, async (req: Request, res: Response) => {
+router.get("/count/:type", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } = await ExpenseService.getExpensesCountByUserId(
     req,
@@ -91,10 +95,14 @@ router.get("/count", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.get("/count/all", verifyToken, async (req: Request, res: Response) => {
-  const { code, message, data } = await ExpenseService.getExpensesCount(req);
-  res.status(code).json({ message, data });
-});
+router.get(
+  "/count/all/:type",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await ExpenseService.getExpensesCount(req);
+    res.status(code).json({ message, data });
+  },
+);
 
 // Gestion des demandes liées aux frais
 
