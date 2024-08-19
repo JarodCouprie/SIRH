@@ -141,7 +141,9 @@ export const DepartmentInfo = () => {
             </Button>
           ) : (
             <Button variant="ghost" onClick={handleUpdateDepartment}>
-              <span className="text-indigo-50">Modifier</span>
+              <span className="text-slate-950 dark:text-slate-50">
+                Modifier
+              </span>
             </Button>
           )}
         </CardTitle>
