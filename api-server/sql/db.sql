@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS belong_team, agency, address, service, team, expense, demand, users, role, own_role;
+DROP TABLE IF EXISTS belong_team, agency, address, service, team, expense, demand, users, role, own_role, notification;
 
 CREATE TABLE address
 (
@@ -75,7 +75,7 @@ CREATE TABLE expense
     id_owner         BIGINT        NOT NULL,
     id_validator     BIGINT        NULL,
     file_key         VARCHAR(255)  NULL,
-    validated_at  DATETIME      NULL,
+    validated_at     DATETIME      NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_owner) REFERENCES users (id),
     FOREIGN KEY (id_validator) REFERENCES users (id)
@@ -132,3 +132,16 @@ CREATE TABLE own_role
     FOREIGN KEY (id_user) REFERENCES users (id),
     FOREIGN KEY (id_role) REFERENCES role (id)
 );
+
+CREATE TABLE notification
+(
+    id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    description VARCHAR(255),
+    type        VARCHAR(50),
+    id_receiver BIGINT,
+    id_sender   BIGINT,
+    touched     BOOLEAN       NOT NULL DEFAULT FALSE,
+    created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_receiver) REFERENCES users (id)
+)
