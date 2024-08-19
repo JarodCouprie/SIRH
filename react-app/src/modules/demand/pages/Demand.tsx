@@ -88,11 +88,10 @@ export function Demand() {
   ) => {
     try {
       const response = await customFetcher(
-        "http://localhost:5000/api/demand?" +
+        `http://localhost:5000/api/demand/${type || "All"}?` +
           new URLSearchParams({
             pageSize: pageSize.toString() || "10",
             pageNumber: pageNumber.toString() || "1",
-            type: type || "",
           }),
       );
       if (response.response.status === 200) {

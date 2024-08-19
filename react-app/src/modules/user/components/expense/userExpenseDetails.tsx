@@ -94,7 +94,7 @@ export const UserExpenseDetails = () => {
   };
 
   const handlePreviewFile = () => {
-    window.open(expense.fileUrl, "_blank");
+    window.open(`${expense.fileUrl}`, "_blank");
   };
 
   return (

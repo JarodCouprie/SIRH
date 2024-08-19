@@ -102,11 +102,10 @@ export function updateUserDays(
 }
 
 export class DemandService {
-  public static async getDemand(userId: number, req: Request) {
+  public static async getDemand(userId: number, req: Request, type: string) {
     try {
       const pageSize = req.query.pageSize || "0";
       const pageNumber = req.query.pageNumber || "10";
-      const type = req.query.type?.toString() || "";
       const limit = +pageSize;
       const offset = (+pageNumber - 1) * +pageSize;
       let demandCount = await DemandRepository.getDemandCountWithType(type);
@@ -116,7 +115,7 @@ export class DemandService {
         offset,
         type,
       );
-      if (!type) {
+      if (type === "All") {
         demands = await DemandRepository.getDemandByUser(userId, limit, offset);
         demandCount = await DemandRepository.geCountByUserId(userId);
       }
