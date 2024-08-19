@@ -76,7 +76,9 @@ export function User() {
                 </Badge>
               )}
             </div>
-            <div className="text-gray-300">{foundUser.email}</div>
+            <div className="text-gray-950 dark:text-gray-300">
+              {foundUser.email}
+            </div>
           </div>
         </div>
       </div>
