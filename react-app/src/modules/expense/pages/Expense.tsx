@@ -50,25 +50,13 @@ export function Expense() {
         toast.error("Une erreur est survenue");
         return;
       }
-      setExpenses(response.data.data);
-    });
-  };
-
-  const fetchExpenseCount = async () => {
-    await customFetcher(
-      "http://localhost:5000/api/expense/count/" + selectedType,
-    ).then((response) => {
-      if (response.response.status !== 200) {
-        toast.error("Une erreur est survenue");
-        return;
-      }
-      setExpensesCount(response.data.data);
+      setExpenses(response.data.data.expenses);
+      setExpensesCount(response.data.data.totalExpensesCount);
     });
   };
 
   useEffect(() => {
     fetchExpenses().then();
-    fetchExpenseCount().then();
   }, [pageNumber, selectedType, limit]);
 
   function maxValue() {
