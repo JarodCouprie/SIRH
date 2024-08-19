@@ -67,7 +67,7 @@ export const AgencyDepartmentDetails = () => {
               {foundService.label}
             </CardTitle>
             <CardDescription className="text-sm text-gray-600">
-              {foundService.lead_service_firstname}{" "}
+              Chef de l'équipe : {foundService.lead_service_firstname}{" "}
               {foundService.lead_service_lastname}
             </CardDescription>
           </div>
