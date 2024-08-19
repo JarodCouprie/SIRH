@@ -10,11 +10,17 @@ export class DepartmentRepository {
     offset = 0,
   ) {
     const [rows] = await this.pool.query(
-      `SELECT *
+      `SELECT service.*,
+              users.firstname as lead_service_firstname,
+              users.lastname  as lead_service_lastname,
+              COUNT(team.id)  as team_count
        FROM service
-       WHERE id_agency = ?
-       ORDER BY label
-       LIMIT ? OFFSET ? `,
+                LEFT JOIN users ON service.id_user_lead_service = users.id
+                LEFT JOIN team ON team.id_service = service.id
+       WHERE service.id_agency = ?
+       GROUP BY service.id
+       ORDER BY service.label
+       LIMIT ? OFFSET ?`,
       [agencyId, limit, offset],
     );
     return rows;
@@ -33,9 +39,10 @@ export class DepartmentRepository {
 
   public static async getDepartmentById(id: number) {
     const [rows]: any = await this.pool.query(
-      `SELECT *
+      `SELECT service.*, users.firstname as lead_service_firstname, users.lastname as lead_service_lastname
        FROM service
-       WHERE id = ?`,
+                LEFT JOIN users ON service.id_user_lead_service = users.id
+       WHERE service.id = ?`,
       [id],
     );
     return rows[0];
@@ -66,6 +73,16 @@ export class DepartmentRepository {
         department.id_user_lead_service,
         department.id_agency,
       ],
+    );
+    return rows[0];
+  }
+
+  public static async deleteDepartment(idDepartment: number) {
+    const [rows]: any = await this.pool.query(
+      `DELETE
+       FROM service
+       WHERE id = ?`,
+      [idDepartment],
     );
     return rows[0];
   }

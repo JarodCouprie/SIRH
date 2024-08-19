@@ -7,6 +7,8 @@ export class Team {
   id_user_lead_team: number;
   id_service: number;
   service_label: string;
+  lead_team_firstname: string;
+  lead_team_lastname: string;
 
   constructor(
     id: number,
@@ -15,6 +17,8 @@ export class Team {
     id_user_lead_team: number,
     id_service: number,
     service_label: string,
+    lead_team_firstname: string,
+    lead_team_lastname: string,
   ) {
     this.id = id;
     this.label = label;
@@ -22,6 +26,8 @@ export class Team {
     this.id_user_lead_team = id_user_lead_team;
     this.id_service = id_service;
     this.service_label = service_label;
+    this.lead_team_firstname = lead_team_firstname;
+    this.lead_team_lastname = lead_team_lastname;
   }
 }
 

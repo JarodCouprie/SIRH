@@ -35,21 +35,31 @@ export const organisationRoutes = {
                   element: <AgencyDepartmentCreate />,
                 },
                 {
-                  path: "details/:id_service",
-                  element: <AgencyDepartmentDetails />,
-                },
-              ],
-            },
-            {
-              path: "team",
-              children: [
-                {
-                  path: "create",
-                  element: <AgencyTeamCreate />,
-                },
-                {
-                  path: "details/:id_team",
-                  element: <h1>In progress</h1>,
+                  path: "details",
+                  children: [
+                    {
+                      path: ":id_service",
+                      children: [
+                        {
+                          path: "",
+                          element: <AgencyDepartmentDetails />,
+                        },
+                        {
+                          path: "team",
+                          children: [
+                            {
+                              path: "create",
+                              element: <AgencyTeamCreate />,
+                            },
+                            {
+                              path: "details/:id_team",
+                              element: <h1>In progress</h1>,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },

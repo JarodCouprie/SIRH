@@ -49,7 +49,7 @@ export const AgencyDepartmentCreate = () => {
     );
 
     if (newAgencyFetch.response.status === 201) {
-      return navigate("/organisation");
+      return navigate(`/organisation/agency/${id_agency}`);
     }
   };
 

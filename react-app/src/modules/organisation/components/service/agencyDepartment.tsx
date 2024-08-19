@@ -73,7 +73,6 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
   const handleClick = (id_service: number) => {
     navigate(`service/details/${id_service}`);
   };
-
   return (
     <div>
       <div className="flex justify-end pb-4">
@@ -108,12 +107,13 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
                     <div>
                       <div>{department.label}</div>
                       <div className="text-xs text-zinc-500">
-                        nombre totale d'équipe
+                        nombre totale d'équipe {department.team_count}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-left">
-                    {department.id_user_lead_service}
+                    {department.lead_service_firstname}{" "}
+                    {department.lead_service_lastname}
                   </TableCell>
                 </TableRow>
               ))

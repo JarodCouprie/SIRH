@@ -63,7 +63,9 @@ export const AgencyTeam = () => {
   };
 
   const handleClickCreate = () => {
-    navigate(`/organisation/agency/${id_agency}/team/create`);
+    navigate(
+      `/organisation/agency/${id_agency}/service/details/${id_service}/team/create`,
+    );
   };
 
   return (
@@ -102,7 +104,7 @@ export const AgencyTeam = () => {
                     {team.label}
                   </TableCell>
                   <TableCell className={`text-left`}>
-                    {team.id_user_lead_team}
+                    {team.lead_team_firstname} {team.lead_team_lastname}
                   </TableCell>
                   <TableCell className={`text-left`}>
                     {/* {getClassForStatus(department.status)} */}4 présent(s)

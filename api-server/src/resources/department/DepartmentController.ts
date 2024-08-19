@@ -51,4 +51,14 @@ router.post("/create/:id", verifyToken, async (req: Request, res: Response) => {
   });
 });
 
+router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await DepartmentService.deleteDepartment(
+    +req.params.id,
+  );
+  res.status(code).json({
+    message,
+    data,
+  });
+});
+
 export default router;

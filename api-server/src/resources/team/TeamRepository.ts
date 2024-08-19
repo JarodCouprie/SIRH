@@ -10,9 +10,10 @@ export class TeamRepository {
     offset = 0,
   ) {
     const [rows] = await this.pool.query(
-      `SELECT team.*, service.label as service_label
+      `SELECT team.*, service.label as service_label, users.firstname as lead_team_firstname, users.lastname as lead_team_lastname
        FROM team
                 JOIN service ON team.id_service = service.id
+                LEFT JOIN users ON team.id_user_lead_team  = users.id
        WHERE team.id_service = ?
        ORDER BY team.label
        LIMIT ? OFFSET ? `,

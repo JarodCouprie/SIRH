@@ -6,6 +6,9 @@ import { DepartmentRepository } from "./DepartmentRepository.js";
 import { CreateDepartment, Department } from "../../common/model/Department.js";
 import { DepartmentDTO } from "./dto/DepartmentDTO.js";
 import { DemandDTO } from "../demand/dto/DemandDTO.js";
+import { DemandRepository } from "../demand/DemandRepository.js";
+import { UserService } from "../user/UserService.js";
+import { updateUserDays } from "../demand/DemandService.js";
 
 export class DepartmentService {
   public static async getDepartmentByAgencyWithoutPagination(idAgency: number) {
@@ -37,12 +40,15 @@ export class DepartmentService {
       const departmentsCount =
         await DepartmentRepository.getCountByAgencyId(idAgency);
 
+      console.log(departments);
+
       if (!departments) {
         return new ControllerResponse(401, "Departments doesn't exist");
       }
       const departmentsDto: DepartmentDTO[] = departments.map(
         (department: Department) => new DepartmentDTO(department),
       );
+
       return new ControllerResponse(200, "", {
         totalData: departmentsCount,
         list: departmentsDto,
@@ -62,6 +68,7 @@ export class DepartmentService {
       }
 
       const department_: DepartmentDTO = new DepartmentDTO(department);
+
       console.log(department_);
       return new ControllerResponse(200, "", department_);
     } catch (error) {
@@ -93,6 +100,22 @@ export class DepartmentService {
       );
     } else {
       return new ControllerResponse(500, "Impossible de créer le service");
+    }
+  }
+
+  public static async deleteDepartment(idDepartment: number) {
+    try {
+      const department: any = await this.getDepartmentById(+idDepartment);
+
+      if (!department) {
+        return new ControllerResponse(404, "pas de service");
+      }
+
+      await DepartmentRepository.deleteDepartment(+idDepartment);
+      return new ControllerResponse(200, "");
+    } catch (error) {
+      logger.error(`Failed to delete the department. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to delete the department");
     }
   }
 }

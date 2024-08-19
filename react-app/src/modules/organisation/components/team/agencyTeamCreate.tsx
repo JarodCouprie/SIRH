@@ -20,27 +20,13 @@ import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { CreateTeamFormDataModel } from "@/models/organisation/CreateTeamFormData.model.js";
 import { UserList } from "@/common/type/user/user-list.type.js";
 import { Checkbox } from "@/components/ui/checkbox.js";
-import { DepartmentList } from "@/models/organisation/DepartmentList.model.js";
 
 export const AgencyTeamCreate = () => {
   const navigate = useNavigate();
-  const { id_agency } = useParams();
+  const { id_service, id_agency } = useParams();
   const [team, setTeam] = useState(new CreateTeamFormDataModel());
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [users, setUsers] = useState<UserList[]>([]);
-  const [services, setService] = useState<DepartmentList[]>([]);
-
-  useEffect(() => {
-    const fetchService = async () => {
-      const response = await customFetcher(
-        `http://localhost:5000/api/service/${id_agency}`,
-      );
-      if (response.response.status === 200) {
-        setService(response.data.data.list);
-      }
-    };
-    fetchService();
-  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,7 +35,7 @@ export const AgencyTeamCreate = () => {
         setUsers(response.data.data.list);
       }
     };
-    fetchUsers();
+    fetchUsers().then();
   }, []);
 
   const handleClickSubmitButton = async (event: {
@@ -58,7 +44,11 @@ export const AgencyTeamCreate = () => {
     event.preventDefault();
     const config = {
       method: "POST",
-      body: JSON.stringify({ ...team, members: selectedUsers }),
+      body: JSON.stringify({
+        ...team,
+        id_service: id_service,
+        members: selectedUsers,
+      }),
     };
 
     const newAgencyFetch = await customFetcher(
@@ -66,8 +56,10 @@ export const AgencyTeamCreate = () => {
       config,
     );
 
-    if (newAgencyFetch.response.status === 201) {
-      navigate("/organisation");
+    if (newAgencyFetch.response.status === 204) {
+      navigate(
+        `/organisation/agency/${id_agency}/service/details/${id_service}`,
+      );
     }
   };
 
@@ -84,12 +76,6 @@ export const AgencyTeamCreate = () => {
     setTeam({
       ...team,
       id_user_lead_team: +value,
-    });
-  };
-  const handleSelectChangeService = (value: string | number) => {
-    setTeam({
-      ...team,
-      id_service: +value,
     });
   };
 
@@ -123,20 +109,6 @@ export const AgencyTeamCreate = () => {
               name="label"
               onChange={handleTeamFormDataChange}
             />
-
-            <Label htmlFor="id_service">Service rataché</Label>
-            <Select name="id_service" onValueChange={handleSelectChangeService}>
-              <SelectTrigger className="p-6">
-                <SelectValue placeholder="Service rataché" />
-              </SelectTrigger>
-              <SelectContent>
-                {services.map((service) => (
-                  <SelectItem key={service.id} value={service.id.toString()}>
-                    {service.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
 
             <Label htmlFor="id_user_lead_team">Chef de l'équipe</Label>
             <Select
@@ -190,7 +162,11 @@ export const AgencyTeamCreate = () => {
               <Button
                 variant="ghost"
                 type="button"
-                onClick={() => navigate(`/organisation`)}
+                onClick={() =>
+                  navigate(
+                    `/organisation/agency/${id_agency}/service/details/${id_service}`,
+                  )
+                }
               >
                 Annuler
               </Button>
