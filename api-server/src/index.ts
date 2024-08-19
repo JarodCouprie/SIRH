@@ -10,6 +10,7 @@ import agency from "./resources/agency/AgencyController.js";
 import department from "./resources/department/DepartmentController.js";
 import team from "./resources/team/TeamController.js";
 import userProfile from "./resources/userProfile/UserProfileController.js";
+import notification from "./resources/notification/NotificationController.js";
 import cors from "cors";
 import helmet from "helmet";
 
@@ -36,6 +37,7 @@ app.use("/api/agency", agency);
 app.use("/api/service", department);
 app.use("/api/team", team);
 app.use("/api/profile", userProfile);
+app.use("/api/notification", notification);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");

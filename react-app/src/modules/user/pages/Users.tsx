@@ -34,10 +34,10 @@ import { customFetcher } from "@/common/helper/fetchInstance.js";
 export function Users() {
   const [users, setUsers] = useState<UserList[]>([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
-  const navigate = useNavigate();
   const [pageSize, setPageSize] = useState(5);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalData, setTotalData] = useState(0);
+  const navigate = useNavigate();
 
   function handleClick(userId: number) {
     navigate(`/user/${userId}`);

@@ -4,10 +4,14 @@ import { CreateNotification } from "../../common/model/Notification.js";
 export class NotificationRepository {
   private static pool = DatabaseClient.mysqlPool;
 
-  public static async getNotificationsByUserId(userId: number) {
+  public static async getNotificationsByUserId(
+    userId: number,
+    limit = 10,
+    offset = 0,
+  ) {
     const [rows] = await this.pool.query(
-      "SELECT * FROM notification WHERE notification.id_receiver = ?",
-      [userId],
+      "SELECT * FROM notification WHERE id_receiver = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
+      [userId, limit, offset],
     );
     return rows;
   }

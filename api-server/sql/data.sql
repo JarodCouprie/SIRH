@@ -45,3 +45,6 @@ VALUES ("TRAVEL", 300, "Voyage d'affaire", "WAITING", 2, null, '2024-03-11'),
 INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`, `status`, `type`, `number_day`,
                      `id_owner`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'WAITING', 'CA', 1, '1');
+
+INSERT INTO `notification` (`description`, `type`, `id_receiver`)
+VALUES ('Première notification que je dois décrire simplement', 'EXPENSE', '1');
