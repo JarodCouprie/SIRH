@@ -111,7 +111,7 @@ export function User() {
     <div className="flex flex-col items-start gap-4 ">
       <Button onClick={handleGoBackToList} variant="link">
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
-        <span>Utilisateurs</span>
+        <span>Collaborateurs</span>
       </Button>
       {userLoaded && userMainPage}
       {userNotFound && noUser}

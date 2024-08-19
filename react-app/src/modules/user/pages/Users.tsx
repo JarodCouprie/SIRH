@@ -90,7 +90,7 @@ export function Users() {
   };
 
   const usersTable = (
-    <MainRoot title="Utilisateurs" action={newUser}>
+    <MainRoot title="Collaborateurs" action={newUser}>
       <Card>
         <Table>
           <TableHeader>
@@ -158,7 +158,7 @@ export function Users() {
       </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
-          <Label>Utilisateurs par page</Label>
+          <Label>Collaborateurs par page</Label>
           <Select
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
