@@ -86,7 +86,6 @@ export class DepartmentService {
       console.log(newDepartment);
       const createdDepartment =
         await DepartmentRepository.createDepartment(newDepartment);
-
       return new ControllerResponse(
         201,
         "Service créé avec succès",

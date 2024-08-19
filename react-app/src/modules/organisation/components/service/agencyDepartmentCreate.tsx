@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select.js";
 
 export const AgencyDepartmentCreate = () => {
-  const { id } = useParams();
+  const { id_agency } = useParams();
   const [service, setService] = useState(
     new CreateDepartmentAgencyFormDataModel(),
   );
@@ -44,7 +44,7 @@ export const AgencyDepartmentCreate = () => {
       body: JSON.stringify(service),
     };
     const newAgencyFetch = await customFetcher(
-      `http://localhost:5000/api/service/create/${id}`,
+      `http://localhost:5000/api/service/create/${id_agency}`,
       config,
     );
 
