@@ -24,7 +24,8 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

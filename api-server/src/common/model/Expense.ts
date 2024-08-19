@@ -10,9 +10,9 @@ export class Expense {
   fileKey?: string;
   id_validator: number;
   justification: string;
-  validator_firstname: string;
-  validator_lastname: string;
-  validated_at: Date;
+  validator_firstname?: string;
+  validator_lastname?: string;
+  validated_at?: Date;
 
   constructor(
     id: string,
@@ -25,9 +25,9 @@ export class Expense {
     ownerId: number,
     id_validator: number,
     justification: string,
-    validator_firstname: string,
-    validator_lastname: string,
-    validated_at: Date,
+    validator_firstname?: string,
+    validator_lastname?: string,
+    validated_at?: Date,
     fileKey?: string,
   ) {
     this.id = id;
