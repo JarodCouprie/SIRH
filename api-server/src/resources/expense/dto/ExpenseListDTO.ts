@@ -16,9 +16,9 @@ export class ExpenseListDTO {
   fileUrl?: string;
   id_validator: number;
   justification: string;
-  validator_firstname: string;
-  validator_lastname: string;
-  validated_at: Date;
+  validator_firstname?: string;
+  validator_lastname?: string;
+  validated_at?: Date;
 
   constructor(expense: Expense, url?: string) {
     this.id = expense.id;
