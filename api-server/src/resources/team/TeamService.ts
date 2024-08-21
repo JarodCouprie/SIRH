@@ -2,8 +2,10 @@ import { ControllerResponse } from "../../common/helper/ControllerResponse.js";
 import { logger } from "../../common/helper/Logger.js";
 import { TeamRepository } from "./TeamRepository.js";
 import { CreateTeam, Team } from "../../common/model/Team.js";
-import { TeamDTO } from "./dto/TeamDTO.js";
+import { TeamDTO, TeamsDTO } from "./dto/TeamDTO.js";
 import { Request } from "express";
+import { MinioClient } from "../../common/helper/MinioClient";
+import { DepartmentRepository } from "../department/DepartmentRepository";
 
 export class TeamService {
   public static async createTeam(req: Request) {
@@ -50,10 +52,26 @@ export class TeamService {
         return new ControllerResponse(401, "Team doesn't exist");
       }
 
+      const members: any[] = [];
+      for (const row of team) {
+        if (row.id) {
+          const memberAvatarUrl = await MinioClient.getSignedUrl(row.image_key);
+          members.push({
+            id_member: row.id,
+            member_firstname: row.firstname,
+            member_lastname: row.lastname,
+            member_email: row.email,
+            member_avatar: memberAvatarUrl,
+            is_present: row.is_present,
+          });
+        }
+      }
+
       const teamDto: TeamDTO = new TeamDTO(
         team[0],
         teamPresence[0].total_present,
         teamPresence[0].total_team,
+        members,
       );
 
       return new ControllerResponse<TeamDTO>(200, "", teamDto);
@@ -73,15 +91,15 @@ export class TeamService {
         return new ControllerResponse(401, "Teams doesn't exist");
       }
 
-      const teamsDto: TeamDTO[] = teams.map(
+      const teamsDto: TeamsDTO[] = teams.map(
         (team: Team) =>
-          new TeamDTO(
+          new TeamsDTO(
             team,
             teamPresence.find(
-              (presence) => presence.id_team === team.id,
+              (presence: any) => presence.id_team === team.id,
             ).total_present,
             teamPresence.find(
-              (presence) => presence.id_team === team.id,
+              (presence: any) => presence.id_team === team.id,
             ).total_team,
           ),
       );
@@ -93,6 +111,17 @@ export class TeamService {
     } catch (error) {
       logger.error(`Failed to get the teams. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get teams");
+    }
+  }
+
+  public static async deleteTeam(teamId: number) {
+    try {
+      console.log(teamId);
+      await TeamRepository.deleteTeam(+teamId);
+      return new ControllerResponse(200, "");
+    } catch (error) {
+      logger.error(`Failed to delete the team. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to delete the team");
     }
   }
 }

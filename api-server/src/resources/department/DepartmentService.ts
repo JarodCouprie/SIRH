@@ -11,28 +11,6 @@ import { UserService } from "../user/UserService.js";
 import { updateUserDays } from "../demand/DemandService.js";
 
 export class DepartmentService {
-  public static async getDepartmentByAgencyWithoutPagination(idAgency: number) {
-    try {
-      const departments: any =
-        await DepartmentRepository.getDepartmentByAgencyIdWithoutCount(
-          idAgency,
-        );
-
-      if (!departments) {
-        return new ControllerResponse(401, "Departments doesn't exist");
-      }
-      const departmentsDto: DepartmentDTO[] = departments.map(
-        (department: Department) => new DepartmentDTO(department),
-      );
-      return new ControllerResponse(200, "", {
-        list: departmentsDto,
-      });
-    } catch (error) {
-      logger.error(`Failed to get the departments. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get departments");
-    }
-  }
-
   public static async getDepartmentByAgency(idAgency: number) {
     try {
       const departments: any =

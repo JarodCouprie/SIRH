@@ -6,9 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.js";
-import { TbBuildingCommunity, TbBuildingEstate } from "react-icons/tb";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
 import {
@@ -26,6 +25,7 @@ import { MdOutlineDelete } from "react-icons/md";
 import { DepartmentModel } from "@/models/organisation/department/Department.model.js";
 import { FaArrowLeft } from "react-icons/fa";
 import { GrGroup } from "react-icons/gr";
+import { PlusIcon } from "@radix-ui/react-icons";
 
 export const AgencyDepartmentDetails = () => {
   const { id_service, id_agency } = useParams();
@@ -48,6 +48,12 @@ export const AgencyDepartmentDetails = () => {
 
   const handleClick = () => {
     navigate(`/organisation/agency/${id_agency}`);
+  };
+
+  const handleClickCreate = () => {
+    navigate(
+      `/organisation/agency/${id_agency}/service/details/${id_service}/team/create`,
+    );
   };
 
   return (
@@ -73,6 +79,12 @@ export const AgencyDepartmentDetails = () => {
             </CardDescription>
           </div>
           <ConfirmDeleteItem service={foundService} navigate={navigate} />
+          <div className="flex justify-end">
+            <Button variant="callToAction" onClick={handleClickCreate}>
+              <PlusIcon className="mr-2 size-4" />
+              Créer une équipe
+            </Button>
+          </div>
         </Card>
       </div>
       <div className="grid w-full grid-cols-3 gap-4">

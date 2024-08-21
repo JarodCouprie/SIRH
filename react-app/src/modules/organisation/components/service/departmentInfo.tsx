@@ -1,7 +1,7 @@
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { DepartmentList } from "@/models/organisation/DepartmentList.model.js";
+import { DepartmentList } from "@/models/organisation/department/DepartmentList.model.ts";
 import {
   Card,
   CardContent,

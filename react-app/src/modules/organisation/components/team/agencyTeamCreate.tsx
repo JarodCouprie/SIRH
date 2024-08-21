@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button.js";
 import { useNavigate, useParams } from "react-router-dom";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { CreateTeamFormDataModel } from "@/models/organisation/CreateTeamFormData.model.js";
+import { CreateTeamFormDataModel } from "@/models/organisation/team/CreateTeamFormData.model.ts";
 import { UserList } from "@/common/type/user/user-list.type.js";
 import { Checkbox } from "@/components/ui/checkbox.js";
 
@@ -56,7 +56,7 @@ export const AgencyTeamCreate = () => {
       config,
     );
 
-    if (newAgencyFetch.response.status === 204) {
+    if (newAgencyFetch.response.status === 200) {
       navigate(
         `/organisation/agency/${id_agency}/service/details/${id_service}`,
       );

@@ -9,6 +9,7 @@ export class TeamModel {
   service_label: string;
   lead_team_firstname: string;
   lead_team_lastname: string;
+  lead_team_email: string;
   total_team: number;
   total_present: number;
   status: TeamStatus;
@@ -22,6 +23,7 @@ export class TeamModel {
     service_label: string = "",
     lead_team_firstname: string = "",
     lead_team_lastname: string = "",
+    lead_team_email: string = "",
     total_team: number = 1,
     total_present: number = 1,
     status: TeamStatus = TeamStatus.COMPLETE,
@@ -34,6 +36,7 @@ export class TeamModel {
     this.service_label = service_label;
     this.lead_team_firstname = lead_team_firstname;
     this.lead_team_lastname = lead_team_lastname;
+    this.lead_team_email = lead_team_email;
     this.total_team = total_team;
     this.total_present = total_present;
     this.status = status;

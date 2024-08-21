@@ -2,7 +2,7 @@ import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 import { Button } from "@/components/ui/button.js";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AgencyList } from "@/models/organisation/agency/Agency.model.js";
 import {
   Card,
@@ -23,7 +23,6 @@ import {
 import { OrganisationMap } from "@/modules/organisation/components/organisationMap.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { TbBuildingEstate } from "react-icons/tb";
-import { TableCell } from "@/components/ui/table.tsx";
 
 export const Organisation = () => {
   const [agencyList, setAgencyList] = useState<AgencyList[]>([]);

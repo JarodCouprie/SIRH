@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Label } from "@/components/ui/label.js";
 import React, { useState, useEffect } from "react";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { CreateDepartmentAgencyFormDataModel } from "@/models/organisation/CreateDepartmentAgencyFormData.model.js";
+import { CreateDepartmentAgencyFormDataModel } from "@/models/organisation/department/CreateDepartmentAgencyFormData.model.ts";
 import { UserList } from "@/common/type/user/user-list.type.js";
 import {
   Select,

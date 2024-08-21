@@ -11,9 +11,9 @@ export class TeamRepository {
   ) {
     const [rows] = await this.pool.query(
       `SELECT team.*,
-              service.label as service_label,
+              service.label   as service_label,
               users.firstname as lead_team_firstname,
-              users.lastname as lead_team_lastname
+              users.lastname  as lead_team_lastname
        FROM team
                 JOIN service ON team.id_service = service.id
                 LEFT JOIN users ON team.id_user_lead_team = users.id
@@ -26,24 +26,42 @@ export class TeamRepository {
   }
 
   public static async getTeamById(teamId: number) {
-    const [rows] = await this.pool.query(
-      `SELECT team.* , users.firstname as lead_team_firstname, users.lastname as lead_team_lastname
-       FROM team
-                JOIN service ON team.id_service = service.id
-                LEFT JOIN users ON team.id_user_lead_team = users.id
-       WHERE team.id = ?`,
+    const [rows]: any = await this.pool.query(
+      `SELECT
+           team.*,
+           users.firstname as lead_team_firstname,
+           users.lastname as lead_team_lastname,
+           users.email as lead_team_email,
+           team_members.*,
+           CASE WHEN demand.id IS NULL THEN 1 
+                WHEN demand.id IS NOT NULL THEN 0 END as is_present
+       FROM
+           team
+               JOIN
+           service ON team.id_service = service.id
+               LEFT JOIN
+           users ON team.id_user_lead_team = users.id
+               LEFT JOIN
+           belong_team ON team.id = belong_team.id_team
+               LEFT JOIN
+           users as team_members ON belong_team.id_user = team_members.id
+            LEFT JOIN demand ON team_members.id = demand.id_owner
+               AND demand.status = 'ACCEPTED'
+               AND CURDATE() BETWEEN demand.start_date AND demand.end_date
+       WHERE
+           team.id = ?`,
       [teamId],
     );
     return rows;
   }
 
-  public static async getCountByService(agencyId: number) {
+  public static async getCountByService(serviceId: number) {
     const [rows]: any = await this.pool.query(
       `SELECT COUNT(*) as count
        FROM team
                 JOIN service ON team.id_service = service.id
-       WHERE service.id_agency = ?`,
-      [agencyId],
+       WHERE service.id = ?`,
+      [serviceId],
     );
     return rows[0].count;
   }
@@ -99,6 +117,7 @@ export class TeamRepository {
     );
     return result;
   }
+
   public static async countTeamById(idTeam: number) {
     const [result]: any = await this.pool.query(
       `
@@ -119,5 +138,16 @@ export class TeamRepository {
       [idTeam],
     );
     return result;
+  }
+
+  public static async deleteTeam(idTeam: number) {
+    console.log(idTeam);
+    const [rows]: any = await this.pool.query(
+      `DELETE
+       FROM team
+       WHERE id = ?`,
+      [idTeam],
+    );
+    return rows[0];
   }
 }

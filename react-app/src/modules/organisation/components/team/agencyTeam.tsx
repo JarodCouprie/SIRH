@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button.js";
-import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
+import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { TeamList } from "@/models/organisation/TeamList.model.js";
+import { TeamList } from "@/models/organisation/team/TeamList.model.js";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Table,
@@ -65,12 +65,6 @@ export const AgencyTeam = () => {
     setPageNumber(pageNumber + 1);
   };
 
-  const handleClickCreate = () => {
-    navigate(
-      `/organisation/agency/${id_agency}/service/details/${id_service}/team/create`,
-    );
-  };
-
   const handleClick = (id: number) => {
     navigate(
       `/organisation/agency/${id_agency}/service/details/${id_service}/team/details/${id}`,
@@ -94,12 +88,6 @@ export const AgencyTeam = () => {
 
   return (
     <>
-      <div className="flex justify-end">
-        <Button variant="callToAction" onClick={handleClickCreate}>
-          <PlusIcon className="mr-2 size-4" />
-          Créer une équipe
-        </Button>
-      </div>
       <Card>
         <Table>
           <TableHeader>

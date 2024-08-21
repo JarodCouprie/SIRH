@@ -1,6 +1,6 @@
-import { Team } from "../../../common/model/Team.js";
+import { Team, TeamMembers } from "../../../common/model/Team.js";
 
-export class TeamDTO {
+export class TeamsDTO {
   id: number;
   label: string;
   minimum_users: number;
@@ -11,7 +11,8 @@ export class TeamDTO {
   lead_team_lastname: string;
   total_team: number;
   total_present: number;
-  status: TeamStatus;
+  status: TeamStatus | undefined;
+
   constructor(team: Team, totalPresent: number, totalTeam: number) {
     this.id = team.id;
     this.label = team.label;
@@ -24,6 +25,43 @@ export class TeamDTO {
     this.total_team = totalTeam;
     this.total_present = totalPresent;
     this.status = calculateStatus(totalPresent, totalTeam);
+  }
+}
+
+export class TeamDTO {
+  id: number;
+  label: string;
+  minimum_users: number;
+  id_user_lead_team: number;
+  id_service: number;
+  service_label: string;
+  lead_team_firstname: string;
+  lead_team_lastname: string;
+  lead_team_email: string;
+  total_team: number;
+  total_present: number;
+  status: TeamStatus | undefined;
+  members: TeamMembers[];
+
+  constructor(
+    team: Team,
+    totalPresent: number,
+    totalTeam: number,
+    members: any[],
+  ) {
+    this.id = team.id;
+    this.label = team.label;
+    this.minimum_users = team.minimum_users;
+    this.id_user_lead_team = team.id_user_lead_team;
+    this.id_service = team.id_service;
+    this.service_label = team.service_label;
+    this.lead_team_firstname = team.lead_team_firstname;
+    this.lead_team_lastname = team.lead_team_lastname;
+    this.lead_team_email = team.lead_team_email;
+    this.total_team = totalTeam;
+    this.total_present = totalPresent;
+    this.status = calculateStatus(totalPresent, totalTeam);
+    this.members = members.map((member) => new TeamMembers(member));
   }
 }
 

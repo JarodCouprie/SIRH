@@ -12,7 +12,7 @@ import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button.js";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { DepartmentList } from "@/models/organisation/DepartmentList.model.js";
+import { DepartmentList } from "@/models/organisation/department/DepartmentList.model.ts";
 import { Label } from "@/components/ui/label.js";
 import {
   Select,
