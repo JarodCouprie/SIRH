@@ -1,0 +1,6 @@
+export enum TeamStatus {
+  NOT_ENOUGH = "NOT_ENOUGH",
+  UNDERSTAFFED = "UNDERSTAFFED",
+  ENOUGH = "ENOUGH",
+  COMPLETE = "COMPLETE",
+}
