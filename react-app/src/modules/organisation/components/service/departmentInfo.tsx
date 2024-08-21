@@ -26,7 +26,7 @@ import { BsFillInfoSquareFill } from "react-icons/bs";
 export const DepartmentInfo = () => {
   const { id_service } = useParams();
   const [departmentCanBeUpdated, setDepartmentCanBeUpdated] = useState(false);
-  const [departmentUpdated, setDepartmentUpdated] = useState<DepartmentList>(
+  const [departmentUpdated, setDepartmentUpdated] = useState(
     new DepartmentList(),
   );
   const [users, setUsers] = useState<UserList[]>([]);
@@ -90,9 +90,12 @@ export const DepartmentInfo = () => {
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
       <FieldRow title="Nom">{departmentUpdated.label}</FieldRow>
       <FieldRow title="Chef de service">
-        {departmentUpdated.id_user_lead_service}
+        {departmentUpdated.lead_service_firstname} {""}{" "}
+        {departmentUpdated.lead_service_lastname}
       </FieldRow>
-      <FieldRow title="Nombre totale de collaborateur">10</FieldRow>
+      <FieldRow title="Nombre total de collaborateur">
+        {departmentUpdated.count_team}
+      </FieldRow>
     </CardContent>
   );
 

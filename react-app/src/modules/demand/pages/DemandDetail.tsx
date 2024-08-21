@@ -40,9 +40,7 @@ export function DemandDetail() {
   };
 
   const fetchDemand = async () => {
-    const data = await customFetcher(
-      `http://localhost:5000/api/demand/list/${id}`,
-    );
+    const data = await customFetcher(`http://localhost:5000/api/demand/${id}`);
     setDemand(data.data.data);
   };
 

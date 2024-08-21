@@ -23,7 +23,11 @@ export function NavBar() {
     >
       <div className="flex flex-col">
         <h1 className="border-b border-slate-700 p-4 text-center text-lg font-bold text-gray-100">
-          SIRH
+          <img
+            src="src/assets/Logo_SIRH.svg"
+            className="size-10"
+            alt="Logo SIRH"
+          />
         </h1>
         <div className="flex flex-col gap-2 p-4">
           <NavBarLink link="/" title="Dashboard">

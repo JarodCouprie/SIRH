@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.js";
-import { TbBuildingEstate } from "react-icons/tb";
+import { TbBuildingCommunity, TbBuildingEstate } from "react-icons/tb";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
 import {
@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button.js";
 import { MdOutlineDelete } from "react-icons/md";
 import { DepartmentModel } from "@/models/organisation/department/Department.model.js";
 import { FaArrowLeft } from "react-icons/fa";
+import { GrGroup } from "react-icons/gr";
 
 export const AgencyDepartmentDetails = () => {
   const { id_service, id_agency } = useParams();
@@ -60,14 +61,14 @@ export const AgencyDepartmentDetails = () => {
       <div className="w-full py-4">
         <Card className="flex items-center px-4">
           <CardHeader className="flex items-center">
-            <TbBuildingEstate className="size-8 text-gray-300" />
+            <GrGroup className="size-8 text-gray-300" />
           </CardHeader>
           <div className="flex flex-grow flex-col">
             <CardTitle className="text-lg font-semibold">
               {foundService.label}
             </CardTitle>
             <CardDescription className="text-sm text-gray-600">
-              Chef de l'équipe : {foundService.lead_service_firstname}{" "}
+              Chef de service : {foundService.lead_service_firstname}{" "}
               {foundService.lead_service_lastname}
             </CardDescription>
           </div>

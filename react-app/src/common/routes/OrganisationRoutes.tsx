@@ -4,6 +4,7 @@ import { Agency } from "@/modules/organisation/pages/Agency.js";
 import { AgencyDepartmentCreate } from "@/modules/organisation/components/service/agencyDepartmentCreate.js";
 import { AgencyTeamCreate } from "@/modules/organisation/components/team/agencyTeamCreate.js";
 import { AgencyDepartmentDetails } from "@/modules/organisation/components/service/agencyDepartmentDetails.js";
+import { AgencyTeamDetails } from "@/modules/organisation/components/team/agencyTeamDetails.tsx";
 
 export const organisationRoutes = {
   path: "organisation",
@@ -53,7 +54,7 @@ export const organisationRoutes = {
                             },
                             {
                               path: "details/:id_team",
-                              element: <h1>In progress</h1>,
+                              element: <AgencyTeamDetails />,
                             },
                           ],
                         },

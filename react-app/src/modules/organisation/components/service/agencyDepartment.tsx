@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.js";
 import { Card } from "@/components/ui/card";
+import { GrGroup } from "react-icons/gr";
 
 interface AgencyDetailsProps {
   agency: AgencyModel;
@@ -92,8 +93,11 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
           <TableBody>
             {departmentList.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  Aucun département trouvé
+                <TableCell colSpan={2} className="h-24 text-center">
+                  <div className="flex flex-col gap-2">
+                    <span>Aucun service trouvé</span>
+                    <span>Céez en un</span>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
@@ -104,6 +108,7 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
                   onClick={() => handleClick(department.id)}
                 >
                   <TableCell className="flex gap-2 text-left">
+                    <GrGroup className="size-7 text-gray-300" />
                     <div>
                       <div>{department.label}</div>
                       <div className="text-xs text-zinc-500">

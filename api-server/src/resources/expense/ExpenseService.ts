@@ -210,7 +210,6 @@ export class ExpenseService {
   public static async getExpenseDemand(id: string, userId: number) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
-      console.log(expenseTemp);
       const expense: ExpenseListDTO = new ExpenseListDTO(
         expenseTemp,
         await MinioClient.getSignedUrl(expenseTemp.file_key),

@@ -9,8 +9,9 @@ export class DepartmentDTO {
   lead_service_lastname: string;
   lead_service_firstname: string;
   team_count: number;
+  count_team: number;
 
-  constructor(department: Department) {
+  constructor(department: Department, countMember: number) {
     this.id = department.id;
     this.label = department.label;
     this.minimum_users = department.minimum_users;
@@ -19,5 +20,6 @@ export class DepartmentDTO {
     this.lead_service_lastname = department.lead_service_lastname;
     this.lead_service_firstname = department.lead_service_firstname;
     this.team_count = department.team_count;
+    this.count_team = countMember;
   }
 }

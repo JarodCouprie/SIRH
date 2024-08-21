@@ -8,7 +8,6 @@ import { Request } from "express";
 export class TeamService {
   public static async createTeam(req: Request) {
     try {
-      console.log(req);
       const { label, minimum_users, id_user_lead_team, id_service, members } =
         req.body;
 
@@ -43,16 +42,49 @@ export class TeamService {
     }
   }
 
-  public static async getTeamByAgency(serviceId: number) {
+  public static async getTeamById(teamId: number) {
+    try {
+      const team: any = await TeamRepository.getTeamById(teamId);
+      const teamPresence = await TeamRepository.countTeamById(teamId);
+      if (!team) {
+        return new ControllerResponse(401, "Team doesn't exist");
+      }
+
+      const teamDto: TeamDTO = new TeamDTO(
+        team[0],
+        teamPresence[0].total_present,
+        teamPresence[0].total_team,
+      );
+
+      return new ControllerResponse<TeamDTO>(200, "", teamDto);
+    } catch (error) {
+      logger.error(`Failed to get the team. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to get Team");
+    }
+  }
+
+  public static async getTeamByService(serviceId: number) {
     try {
       const teams: any = await TeamRepository.getTeamByService(serviceId);
       const teamsCount = await TeamRepository.getCountByService(serviceId);
+      const teamPresence = await TeamRepository.countTeam(serviceId);
 
       if (!teams) {
         return new ControllerResponse(401, "Teams doesn't exist");
       }
 
-      const teamsDto: TeamDTO[] = teams.map((team: Team) => new TeamDTO(team));
+      const teamsDto: TeamDTO[] = teams.map(
+        (team: Team) =>
+          new TeamDTO(
+            team,
+            teamPresence.find(
+              (presence) => presence.id_team === team.id,
+            ).total_present,
+            teamPresence.find(
+              (presence) => presence.id_team === team.id,
+            ).total_team,
+          ),
+      );
 
       return new ControllerResponse(200, "", {
         totalData: teamsCount,

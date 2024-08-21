@@ -58,6 +58,18 @@ export class DepartmentRepository {
     return rows[0].count;
   }
 
+  public static async getCountUserInTeamService(id: number) {
+    const [rows]: any = await this.pool.query(
+      `SELECT COUNT(belong_team.id_user) AS team_count
+       FROM team
+                JOIN service ON team.id_service = service.id
+                LEFT JOIN belong_team ON team.id = belong_team.id_team
+       WHERE service.id = ?;`,
+      [id],
+    );
+    return rows[0].team_count;
+  }
+
   public static async createDepartment(department: CreateDepartment) {
     const [rows]: any = await this.pool.query(
       `

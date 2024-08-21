@@ -10,14 +10,29 @@ export class TeamRepository {
     offset = 0,
   ) {
     const [rows] = await this.pool.query(
-      `SELECT team.*, service.label as service_label, users.firstname as lead_team_firstname, users.lastname as lead_team_lastname
+      `SELECT team.*,
+              service.label as service_label,
+              users.firstname as lead_team_firstname,
+              users.lastname as lead_team_lastname
        FROM team
                 JOIN service ON team.id_service = service.id
-                LEFT JOIN users ON team.id_user_lead_team  = users.id
+                LEFT JOIN users ON team.id_user_lead_team = users.id
        WHERE team.id_service = ?
        ORDER BY team.label
        LIMIT ? OFFSET ? `,
       [serviceId, limit, offset],
+    );
+    return rows;
+  }
+
+  public static async getTeamById(teamId: number) {
+    const [rows] = await this.pool.query(
+      `SELECT team.* , users.firstname as lead_team_firstname, users.lastname as lead_team_lastname
+       FROM team
+                JOIN service ON team.id_service = service.id
+                LEFT JOIN users ON team.id_user_lead_team = users.id
+       WHERE team.id = ?`,
+      [teamId],
     );
     return rows;
   }
@@ -59,6 +74,50 @@ export class TeamRepository {
       [member.id_team, member.id_user],
     );
 
+    return result;
+  }
+
+  public static async countTeam(idService: number) {
+    const [result]: any = await this.pool.query(
+      `
+          SELECT belong_team.id_team,
+                 COUNT(belong_team.id_user)                    AS total_team,
+                 COUNT(CASE WHEN demand.id IS NULL THEN 1 END) AS total_present
+          FROM belong_team
+                   JOIN
+               team ON belong_team.id_team = team.id
+                   JOIN
+               users ON belong_team.id_user = users.id
+                   LEFT JOIN
+               demand ON users.id = demand.id_owner
+                   AND demand.status = 'ACCEPTED'
+                   AND CURDATE() BETWEEN demand.start_date AND demand.end_date
+          WHERE team.id_service = ?
+          GROUP BY team.id;
+      `,
+      [idService],
+    );
+    return result;
+  }
+  public static async countTeamById(idTeam: number) {
+    const [result]: any = await this.pool.query(
+      `
+          SELECT belong_team.id_team,
+                 COUNT(belong_team.id_user)                    AS total_team,
+                 COUNT(CASE WHEN demand.id IS NULL THEN 1 END) AS total_present
+          FROM belong_team
+                   JOIN
+               team ON belong_team.id_team = team.id
+                   JOIN
+               users ON belong_team.id_user = users.id
+                   LEFT JOIN
+               demand ON users.id = demand.id_owner
+                   AND demand.status = 'ACCEPTED'
+                   AND CURDATE() BETWEEN demand.start_date AND demand.end_date
+          WHERE team.id = ?;
+      `,
+      [idTeam],
+    );
     return result;
   }
 }

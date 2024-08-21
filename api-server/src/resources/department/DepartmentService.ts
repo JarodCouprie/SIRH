@@ -40,8 +40,6 @@ export class DepartmentService {
       const departmentsCount =
         await DepartmentRepository.getCountByAgencyId(idAgency);
 
-      console.log(departments);
-
       if (!departments) {
         return new ControllerResponse(401, "Departments doesn't exist");
       }
@@ -62,14 +60,16 @@ export class DepartmentService {
   public static async getDepartmentById(id: number) {
     try {
       const department: any = await DepartmentRepository.getDepartmentById(id);
-
+      const countMember =
+        await DepartmentRepository.getCountUserInTeamService(id);
       if (!department) {
         return new ControllerResponse(401, "Departments doesn't exist");
       }
 
-      const department_: DepartmentDTO = new DepartmentDTO(department);
-
-      console.log(department_);
+      const department_: DepartmentDTO = new DepartmentDTO(
+        department,
+        countMember,
+      );
       return new ControllerResponse(200, "", department_);
     } catch (error) {
       logger.error(`Failed to get the departments. Error: ${error}`);
@@ -90,7 +90,6 @@ export class DepartmentService {
         id_user_lead_service,
         +idAgency,
       );
-      console.log(newDepartment);
       const createdDepartment =
         await DepartmentRepository.createDepartment(newDepartment);
       return new ControllerResponse(

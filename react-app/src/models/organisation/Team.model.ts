@@ -1,6 +1,6 @@
 import { TeamStatus } from "@/common/enum/TeamStatus.enum.ts";
 
-export class TeamList {
+export class TeamModel {
   id: number;
   label: string;
   minimum_users: number;

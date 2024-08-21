@@ -14,7 +14,7 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 }, // Set the file size limit (50MB in this case)
 });
 
-router.get("/:type", verifyToken, async (req: Request, res: Response) => {
+router.get("/list/:type", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } = await DemandService.getDemand(
     userId,
@@ -24,17 +24,12 @@ router.get("/:type", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
-router.get(
-  "/list/:id_demand",
-  verifyToken,
-  async (req: Request, res: Response) => {
-    console.log(req.params.id_demand);
-    const { code, message, data } = await DemandService.getDemandById(
-      req.params.id_demand,
-    );
-    res.status(code).json({ message, data });
-  },
-);
+router.get("/:id_demand", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await DemandService.getDemandById(
+    req.params.id_demand,
+  );
+  res.status(code).json({ message, data });
+});
 
 router.post(
   "/",
