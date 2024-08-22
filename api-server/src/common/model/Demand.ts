@@ -147,18 +147,6 @@ export class StatusDemand {
   }
 }
 
-export class NumberDayDemand {
-  id: number;
-  number_day: number;
-  type: DemandType;
-
-  constructor(id: number, number_day: number, type: DemandType) {
-    this.id = id;
-    this.number_day = number_day;
-    this.type = type;
-  }
-}
-
 export enum DemandType {
   RTT = "RTT",
   TT = "TT",
