@@ -1,5 +1,7 @@
 import { DatabaseClient } from "../../common/helper/DatabaseClient.js";
 import { CreateDepartment, Department } from "../../common/model/Department.js";
+import { CreateOrUpdateAddressDTO } from "../address/dto/CreateOrUpdateAddressDTO";
+import { UserAddress } from "../../common/model/Address";
 
 export class DepartmentRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -76,6 +78,22 @@ export class DepartmentRepository {
       ],
     );
     return rows[0];
+  }
+
+  public static async updateDepartment(
+    department: CreateDepartment,
+    id: number,
+  ) {
+    const [result] = await this.pool.query(
+      `
+          UPDATE service
+          SET label       = ?,
+              id_user_lead_service = ?
+          WHERE id = ?
+      `,
+      [department.label, department.id_user_lead_service, id],
+    );
+    return result;
   }
 
   public static async deleteDepartment(idDepartment: number) {

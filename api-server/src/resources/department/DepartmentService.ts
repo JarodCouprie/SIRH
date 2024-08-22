@@ -9,6 +9,7 @@ import { DemandDTO } from "../demand/dto/DemandDTO.js";
 import { DemandRepository } from "../demand/DemandRepository.js";
 import { UserService } from "../user/UserService.js";
 import { updateUserDays } from "../demand/DemandService.js";
+import { AgencyList } from "../agency/dto/AgencyDTO";
 
 export class DepartmentService {
   public static async getDepartmentByAgency(idAgency: number) {
@@ -77,6 +78,25 @@ export class DepartmentService {
       );
     } else {
       return new ControllerResponse(500, "Impossible de créer le service");
+    }
+  }
+
+  public static async updateDepartment(idDepartment: number) {
+    try {
+      const department: CreateDepartment =
+        await DepartmentRepository.getDepartmentById(idDepartment);
+      const updateDepartment = await DepartmentRepository.updateDepartment(
+        department,
+        idDepartment,
+      );
+
+      return new ControllerResponse(
+        200,
+        "Adresse de l'agence modifiée",
+        updateDepartment,
+      );
+    } catch (error) {
+      return new ControllerResponse(500, "Impossible de modifier le service");
     }
   }
 

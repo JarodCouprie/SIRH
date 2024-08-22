@@ -40,6 +40,21 @@ router.post("/create/:id", verifyToken, async (req: Request, res: Response) => {
   });
 });
 
+router.post(
+  "/update-info/:id_department",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await DepartmentService.updateDepartment(
+      +req.params.id_department,
+      req,
+    );
+    res.status(code).json({
+      message,
+      data,
+    });
+  },
+);
+
 router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await DepartmentService.deleteDepartment(
     +req.params.id,

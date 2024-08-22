@@ -57,7 +57,7 @@ export const DepartmentInfo = () => {
       body: JSON.stringify(departmentUpdated),
     };
     await customFetcher(
-      `http://localhost:5000/api/department/update-info/${departmentUpdated.id}`,
+      `http://localhost:5000/api/service/update-info/${departmentUpdated.id}`,
       config,
     ).then((response) => {
       setDepartmentUpdated(response.data.data);

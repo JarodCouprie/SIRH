@@ -114,6 +114,18 @@ export class TeamService {
     }
   }
 
+  public static async editTeam(teamId: number, req: Request) {
+    try {
+      const ids_member = req.body;
+      await TeamRepository.editTeam(teamId, ids_member);
+
+      return new ControllerResponse(200, "");
+    } catch (error) {
+      logger.error(`Failed to edit the team. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to edit the team");
+    }
+  }
+
   public static async deleteTeam(teamId: number) {
     try {
       console.log(teamId);

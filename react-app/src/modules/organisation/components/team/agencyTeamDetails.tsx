@@ -34,6 +34,7 @@ import { MemberStatus } from "@/common/enum/MemberStatus.enum.ts";
 import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -42,6 +43,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import MultipleSelector from "@/components/ui/multiple-command.tsx";
+import { UserList } from "@/common/type/user/user-list.type.ts";
 
 export const AgencyTeamDetails = () => {
   const [team, setTeam] = useState<TeamModel>(new TeamModel());
@@ -99,6 +102,10 @@ export const AgencyTeamDetails = () => {
     }
   };
 
+  const refreshTeam = async () => {
+    await fetchTeam().then();
+  };
+
   return (
     <>
       <div>
@@ -122,12 +129,10 @@ export const AgencyTeamDetails = () => {
             </CardDescription>
           </div>
           <ConfirmDeleteItem team={team} navigate={navigate} />
-          <div className="flex justify-end">
-            <Button variant="callToAction">
-              <PlusIcon className="mr-2 size-4" />
-              Ajouter un membre
-            </Button>
-          </div>
+          <ConfirmCreateItem
+            members={members}
+            refreshTeam={() => refreshTeam()}
+          />
         </Card>
       </div>
       <div className="flex w-full gap-4 max-md:flex-col">
@@ -265,6 +270,110 @@ export function ConfirmDeleteItem({ team, navigate }: ConfirmDeleteItemProps) {
           <Button onClick={fetchDepartment} variant="destructive">
             Supprimer
           </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+interface ConfirmCreateItemProps {
+  members: TeamMembers[];
+  refreshTeam: () => void;
+}
+
+export function ConfirmCreateItem({
+  members,
+  refreshTeam,
+}: ConfirmCreateItemProps) {
+  const [users, setUsers] = useState<UserList[]>([]);
+
+  const { id_team } = useParams();
+
+  const membersToValue = (teamMembers: TeamMembers[]) => {
+    return teamMembers.map((member) => ({
+      label: `${member.member_firstname} ${member.member_lastname}`,
+      value: member.id_member,
+    }));
+  };
+
+  const [selectedMembers, setSelectedMembers] = useState(
+    membersToValue(members),
+  );
+
+  const userToValue = (userList: UserList[]) => {
+    return userList.map((user) => ({
+      label: `${user.firstname} ${user.lastname}`,
+      value: user.id,
+    }));
+  };
+
+  const fetchUsers = async () => {
+    await customFetcher(`http://localhost:5000/api/user`).then((response) => {
+      if (response.response.status !== 200) {
+        return;
+      }
+      setUsers(response.data.data.list);
+    });
+  };
+
+  useEffect(() => {
+    fetchUsers().then();
+    setSelectedMembers(membersToValue(members));
+  }, [members]);
+
+  const handleChange = (value: []) => {
+    setSelectedMembers(value);
+  };
+
+  const fetchMember = async () => {
+    const member = selectedMembers.map((member) => member.value);
+
+    const response = await customFetcher(
+      `http://localhost:5000/api/team/edit/${id_team}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(member),
+      },
+    );
+
+    if (response.response.status === 200) {
+      refreshTeam();
+    }
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="callToAction">
+          <PlusIcon className="mr-2 size-4" />
+          <span>Modifier équipe</span>
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            Modification des membres de l'équipe
+          </AlertDialogTitle>
+          <MultipleSelector
+            value={selectedMembers}
+            defaultOptions={userToValue(users)}
+            onChange={handleChange}
+            emptyIndicator={
+              <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                Aucun résultat trouvé.
+              </p>
+            }
+          />
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            onClick={() => {
+              setSelectedMembers(membersToValue(members));
+            }}
+          >
+            Annuler
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={fetchMember}>Modifier</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

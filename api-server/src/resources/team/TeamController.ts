@@ -35,6 +35,22 @@ router.post("/create", verifyToken, async (req: Request, res: Response) => {
     data,
   });
 });
+
+router.put(
+  "/edit/:id_team",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await TeamService.editTeam(
+      +req.params.id_team,
+      req,
+    );
+    res.status(code).json({
+      message,
+      data,
+    });
+  },
+);
+
 router.delete("/:id_team", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await TeamService.deleteTeam(
     +req.params.id_team,
