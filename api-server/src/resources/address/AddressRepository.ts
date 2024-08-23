@@ -1,5 +1,5 @@
 import { DatabaseClient } from "../../common/helper/DatabaseClient.js";
-import { UserAddress } from "../../common/model/Address.js";
+import { Address } from "../../common/model/Address.js";
 import { CreateOrUpdateAddressDTO } from "./dto/CreateOrUpdateAddressDTO.js";
 
 export class AddressRepository {
@@ -24,7 +24,7 @@ export class AddressRepository {
   }
 
   public static async updateAddress(
-    address: CreateOrUpdateAddressDTO | UserAddress,
+    address: CreateOrUpdateAddressDTO | Address,
     id: number,
   ) {
     const [result] = await this.pool.query(

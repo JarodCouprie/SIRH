@@ -1,8 +1,6 @@
-import {
-  DemandStatus,
-  DemandType,
-  ValidatedDemand,
-} from "../../../common/model/Demand.js";
+import { ValidatedDemand } from "../../../common/model/Demand.js";
+import { DemandStatus } from "../../../common/enum/DemandStatus";
+import { DemandType } from "../../../common/enum/DemandType";
 
 export class DemandValidatedDTO {
   id: number;
