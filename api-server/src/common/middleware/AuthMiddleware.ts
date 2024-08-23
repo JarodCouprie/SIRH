@@ -7,7 +7,7 @@ dotenv.config();
 
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.replace("Bearer ", "");
-  if (!token) return res.status(401).json({ error: "Access denied" });
+  if (!token) return res.status(401).json({ error: "Accès refusé" });
   try {
     (req as CustomRequest).token = <JwtPayload>(
       jwt.verify(token, String(process.env.ACCESS_TOKEN_SECRET))

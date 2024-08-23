@@ -7,7 +7,8 @@
     "dev-back": "node --watch --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
     "start": "tsc && node dist/index.js",
     "prettier": "prettier --write src/",
-    "test": "vitest --ui"
+    "test": "vitest",
+    "test-ui": "vitest --ui"
   },
   "author": "Jarod Couprie",
   "devDependencies": {
