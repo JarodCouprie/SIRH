@@ -1,8 +1,6 @@
-import {
-  Expense,
-  ExpenseStatus,
-  ExpenseType,
-} from "../../../common/model/Expense.js";
+import { Expense } from "../../../common/model/Expense.js";
+import { ExpenseType } from "../../../common/enum/ExpenseType";
+import { ExpenseStatus } from "../../../common/enum/ExpenseStatus";
 
 export class ExpenseListDTO {
   id: string;

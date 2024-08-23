@@ -1,3 +1,6 @@
+import { DemandStatus } from "../enum/DemandStatus";
+import { DemandType } from "../enum/DemandType";
+
 export class Demand {
   id: number;
   start_date: Date;
@@ -145,19 +148,4 @@ export class StatusDemand {
     this.id = id;
     this.status = status;
   }
-}
-
-export enum DemandType {
-  RTT = "RTT",
-  TT = "TT",
-  CA = "CA",
-  ABSENCE = "ABSENCE",
-  SICKNESS = "SICKNESS",
-}
-
-export enum DemandStatus {
-  ACCEPTED = "ACCEPTED",
-  WAITING = "WAITING",
-  DENIED = "DENIED",
-  DRAFT = "DRAFT",
 }

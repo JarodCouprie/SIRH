@@ -43,7 +43,6 @@ export class DepartmentService {
         id_user_lead_service,
         +idAgency,
       );
-      console.log(newDepartment);
       const createdDepartment =
         await DepartmentRepository.createDepartment(newDepartment);
 

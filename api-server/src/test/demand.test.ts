@@ -2,32 +2,37 @@ import { describe, expect, test } from "vitest";
 import {
   ConfirmDemand,
   Demand,
-  DemandStatus,
-  DemandType,
   RejectDemand,
   StatusDemand,
   ValidatedDemand,
 } from "../common/model/Demand";
+import { DemandStatus } from "../common/enum/DemandStatus";
+import { DemandType } from "../common/enum/DemandType";
+import { CreateDemand } from "../resources/demand/dto/CreateDemandDTO";
+import { DemandDTO } from "../resources/demand/dto/DemandDTO";
+import { DemandValidatedDTO } from "../resources/demand/dto/DemandValidatedDTO";
+import { EditDemandDTO } from "../resources/demand/dto/EditDemandDTO";
+
+const demand = new Demand(
+  1,
+  new Date("2024-07-12"),
+  new Date("2024-07-12"),
+  "motivation",
+  "justification",
+  new Date("2024-07-12"),
+  DemandStatus.DENIED,
+  DemandType.CA,
+  2,
+  3,
+  4,
+  "Paul",
+  "Dupont",
+  new Date("2024"),
+  "file_key",
+);
 
 describe("Demand models should be what we give it", () => {
   test("Test Demand Model", () => {
-    const demand = new Demand(
-      1,
-      new Date("2024-07-12"),
-      new Date("2024-07-12"),
-      "motivation",
-      "justification",
-      new Date("2024-07-12"),
-      DemandStatus.DENIED,
-      DemandType.CA,
-      2,
-      3,
-      4,
-      "Paul",
-      "Dupont",
-      new Date("2024"),
-      "file_key",
-    );
     expect(demand.id).toBe(1);
     expect(demand.start_date).toStrictEqual(new Date("2024-07-12"));
     expect(demand.end_date).toStrictEqual(new Date("2024-07-12"));
@@ -99,5 +104,46 @@ describe("Demand models should be what we give it", () => {
     const demand = new StatusDemand(787, DemandStatus.DRAFT);
     expect(demand.id).toBe(787);
     expect(demand.status).toStrictEqual(DemandStatus.DRAFT);
+  });
+  test("Test CreateDemand", () => {
+    const demand = new CreateDemand(
+      new Date("2023"),
+      new Date("2024"),
+      "motivation",
+      "status",
+      DemandType.ABSENCE,
+      5,
+      "file_key",
+      7,
+    );
+    expect(demand.file_key).toBe("file_key");
+    expect(demand.number_day).toBe(5);
+    expect(demand.number_day).not.toBe(54447);
+    expect(demand.file_key).toBe("file_key");
+    expect(demand.idOwner).toBe(7);
+  });
+  test("Test EditDemandDTO", () => {
+    const demand = new EditDemandDTO(
+      new Date("2023"),
+      new Date("2024"),
+      "motivation",
+      DemandType.ABSENCE,
+      5,
+      "key",
+      "status",
+    );
+    expect(demand.start_date).toStrictEqual(new Date("2023"));
+    expect(demand.end_date).toStrictEqual(new Date("2024"));
+    expect(demand.key).toBe("key");
+    expect(demand.number_day).toBe(5);
+    expect(demand.number_day).not.toBe(54447);
+  });
+  test("Test DemandDTO Model", () => {
+    const demandDTO = new DemandDTO(demand);
+    expect(demandDTO.id).toBe(1);
+  });
+  test("Test DemandValidatedDTO Model", () => {
+    const demandValidatedDTO = new DemandValidatedDTO(demand);
+    expect(demandValidatedDTO.id).toBe(1);
   });
 });

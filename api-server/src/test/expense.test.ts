@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { Expense, ExpenseStatus, ExpenseType } from "../common/model/Expense";
+import { Expense } from "../common/model/Expense";
 import { ExpenseListDTO } from "../resources/expense/dto/ExpenseListDTO";
 import { ExpenseAmountDateAndStatusDTO } from "../resources/expense/dto/ExpenseAmountDateAndStatusDTO";
-
-// https://vitest.dev/api/
+import { ExpenseType } from "../common/enum/ExpenseType";
+import { ExpenseStatus } from "../common/enum/ExpenseStatus";
 
 describe("Expense Model", () => {
   test("Test Expense Model With Only Mandatory Attributes Should Be Instance Of Expense And Values Equals", () => {
@@ -196,7 +196,7 @@ describe("ExpenseAmountDateAndStatusDTO", () => {
         ExpenseType.FOOD,
         500,
         "motivation",
-        new Date(),
+        new Date("2141"),
         new Date(),
         ExpenseStatus.WAITING,
         0,
@@ -205,7 +205,7 @@ describe("ExpenseAmountDateAndStatusDTO", () => {
       ),
     );
 
-    expect(expense.facturation_date).toEqual(new Date());
+    expect(expense.facturation_date).toStrictEqual(new Date("2141"));
     expect(expense.amount).toBe(500);
     expect(expense.status).toBe(ExpenseStatus.WAITING);
     expect(expense).toBeInstanceOf(ExpenseAmountDateAndStatusDTO);

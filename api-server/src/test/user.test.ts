@@ -1,33 +1,36 @@
-import { describe, expect, test } from "vitest";
+import { assert, describe, expect, test } from "vitest";
 import { CreateUser, ResetUserPassword, User } from "../common/model/User";
 import { RoleEnum } from "../common/enum/RoleEnum";
+import { UserDTO } from "../resources/user/dto/UserDTO";
+import { UserListDTO } from "../resources/user/dto/UserListDTO";
+
+const user: User = new User(
+  17,
+  "firstname",
+  "lastname",
+  "email",
+  "phone",
+  new Date("2024-07-12"),
+  true,
+  12,
+  19,
+  27,
+  "street",
+  "streetNumber",
+  "locality",
+  "zipcode",
+  27,
+  1,
+  "country",
+  "français",
+  [RoleEnum.USER],
+  "iban",
+  "bic",
+  "image_key",
+);
 
 describe("User models should be what we give him", () => {
   test("Test User Model", () => {
-    const user: User = new User(
-      17,
-      "firstname",
-      "lastname",
-      "email",
-      "phone",
-      new Date("2024-07-12"),
-      true,
-      12,
-      19,
-      27,
-      "street",
-      "streetNumber",
-      "locality",
-      "zipcode",
-      27,
-      1,
-      "country",
-      "français",
-      [RoleEnum.USER],
-      "iban",
-      "bic",
-      "image_key",
-    );
     expect(user.id).toBe(17);
     expect(user.firstname).toBe("firstname");
     expect(user.lastname).toBe("lastname");
@@ -64,7 +67,7 @@ describe("User models should be what we give him", () => {
       "iban",
       "bic",
     );
-    expect(user.firstname).toBe("firstname");
+    assert.equal(user.firstname, "firstname");
     expect(user.lastname).toBe("lastname");
     expect(user.email).toBe("email");
     expect(user.password).toBe("password");
@@ -83,5 +86,13 @@ describe("User models should be what we give him", () => {
     );
     expect(resetUserPassword.id).toBe(1);
     expect(resetUserPassword.password).toBe("laMaisonEstTouteVerte");
+  });
+  test("Test UserDTO", () => {
+    const userDTO = new UserDTO(user);
+    expect(user.id).toBe(17);
+  });
+  test("Test UserListDTO", () => {
+    const userDTO = new UserListDTO(user);
+    expect(user.id).toBe(17);
   });
 });

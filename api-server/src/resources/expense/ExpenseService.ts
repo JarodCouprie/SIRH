@@ -1,5 +1,5 @@
 import { ExpenseRepository } from "./ExpenseRepository.js";
-import { Expense, ExpenseStatus } from "../../common/model/Expense.js";
+import { Expense } from "../../common/model/Expense.js";
 import {
   ExpenseInvalidation,
   ExpenseListDTO,
@@ -10,6 +10,7 @@ import { logger } from "../../common/helper/Logger.js";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "./dto/ExpenseAmountDateAndStatusDTO.js";
 import { MinioClient } from "../../common/helper/MinioClient.js";
+import { ExpenseStatus } from "../../common/enum/ExpenseStatus";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
