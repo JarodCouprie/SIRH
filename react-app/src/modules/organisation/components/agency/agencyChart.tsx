@@ -31,8 +31,8 @@ export const AgencyChart: React.FC = () => {
     <div className="flex w-full flex-col gap-4">
       <AreaChartAgency
         data={agencyDataArea}
-        title="Absences à l'année"
-        description="Collaborateurs absents au cours de l'année actuelle"
+        title="Demandes d'absence à l'année"
+        description="Demandes des collaborateurs au cours de l'année actuelle"
         chartConfig={chartAreaConfig}
         colorData={"hsl(var(--chart-2))"}
         dataKey="count"

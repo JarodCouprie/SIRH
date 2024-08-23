@@ -4,12 +4,13 @@ import { AgencyRepository } from "../agency/AgencyRepository.js";
 import { logger } from "../../common/helper/Logger.js";
 import { DepartmentRepository } from "./DepartmentRepository.js";
 import { CreateDepartment, Department } from "../../common/model/Department.js";
-import { DepartmentDTO } from "./dto/DepartmentDTO.js";
+import { DepartmentDTO, EditDepartment } from "./dto/DepartmentDTO.js";
 import { DemandDTO } from "../demand/dto/DemandDTO.js";
 import { DemandRepository } from "../demand/DemandRepository.js";
 import { UserService } from "../user/UserService.js";
 import { updateUserDays } from "../demand/DemandService.js";
 import { AgencyList } from "../agency/dto/AgencyDTO";
+import request from "supertest";
 
 export class DepartmentService {
   public static async getDepartmentByAgency(idAgency: number) {
@@ -81,19 +82,25 @@ export class DepartmentService {
     }
   }
 
-  public static async updateDepartment(idDepartment: number) {
+  public static async updateDepartment(idDepartment: number, req: Request) {
     try {
-      const department: CreateDepartment =
+      const department: CreateDepartment = req.body;
+      await DepartmentRepository.updateDepartment(department, idDepartment);
+      const countMember =
+        await DepartmentRepository.getCountUserInTeamService(idDepartment);
+      const department_ =
         await DepartmentRepository.getDepartmentById(idDepartment);
-      const updateDepartment = await DepartmentRepository.updateDepartment(
-        department,
-        idDepartment,
-      );
+
+      if (!department_) {
+        return new ControllerResponse(401, "L'agence n'existe pas");
+      }
+
+      const departmentSend = new EditDepartment(department_, countMember);
 
       return new ControllerResponse(
         200,
         "Adresse de l'agence modifiée",
-        updateDepartment,
+        departmentSend,
       );
     } catch (error) {
       return new ControllerResponse(500, "Impossible de modifier le service");

@@ -23,3 +23,21 @@ export class DepartmentDTO {
     this.count_team = countMember;
   }
 }
+
+export class EditDepartment {
+  id: number;
+  label: string;
+  id_user_lead_service: number;
+  lead_service_lastname: string;
+  lead_service_firstname: string;
+  count_team: number;
+
+  constructor(department: Department, countMember: number) {
+    this.id = department.id;
+    this.label = department.label;
+    this.id_user_lead_service = department.id_user_lead_service;
+    this.lead_service_lastname = department.lead_service_lastname;
+    this.lead_service_firstname = department.lead_service_firstname;
+    this.count_team = countMember;
+  }
+}

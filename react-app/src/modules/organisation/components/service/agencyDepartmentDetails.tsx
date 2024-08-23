@@ -89,7 +89,10 @@ export const AgencyDepartmentDetails = () => {
       </div>
       <div className="grid w-full grid-cols-3 gap-4">
         <div className="col-span-1 flex flex-col gap-4 max-2xl:col-span-3">
-          <DepartmentInfo />
+          <DepartmentInfo
+            department={foundService}
+            setDepartment={setFoundService}
+          />
         </div>
         <div className="col-span-2 flex flex-col gap-4 max-2xl:col-span-3">
           <AgencyTeam />

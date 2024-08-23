@@ -1,7 +1,6 @@
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { DepartmentList } from "@/models/organisation/department/DepartmentList.model.ts";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,15 +21,39 @@ import {
   SelectValue,
 } from "@/components/ui/select.js";
 import { BsFillInfoSquareFill } from "react-icons/bs";
+import { DepartmentModel } from "@/models/organisation/department/Department.model.ts";
 
-export const DepartmentInfo = () => {
+interface DepartmentInfoDetailsProps {
+  department: DepartmentModel;
+  setDepartment: Dispatch<SetStateAction<DepartmentModel>>;
+}
+
+class DepartmentData {
+  label: string;
+  id_user_lead_service: number;
+  lead_service_firstname: string;
+  lead_service_lastname: string;
+  count_team: number;
+
+  constructor(department: DepartmentModel) {
+    this.label = department.label;
+    this.id_user_lead_service = department.id_user_lead_service;
+    this.lead_service_lastname = department.lead_service_lastname;
+    this.lead_service_firstname = department.lead_service_firstname;
+    this.count_team = department.count_team;
+  }
+}
+
+export const DepartmentInfo: React.FC<DepartmentInfoDetailsProps> = ({
+  department,
+  setDepartment,
+}) => {
   const { id_service } = useParams();
   const [departmentCanBeUpdated, setDepartmentCanBeUpdated] = useState(false);
   const [departmentUpdated, setDepartmentUpdated] = useState(
-    new DepartmentList(),
+    new DepartmentData(department),
   );
   const [users, setUsers] = useState<UserList[]>([]);
-
   const fetchDepartmentInfo = async () => {
     const response = await customFetcher(
       `http://localhost:5000/api/service/department/${id_service}`,
@@ -48,6 +71,7 @@ export const DepartmentInfo = () => {
   };
 
   const handleUpdateDepartment = () => {
+    setDepartmentUpdated(new DepartmentData(department));
     setDepartmentCanBeUpdated(!departmentCanBeUpdated);
   };
 
@@ -57,10 +81,10 @@ export const DepartmentInfo = () => {
       body: JSON.stringify(departmentUpdated),
     };
     await customFetcher(
-      `http://localhost:5000/api/service/update-info/${departmentUpdated.id}`,
+      `http://localhost:5000/api/service/update-info/${id_service}`,
       config,
     ).then((response) => {
-      setDepartmentUpdated(response.data.data);
+      setDepartment(response.data.data);
       setDepartmentCanBeUpdated(!departmentCanBeUpdated);
     });
   };
@@ -86,12 +110,12 @@ export const DepartmentInfo = () => {
     fetchUsers().then();
   }, []);
 
-  const userFields = (
+  const departmentFields = (
     <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
       <FieldRow title="Nom">{departmentUpdated.label}</FieldRow>
       <FieldRow title="Chef de service">
-        {departmentUpdated.lead_service_firstname} {""}{" "}
-        {departmentUpdated.lead_service_lastname}
+        {department.lead_service_firstname} {""}{" "}
+        {department.lead_service_lastname}
       </FieldRow>
       <FieldRow title="Nombre total de collaborateur">
         {departmentUpdated.count_team}
@@ -99,7 +123,7 @@ export const DepartmentInfo = () => {
     </CardContent>
   );
 
-  const userUpdating = (
+  const departmentUpdating = (
     <CardContent className="flex flex-col gap-4 py-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="label">Nom</Label>
@@ -114,7 +138,11 @@ export const DepartmentInfo = () => {
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="id_user_lead_service">Chef du service</Label>
-        <Select name="id_user_lead_service" onValueChange={handleSelectChange}>
+        <Select
+          name="id_user_lead_service"
+          value={departmentUpdated.id_user_lead_service.toString()}
+          onValueChange={handleSelectChange}
+        >
           <SelectTrigger className="p-6">
             <SelectValue placeholder="Chef du service" />
           </SelectTrigger>
@@ -151,7 +179,7 @@ export const DepartmentInfo = () => {
           )}
         </CardTitle>
       </CardHeader>
-      {departmentCanBeUpdated ? userUpdating : userFields}
+      {departmentCanBeUpdated ? departmentUpdating : departmentFields}
       {departmentCanBeUpdated && (
         <CardFooter className="justify-end">
           <Button

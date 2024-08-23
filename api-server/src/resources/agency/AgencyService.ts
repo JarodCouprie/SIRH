@@ -65,6 +65,12 @@ export class AgencyService {
 
   public static async getDemandGroupedByMonthData(req: Request) {
     const agencyData: any = await AgencyRepository.getDemandGroupedByMonth();
+    console.log(agencyData);
+    const weekData: any = await AgencyRepository.getDemandGroupedByWeek();
+    console.log(weekData);
+    const userAgency: any = await AgencyRepository.countUserInAgency(1);
+    console.log(userAgency);
+
     return new ControllerResponse(200, "", agencyData);
   }
 
@@ -160,7 +166,6 @@ export class AgencyService {
         return new ControllerResponse(401, "L'agence n'existe pas");
       }
       const agencyToSend = new AgencyList(agency);
-
       return new ControllerResponse<AgencyList>(
         200,
         "Adresse de l'agence modifiée",

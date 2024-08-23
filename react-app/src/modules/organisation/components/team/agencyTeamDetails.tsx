@@ -147,7 +147,7 @@ export const AgencyTeamDetails = () => {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Détails de la demande</CardTitle>
+              <CardTitle>Informations de l'équipe</CardTitle>
             </CardHeader>
             <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
               <FieldRow title="Nom de l'équipe">{team.label}</FieldRow>
