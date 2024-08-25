@@ -14,6 +14,27 @@ const upload = multer({
 dotenv.config();
 
 // Recupération des valeurs et données
+/**
+ * @swagger
+ * /api/expense/list/{type}:
+ *   get:
+ *     summary: Récupère les demandes de frais de l'utilisateur.
+ *     description: Récupère les demandes de frais de l'utilisateur selon l'ID passé par le JWT Token.
+ *     parameters:
+ *       - in: path
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Type de demande de frais
+ *     responses:
+ *       '200':
+ *         description: A successful response
+ *       '404':
+ *         description: Employee not found
+ *       '500':
+ *         description: Internal server error
+ */
 router.get("/list/:type", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } =
