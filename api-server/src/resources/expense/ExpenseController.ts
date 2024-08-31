@@ -62,7 +62,7 @@ dotenv.config();
  *                       format: date
  *                       description: date de facturation de la demande
  *                      status:
- *                        type: ExpenseStatus
+ *                        type: string
  *                        description: Status actuel de la demande (REFUNDED, NOT_REFUNDED, WAITING)
  *                      id_owner:
  *                        type: integer
