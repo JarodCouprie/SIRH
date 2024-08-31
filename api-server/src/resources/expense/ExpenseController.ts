@@ -28,12 +28,75 @@ dotenv.config();
  *         required: true
  *         description: Type de demande de frais
  *     responses:
- *       '200':
- *         description: A successful response
- *       '404':
- *         description: Employee not found
- *       '500':
- *         description: Internal server error
+ *       200:
+ *         description: Retourne les demandes de frais souhaitées
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 expenses:
+ *                   type: array
+ *                   description: Liste des demandes de frais retrouvées
+ *                   items:
+ *                    type: object
+ *                    properties:
+ *                      id:
+ *                        type: string
+ *                        description: identifiant de l'expense
+ *                      type:
+ *                        type: ExpenseType
+ *                        description: Type de la demande (TRAVEL, COMPENSATION, FOOD, HOUSING)
+ *                      amount:
+ *                        type: integer
+ *                        description : montant en euro de la demande
+ *                      motivation:
+ *                        type: string
+ *                        description: Justification et explication du contexte de la demande
+ *                      created_at:
+ *                        type: string
+ *                        format: date
+ *                        descirption: date de création de la demande
+ *                      facturation_date:
+ *                       type: string
+ *                       format: date
+ *                       description: date de facturation de la demande
+ *                      status:
+ *                        type: ExpenseStatus
+ *                        description: Status actuel de la demande (REFUNDED, NOT_REFUNDED, WAITING)
+ *                      id_owner:
+ *                        type: integer
+ *                        description: id de l'utilisateur propriétaire de la demande
+ *                      fileUrl:
+ *                        type: string
+ *                        description: lien vers le fichier joint à la demande
+ *                        required: false
+ *                      id_validator:
+ *                        type: integer
+ *                        description: id de l'utilisateur ayant validé la demande s'il y en a un
+ *                        required: false
+ *                      justification:
+ *                        type: string
+ *                        description: justification du choix en cas de refus de la demande
+ *                      validator_firstname:
+ *                        type: string
+ *                        description: prénom du validateur
+ *                        required: false
+ *                      validator_lastname:
+ *                        type: string
+ *                        description: prénom du validateur
+ *                        required: false
+ *                      validated_at:
+ *                        type: string
+ *                        format: date
+ *                        description: date de validation
+ *                        required: false
+ *
+ *                 totalExpensesCount:
+ *                   type: integer
+ *                   description: Nombre de demandes trouvées
+ *       500:
+ *         description: Échec de la récupération de la demande
  */
 router.get("/list/:type", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
@@ -196,6 +259,45 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
+/**
+ * @swagger
+ * /api/expense/:
+ *   post:
+ *     summary: Créer une nouvelle demande de frais
+ *     description: Créer une nouvelle demande de frais au nom de l'utilisateur connecté
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         expense:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                type:
+ *                  type: ExpenseType
+ *                  description: Type de la demande (TRAVEL, COMPENSATION, FOOD, HOUSING)
+ *                amount:
+ *                  type: integer
+ *                  description : montant en euro de la demande
+ *                motivation:
+ *                  type: string
+ *                  description: Justification et explication du contexte de la demande
+ *                facturation_date:
+ *                 type: string
+ *                 format: date
+ *                 description: date de facturation de la demande
+ *                status:
+ *                  type: ExpenseStatus
+ *                  description: Status actuel de la demande (REFUNDED, NOT_REFUNDED, WAITING)
+ *                fileUrl:
+ *                  type: string
+ *                  description: lien vers le fichier joint à la demande
+ *                  required: false
+ *     responses:
+ *       200:
+ *         description: Création effectuée avec succès
+ *       500:
+ *         description: Échec de la création de la demande
+ */
 router.post(
   "/",
   verifyToken,
