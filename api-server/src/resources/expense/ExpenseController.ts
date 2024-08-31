@@ -45,7 +45,7 @@ dotenv.config();
  *                        type: string
  *                        description: identifiant de l'expense
  *                      type:
- *                        type: ExpenseType
+ *                        type: string
  *                        description: Type de la demande (TRAVEL, COMPENSATION, FOOD, HOUSING)
  *                      amount:
  *                        type: integer
@@ -273,7 +273,7 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
  *             type: object
  *             properties:
  *                type:
- *                  type: ExpenseType
+ *                  type: string
  *                  description: Type de la demande (TRAVEL, COMPENSATION, FOOD, HOUSING)
  *                amount:
  *                  type: integer
@@ -286,7 +286,7 @@ router.put("/confirm/:id", verifyToken, async (req: Request, res: Response) => {
  *                 format: date
  *                 description: date de facturation de la demande
  *                status:
- *                  type: ExpenseStatus
+ *                  type: string
  *                  description: Status actuel de la demande (REFUNDED, NOT_REFUNDED, WAITING)
  *                fileUrl:
  *                  type: string
