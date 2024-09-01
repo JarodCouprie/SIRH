@@ -5,8 +5,8 @@ export class Agency {
   streetNumber: string;
   locality: string;
   zipcode: string;
-  lat: string;
-  lng: string;
+  lat: number;
+  lng: number;
 
   constructor(
     id: number,
@@ -15,8 +15,8 @@ export class Agency {
     streetNumber: string,
     locality: string,
     zipcode: string,
-    lat: string,
-    lng: string,
+    lat: number,
+    lng: number,
   ) {
     this.id = id;
     this.label = label;

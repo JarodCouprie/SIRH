@@ -3,7 +3,6 @@ import {
   ExpenseStatus,
   ExpenseType,
 } from "@/models/ExpenseModel.ts";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { MdOutlineEuroSymbol } from "react-icons/md";
 import { FaBed, FaCar, FaUtensils } from "react-icons/fa";
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
@@ -96,9 +95,6 @@ export function ExpenseListCard(props: any) {
         )}
       </TableCell>
       <TableCell className="text-left">{statusBadge}</TableCell>
-      <TableCell className="w-10 px-4">
-        <DotsVerticalIcon className="size-7 cursor-pointer" />
-      </TableCell>
     </TableRow>
   );
 }

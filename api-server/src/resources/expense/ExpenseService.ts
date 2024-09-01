@@ -1,5 +1,5 @@
 import { ExpenseRepository } from "./ExpenseRepository.js";
-import { Expense, ExpenseStatus } from "../../common/model/Expense.js";
+import { Expense } from "../../common/model/Expense.js";
 import {
   ExpenseInvalidation,
   ExpenseListDTO,
@@ -10,6 +10,7 @@ import { logger } from "../../common/helper/Logger.js";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "./dto/ExpenseAmountDateAndStatusDTO.js";
 import { MinioClient } from "../../common/helper/MinioClient.js";
+import { ExpenseStatus } from "../../common/enum/ExpenseStatus";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
@@ -26,14 +27,18 @@ export class ExpenseService {
             +limit,
             type,
           );
+        const expensesCount =
+          await ExpenseRepository.getExpensesCountByTypeAndUserId(type, userId);
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
         );
-        return new ControllerResponse<ExpenseListDTO[]>(
-          200,
-          "",
-          expensesListDto,
-        );
+
+        const data = {
+          expenses: expensesListDto,
+          totalExpensesCount: expensesCount,
+        };
+
+        return new ControllerResponse(200, "", data);
       }
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesValuesByUserId(
@@ -41,10 +46,18 @@ export class ExpenseService {
           +offset,
           +limit,
         );
+      const expensesCount =
+        await ExpenseRepository.getExpensesCountByUserId(userId);
       const expensesListDto: ExpenseListDTO[] = expenses.map(
         (expense: Expense) => new ExpenseListDTO(expense),
       );
-      return new ControllerResponse<ExpenseListDTO[]>(200, "", expensesListDto);
+
+      const data = {
+        expenses: expensesListDto,
+        totalExpensesCount: expensesCount,
+      };
+
+      return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get expenses");
@@ -92,23 +105,32 @@ export class ExpenseService {
             +limit,
             type,
           );
+        const expensesCount =
+          await ExpenseRepository.getExpensesCountByType(type);
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
         );
-        return new ControllerResponse<ExpenseListDTO[]>(
-          200,
-          "",
-          expensesListDto,
-        );
+        const data = {
+          expenses: expensesListDto,
+          totalExpensesCount: expensesCount,
+        };
+
+        return new ControllerResponse(200, "", data);
       }
       const expenses: Expense[] = await ExpenseRepository.getExpensesValues(
         +offset,
         +limit,
       );
+      const expensesCount = await ExpenseRepository.getExpensesCount();
       const expensesListDto: ExpenseListDTO[] = expenses.map(
         (expense: Expense) => new ExpenseListDTO(expense),
       );
-      return new ControllerResponse<ExpenseListDTO[]>(200, "", expensesListDto);
+
+      const data = {
+        expenses: expensesListDto,
+        totalExpensesCount: expensesCount,
+      };
+      return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error in Service: ${error}`);
       return new ControllerResponse(500, "Failed to get expenses");

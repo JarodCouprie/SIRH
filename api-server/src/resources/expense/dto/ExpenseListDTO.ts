@@ -1,8 +1,6 @@
-import {
-  Expense,
-  ExpenseStatus,
-  ExpenseType,
-} from "../../../common/model/Expense.js";
+import { Expense } from "../../../common/model/Expense.js";
+import { ExpenseType } from "../../../common/enum/ExpenseType";
+import { ExpenseStatus } from "../../../common/enum/ExpenseStatus";
 
 export class ExpenseListDTO {
   id: string;
@@ -16,9 +14,9 @@ export class ExpenseListDTO {
   fileUrl?: string;
   id_validator: number;
   justification: string;
-  validator_firstname: string;
-  validator_lastname: string;
-  validated_at: Date;
+  validator_firstname?: string;
+  validator_lastname?: string;
+  validated_at?: Date;
 
   constructor(expense: Expense, url?: string) {
     this.id = expense.id;

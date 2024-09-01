@@ -1,15 +1,15 @@
 import { Agency } from "../../../common/model/Agency.js";
-import { AgencyAddress } from "../../../common/model/Address.js";
+import { Address } from "../../../common/model/Address";
 
 export class AgencyList {
   id: number;
   label: string;
-  address: AgencyAddress;
+  address: Address;
 
   constructor(agency: Agency) {
     this.id = agency.id;
     this.label = agency.label;
-    this.address = new AgencyAddress(agency);
+    this.address = new Address(agency);
   }
 }
 
@@ -20,8 +20,8 @@ export class AgencyDTO {
   streetNumber: string;
   locality: string;
   zipcode: string;
-  lat: string;
-  lng: string;
+  lat: number;
+  lng: number;
 
   constructor(agency: Agency) {
     this.id = agency.id;
@@ -38,8 +38,8 @@ export class AgencyDTO {
 export class AgencyCoord {
   id: number;
   label: string;
-  lat: string;
-  lng: string;
+  lat: number;
+  lng: number;
 
   constructor(agency: Agency) {
     this.id = agency.id;

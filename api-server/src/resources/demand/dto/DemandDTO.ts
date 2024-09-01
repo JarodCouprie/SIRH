@@ -1,8 +1,6 @@
-import {
-  Demand,
-  DemandType,
-  DemandStatus,
-} from "../../../common/model/Demand.js";
+import { Demand } from "../../../common/model/Demand.js";
+import { DemandStatus } from "../../../common/enum/DemandStatus";
+import { DemandType } from "../../../common/enum/DemandType";
 
 export class DemandDTO {
   id: number;

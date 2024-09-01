@@ -1,9 +1,10 @@
 import { DatabaseClient } from "../../common/helper/DatabaseClient.js";
-import { Expense, ExpenseStatus } from "../../common/model/Expense.js";
+import { Expense } from "../../common/model/Expense.js";
 import {
   ExpenseInvalidation,
   ExpenseValidation,
 } from "./dto/ExpenseListDTO.js";
+import { ExpenseStatus } from "../../common/enum/ExpenseStatus";
 
 export class ExpenseRepository {
   private static pool = DatabaseClient.mysqlPool;
