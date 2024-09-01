@@ -40,6 +40,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
+import io from "socket.io-client";
+import { useEffect, useState } from "react";
+
+const socket = io("http://localhost:4000");
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
@@ -54,6 +58,20 @@ export function UserMenu() {
     setSystemTheme();
   };
   const localTheme = localStorage.theme || "dark";
+
+  const [notifications, setNotifications] = useState(0);
+
+  useEffect(() => {
+    socket.on("notification", ({ data }) => {
+      console.log("Notification reçue:", data);
+      setNotifications(+data.toString().slice(-1));
+    });
+
+    return () => {
+      socket.off("notification");
+    };
+  }, []);
+
   return (
     <div className="border-t border-gray-700 p-2">
       <DropdownMenu>
@@ -63,7 +81,7 @@ export function UserMenu() {
             className="flex w-full justify-between gap-2 outline-none hover:bg-gray-700"
           >
             <div className="flex w-full items-center gap-2">
-              <Avatar className="size-8">
+              <Avatar className="relative size-8">
                 <AvatarImage
                   src={currentUser?.avatar_url}
                   alt={`avatar image of ${currentUser?.firstname} ${currentUser?.lastname}`}
@@ -80,7 +98,9 @@ export function UserMenu() {
                 <span className="text-xs text-gray-300">Connecté</span>
               </div>
             </div>
-            <MixerVerticalIcon className="size-6 text-gray-300" />
+            <div>
+              <MixerVerticalIcon className="size-6 text-gray-300" />
+            </div>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
@@ -100,8 +120,11 @@ export function UserMenu() {
             <NavLink to="/profile/notifications">
               <DropdownMenuItem>
                 Notifications
-                <DropdownMenuShortcut>
+                <DropdownMenuShortcut className="relative">
                   <BellIcon />
+                  <div className="absolute -right-2 -top-2 grid size-4 place-items-center rounded-full bg-red-600 text-center text-white">
+                    {notifications}
+                  </div>
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
             </NavLink>

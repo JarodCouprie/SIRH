@@ -13,6 +13,9 @@ import userProfile from "./resources/userProfile/UserProfileController.js";
 import notification from "./resources/notification/NotificationController.js";
 import cors from "cors";
 import helmet from "helmet";
+import { Server } from "socket.io";
+import { getIo, initSocket } from "./common/helper/Socket";
+import { NotificationSender } from "./common/helper/NotificationSender";
 
 dotenv.config();
 
@@ -22,6 +25,12 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
+
+initSocket();
+
+setInterval(() => {
+  NotificationSender.send(Date.now());
+}, 2000);
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
