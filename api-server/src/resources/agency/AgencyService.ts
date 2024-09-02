@@ -7,6 +7,9 @@ import { logger } from "../../common/helper/Logger.js";
 import { AgencyRepository } from "./AgencyRepository.js";
 import { AgencyCoord, AgencyDTO, AgencyList } from "./dto/AgencyDTO.js";
 import { AgencyEntity } from "../../common/entity/agency/agency.entity.js";
+import { DemandRepository } from "../demand/DemandRepository.js";
+import { UserService } from "../user/UserService.js";
+import { updateUserDays } from "../demand/DemandService.js";
 
 export class AgencyService {
   public static async getAgency(req: Request) {
@@ -62,6 +65,12 @@ export class AgencyService {
 
   public static async getDemandGroupedByMonthData(req: Request) {
     const agencyData: any = await AgencyRepository.getDemandGroupedByMonth();
+    console.log(agencyData);
+    const weekData: any = await AgencyRepository.getDemandGroupedByWeek();
+    console.log(weekData);
+    const userAgency: any = await AgencyRepository.countUserInAgency(1);
+    console.log(userAgency);
+
     return new ControllerResponse(200, "", agencyData);
   }
 
@@ -157,7 +166,6 @@ export class AgencyService {
         return new ControllerResponse(401, "L'agence n'existe pas");
       }
       const agencyToSend = new AgencyList(agency);
-
       return new ControllerResponse<AgencyList>(
         200,
         "Adresse de l'agence modifiée",
@@ -169,6 +177,21 @@ export class AgencyService {
         500,
         "Impossible de modifier l'adresse de l'utilisateur",
       );
+    }
+  }
+
+  public static async deleteAgency(id: number) {
+    try {
+      const agency: any = await AgencyRepository.getAgencyById(+id);
+
+      if (!agency) {
+        return new ControllerResponse(404, "pas d'agence");
+      }
+      await AgencyRepository.deleteAgency(+id);
+      return new ControllerResponse(200, "");
+    } catch (error) {
+      logger.error(`Failed to delete the agency. Error: ${error}`);
+      return new ControllerResponse(500, "Failed to delete the agency");
     }
   }
 }

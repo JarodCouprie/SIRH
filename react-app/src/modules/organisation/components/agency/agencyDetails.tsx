@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { AgencyAddress } from "@/modules/organisation/components/agencyAddress.js";
+import { AgencyAddress } from "@/modules/organisation/components/agency/agencyAddress.js";
 import { AgencyModel } from "@/models/organisation/agency/Agency.model.js";
-import { AgencyChart } from "@/modules/organisation/components/agencyChart.js";
+import { AgencyChart } from "@/modules/organisation/components/agency/agencyChart.js";
 
 interface AgencyDetailsProps {
   agency: AgencyModel;

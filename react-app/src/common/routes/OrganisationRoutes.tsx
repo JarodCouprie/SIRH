@@ -2,7 +2,9 @@ import { Organisation } from "@/modules/organisation/Organisation.tsx";
 import { AgencyCreate } from "@/modules/organisation/pages/AgencyCreate.js";
 import { Agency } from "@/modules/organisation/pages/Agency.js";
 import { AgencyDepartmentCreate } from "@/modules/organisation/components/service/agencyDepartmentCreate.js";
-import { AgencyTeamCreate } from "@/modules/organisation/components/service/agencyTeamCreate.js";
+import { AgencyTeamCreate } from "@/modules/organisation/components/team/agencyTeamCreate.js";
+import { AgencyDepartmentDetails } from "@/modules/organisation/components/service/agencyDepartmentDetails.js";
+import { AgencyTeamDetails } from "@/modules/organisation/components/team/agencyTeamDetails.tsx";
 
 export const organisationRoutes = {
   path: "organisation",
@@ -14,24 +16,53 @@ export const organisationRoutes = {
           path: "",
           element: <Organisation />,
         },
+
         {
           path: "agency/create",
           element: <AgencyCreate />,
         },
         {
-          path: "agency/:id",
+          path: "agency/:id_agency",
           children: [
             {
               path: "",
               element: <Agency />,
             },
             {
-              path: "service/create",
-              element: <AgencyDepartmentCreate />,
-            },
-            {
-              path: "team/create",
-              element: <AgencyTeamCreate />,
+              path: "service",
+              children: [
+                {
+                  path: "create",
+                  element: <AgencyDepartmentCreate />,
+                },
+                {
+                  path: "details",
+                  children: [
+                    {
+                      path: ":id_service",
+                      children: [
+                        {
+                          path: "",
+                          element: <AgencyDepartmentDetails />,
+                        },
+                        {
+                          path: "team",
+                          children: [
+                            {
+                              path: "create",
+                              element: <AgencyTeamCreate />,
+                            },
+                            {
+                              path: "details/:id_team",
+                              element: <AgencyTeamDetails />,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },

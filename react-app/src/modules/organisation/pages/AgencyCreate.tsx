@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button.js";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label.js";
 import React, { useState } from "react";
-import { CreateOrganisationFormDataModel } from "@/models/organisation/CreateOrganisationFormData.model.js";
+import { CreateOrganisationFormDataModel } from "@/models/organisation/CreateOrganisationFormData.model.ts";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
 
 // Définir une interface pour les erreurs

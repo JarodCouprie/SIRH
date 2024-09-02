@@ -112,7 +112,7 @@ CREATE TABLE team
     id_service        BIGINT        NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_user_lead_team) REFERENCES users (id),
-    FOREIGN KEY (id_service) REFERENCES service (id)
+    FOREIGN KEY (id_service) REFERENCES service (id) ON DELETE CASCADE
 );
 
 CREATE TABLE belong_team
@@ -120,7 +120,7 @@ CREATE TABLE belong_team
     id_team BIGINT,
     id_user BIGINT,
     PRIMARY KEY (id_team, id_user),
-    FOREIGN KEY (id_team) REFERENCES team (id),
+    FOREIGN KEY (id_team) REFERENCES team (id) ON DELETE CASCADE,
     FOREIGN KEY (id_user) REFERENCES users (id)
 );
 
