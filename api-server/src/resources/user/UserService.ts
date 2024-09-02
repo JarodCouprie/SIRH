@@ -38,7 +38,7 @@ export class UserService {
       logger.error(`Failed to get users. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Impossible de récupérer la liste des utilisateurs",
+        "Impossible de récupérer la liste des collaborateurs",
       );
     }
   }
@@ -69,7 +69,7 @@ export class UserService {
       logger.error(`Failed to get user list. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Impossible de récupérer la liste des utilisateurs",
+        "Impossible de récupérer la liste des collaborateurs",
       );
     }
   }

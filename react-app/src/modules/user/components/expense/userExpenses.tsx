@@ -36,6 +36,7 @@ import { UserModel } from "@/models/user/User.model.js";
 import { UserRejectExpense } from "@/modules/user/components/expense/userRejectExpense.js";
 import { UserConfirmExpense } from "@/modules/user/components/expense/userConfirmExpense.js";
 import { useNavigate } from "react-router-dom";
+import { Card } from "@/components/ui/card.js";
 
 interface UserExpenseProps {
   user: UserModel;
@@ -143,7 +144,7 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
 
   return (
     <>
-      <div className="rounded pt-4">
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -231,46 +232,46 @@ export const UserExpenses: React.FC<UserExpenseProps> = ({ user }) => {
             )}
           </TableBody>
         </Table>
-        <div className="flex w-full justify-between py-2">
-          <div className="flex items-center gap-2">
-            <Label>Demande de frais par page</Label>
-            <Select
-              onValueChange={(value) => handlePageSize(value)}
-              defaultValue={pageSize.toString()}
-            >
-              <SelectTrigger className="w-fit">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-950 dark:text-gray-100">
-              {`${1 + pageSize * (pageNumber - 1)} - ${
-                expenseList.length + pageSize * (pageNumber - 1)
-              } sur ${totalData}`}
-            </span>
-            <Button
-              variant="ghost"
-              onClick={handlePreviousPageNumber}
-              disabled={pageNumber === 1}
-            >
-              <CaretLeftIcon />
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={handleNextPageNumber}
-              disabled={pageSize * pageNumber >= totalData}
-            >
-              <CaretRightIcon />
-            </Button>
-          </div>
+      </Card>
+      <div className="flex w-full justify-between py-2">
+        <div className="flex items-center gap-2">
+          <Label>Demande de frais par page</Label>
+          <Select
+            onValueChange={(value) => handlePageSize(value)}
+            defaultValue={pageSize.toString()}
+          >
+            <SelectTrigger className="w-fit">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-950 dark:text-gray-100">
+            {`${expenseList.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${
+              expenseList.length + pageSize * (pageNumber - 1)
+            } sur ${totalData}`}
+          </span>
+          <Button
+            variant="ghost"
+            onClick={handlePreviousPageNumber}
+            disabled={pageNumber === 1}
+          >
+            <CaretLeftIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleNextPageNumber}
+            disabled={pageSize * pageNumber >= totalData}
+          >
+            <CaretRightIcon />
+          </Button>
         </div>
       </div>
     </>
