@@ -30,6 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 import { Badge } from "@/components/ui/badge.tsx";
 import { UserList } from "@/common/type/user/user-list.type.ts";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { Card } from "@/components/ui/card";
 
 export function Users() {
   const [users, setUsers] = useState<UserList[]>([]);
@@ -89,8 +90,8 @@ export function Users() {
   };
 
   const usersTable = (
-    <MainRoot title="Utilisateurs" action={newUser}>
-      <div className="rounded border border-slate-700">
+    <MainRoot title="Collaborateurs" action={newUser}>
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -110,7 +111,10 @@ export function Users() {
                 >
                   <TableCell className="flex gap-2 font-medium">
                     <Avatar>
-                      <AvatarImage src={user?.avatar_url} />
+                      <AvatarImage
+                        src={user?.avatar_url}
+                        alt={`avatar image of ${user?.firstname} ${user?.lastname}`}
+                      />
                       <AvatarFallback>
                         {user.firstname?.charAt(0)}
                         {user.lastname?.charAt(0)}
@@ -151,15 +155,15 @@ export function Users() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
-          <Label>Utilisateurs par page</Label>
+          <Label>Collaborateurs par page</Label>
           <Select
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
           >
-            <SelectTrigger className="w-fit">
+            <SelectTrigger className="w-fit" aria-label="select page size">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -173,12 +177,13 @@ export function Users() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-950 dark:text-gray-100">
-            {`${1 + pageSize * (pageNumber - 1)} - ${users.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+            {`${users.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${users.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
           </span>
           <Button
             variant="ghost"
             onClick={handlePreviousPageNumber}
             disabled={pageNumber === 1}
+            aria-label="previous page"
           >
             <CaretLeftIcon />
           </Button>
@@ -186,6 +191,7 @@ export function Users() {
             variant="ghost"
             onClick={handleNextPageNumber}
             disabled={pageSize * pageNumber >= totalData}
+            aria-label="next page"
           >
             <CaretRightIcon />
           </Button>

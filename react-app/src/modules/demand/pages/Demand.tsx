@@ -42,6 +42,7 @@ import { useCurrentUser } from "@/common/hooks/useCurrentUser.js";
 import { DemandStatus } from "@/common/enum/DemandStatus.enum.js";
 import { DemandType } from "@/common/enum/DemandType.enum.js";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { Card } from "@/components/ui/card";
 
 export function Demand() {
   const [demandList, setDemandList] = useState<DemandList[]>([]);
@@ -87,11 +88,10 @@ export function Demand() {
   ) => {
     try {
       const response = await customFetcher(
-        "http://localhost:5000/api/demand?" +
+        `http://localhost:5000/api/demand/list/${type || "All"}?` +
           new URLSearchParams({
             pageSize: pageSize.toString() || "10",
             pageNumber: pageNumber.toString() || "1",
-            type: type || "",
           }),
       );
       if (response.response.status === 200) {
@@ -183,7 +183,7 @@ export function Demand() {
 
   const tableDemand = (
     <>
-      <div className="rounded pt-4">
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -240,7 +240,7 @@ export function Demand() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
           <Label>Demandes par page</Label>
@@ -262,7 +262,7 @@ export function Demand() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-950 dark:text-gray-100">
-            {`${1 + pageSize * (pageNumber - 1)} - ${demandList.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+            {`${demandList.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${demandList.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
           </span>
           <Button
             variant="ghost"
@@ -286,7 +286,7 @@ export function Demand() {
   return (
     <MainRoot title="Demandes" action={newDemand}>
       <DemandCard />
-      <div className="py-4">
+      <div className="py-8">
         <Tabs defaultValue="general">
           <TabsList className="flex flex-wrap">
             <TabsTrigger value="general" onClick={() => handleFilter()}>

@@ -25,7 +25,9 @@ export const Profile = () => {
           <span className="text-3xl font-bold text-gray-950 dark:text-slate-200">
             {currentUser?.firstname} {currentUser?.lastname}
           </span>
-          <span className="text-gray-500">{currentUser?.email}</span>
+          <span className="text-gray-950 dark:text-gray-300">
+            {currentUser?.email}
+          </span>
         </div>
       </div>
       <div className="grid w-full grid-cols-3 gap-4">

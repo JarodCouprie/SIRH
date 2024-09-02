@@ -142,8 +142,10 @@ export const AgencyAddress: React.FC<AgencyAddressProps> = ({
               Annuler
             </Button>
           ) : (
-            <Button variant="callToAction" onClick={handleUpdateAgency}>
-              Modifier
+            <Button variant="ghost" onClick={handleUpdateAgency}>
+              <span className="text-slate-950 dark:text-slate-50">
+                Modifier
+              </span>
             </Button>
           )}
         </CardTitle>

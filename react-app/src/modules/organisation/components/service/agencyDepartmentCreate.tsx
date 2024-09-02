@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Label } from "@/components/ui/label.js";
 import React, { useState, useEffect } from "react";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { CreateDepartmentAgencyFormDataModel } from "@/models/organisation/CreateDepartmentAgencyFormData.model.js";
+import { CreateDepartmentAgencyFormDataModel } from "@/models/organisation/department/CreateDepartmentAgencyFormData.model.ts";
 import { UserList } from "@/common/type/user/user-list.type.js";
 import {
   Select,
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select.js";
 
 export const AgencyDepartmentCreate = () => {
-  const { id } = useParams();
+  const { id_agency } = useParams();
   const [service, setService] = useState(
     new CreateDepartmentAgencyFormDataModel(),
   );
@@ -44,12 +44,12 @@ export const AgencyDepartmentCreate = () => {
       body: JSON.stringify(service),
     };
     const newAgencyFetch = await customFetcher(
-      `http://localhost:5000/api/service/create/${id}`,
+      `http://localhost:5000/api/service/create/${id_agency}`,
       config,
     );
 
     if (newAgencyFetch.response.status === 201) {
-      return navigate("/organisation");
+      return navigate(`/organisation/agency/${id_agency}`);
     }
   };
 

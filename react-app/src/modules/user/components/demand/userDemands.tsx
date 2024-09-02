@@ -27,6 +27,7 @@ import { UserConfirmDemand } from "@/modules/user/components/demand/userConfirmD
 import { DemandStatus } from "@/common/enum/DemandStatus.enum.js";
 import { getDemandBadge } from "@/modules/demand/components/demandBadge.js";
 import { DemandListLabel } from "@/modules/demand/components/demandListLabel.js";
+import { Card } from "@/components/ui/card";
 
 interface UserDemandProps {
   user: UserModel;
@@ -84,7 +85,7 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
 
   return (
     <>
-      <div className="rounded pt-4">
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
@@ -169,7 +170,7 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
           <Label>Demandes par page</Label>
@@ -191,7 +192,7 @@ export const UserDemands: React.FC<UserDemandProps> = ({ user }) => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-950 dark:text-gray-100">
-            {`${1 + pageSize * (pageNumber - 1)} - ${
+            {`${demandList.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${
               demandList.length + pageSize * (pageNumber - 1)
             } sur ${totalData}`}
           </span>

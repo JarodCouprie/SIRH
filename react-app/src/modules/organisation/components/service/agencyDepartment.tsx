@@ -12,7 +12,7 @@ import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button.js";
 import { useNavigate } from "react-router-dom";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
-import { DepartmentList } from "@/models/organisation/DepartmentList.model.js";
+import { DepartmentList } from "@/models/organisation/department/DepartmentList.model.ts";
 import { Label } from "@/components/ui/label.js";
 import {
   Select,
@@ -22,6 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.js";
+import { Card } from "@/components/ui/card";
+import { GrGroup } from "react-icons/gr";
 
 interface AgencyDetailsProps {
   agency: AgencyModel;
@@ -69,54 +71,64 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
     navigate("service/create");
   };
 
+  const handleClick = (id_service: number) => {
+    navigate(`service/details/${id_service}`);
+  };
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-end pb-4">
         <Button variant="callToAction" onClick={handleClickCreate}>
           <PlusIcon className="mr-2 size-4" />
-          Créer un département
+          Créer un service
         </Button>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-left">Service</TableHead>
-            <TableHead className="text-left">Collaborateur</TableHead>
-            <TableHead className="text-left">Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {departmentList.length === 0 ? (
+      <Card>
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
-                Aucun département trouvé
-              </TableCell>
+              <TableHead className="text-left">Service</TableHead>
+              <TableHead className="text-left">Chef de service</TableHead>
             </TableRow>
-          ) : (
-            departmentList.map((department: DepartmentList) => (
-              <TableRow
-                key={department.id}
-                className="hover:cursor-pointer"
-                //onClick={() => handleClick(department.id)}
-              >
-                <TableCell className="flex gap-2 text-left">
-                  {department.label}
-                </TableCell>
-                <TableCell className="text-left">
-                  {department.id_user_lead_service}
-                </TableCell>
-                <TableCell className={`text-left`}>
-                  {/* {getClassForStatus(department.status)} */}
-                  {department.minimum_users}
+          </TableHeader>
+          <TableBody>
+            {departmentList.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={2} className="h-24 text-center">
+                  <div className="flex flex-col gap-2">
+                    <span>Aucun service trouvé</span>
+                    <span>Céez en un</span>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : (
+              departmentList.map((department: DepartmentList) => (
+                <TableRow
+                  key={department.id}
+                  className="hover:cursor-pointer"
+                  onClick={() => handleClick(department.id)}
+                >
+                  <TableCell className="flex gap-2 text-left">
+                    <GrGroup className="size-7 text-gray-300" />
+                    <div>
+                      <div>{department.label}</div>
+                      <div className="text-xs text-zinc-500">
+                        nombre totale d'équipe {department.team_count}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-left">
+                    {department.lead_service_firstname}{" "}
+                    {department.lead_service_lastname}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="flex w-full justify-between py-2">
         <div className="flex items-center gap-2">
-          <Label>Demandes par page</Label>
+          <Label>Services par page</Label>
           <Select
             onValueChange={(value) => handlePageSize(value)}
             defaultValue={pageSize.toString()}
@@ -135,7 +147,7 @@ export const AgencyDepartment: React.FC<AgencyDetailsProps> = (agency) => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-950 dark:text-gray-100">
-            {`${1 + pageSize * (pageNumber - 1)} - ${departmentList.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
+            {`${departmentList.length === 0 ? 0 : 1 + pageSize * (pageNumber - 1)} - ${departmentList.length + pageSize * (pageNumber - 1)} sur ${totalData}`}
           </span>
           <Button
             variant="ghost"

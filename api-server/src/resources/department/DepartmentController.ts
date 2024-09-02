@@ -15,10 +15,49 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   });
 });
 
+router.get(
+  "/department/:id",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await DepartmentService.getDepartmentById(
+      +req.params.id,
+    );
+    res.status(code).json({
+      message,
+      data,
+    });
+  },
+);
+
 router.post("/create/:id", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } = await DepartmentService.createDepartment(
     +req.params.id,
     req,
+  );
+  res.status(code).json({
+    message,
+    data,
+  });
+});
+
+router.post(
+  "/update-info/:id_department",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const { code, message, data } = await DepartmentService.updateDepartment(
+      +req.params.id_department,
+      req,
+    );
+    res.status(code).json({
+      message,
+      data,
+    });
+  },
+);
+
+router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message, data } = await DepartmentService.deleteDepartment(
+    +req.params.id,
   );
   res.status(code).json({
     message,
