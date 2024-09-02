@@ -1,4 +1,4 @@
-import { DemandType } from "../../../common/model/Demand.js";
+import { DemandType } from "../../../common/enum/DemandType";
 
 export class CreateDemand {
   start_date: Date;

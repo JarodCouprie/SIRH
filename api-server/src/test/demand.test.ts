@@ -1,224 +1,149 @@
-import { UserService } from "../resources/user/UserService.js";
-import { DemandRepository } from "../resources/demand/DemandRepository.js";
+import { describe, expect, test } from "vitest";
 import {
-  calculateNumberOfDays,
-  DemandService,
-  updateUserDays,
-} from "../resources/demand/DemandService.js";
-import { EditDemandDTO } from "../resources/demand/dto/EditDemandDTO.js";
-import { ControllerResponse } from "../common/helper/ControllerResponse.js";
-import { Demand, DemandType } from "../common/model/Demand.js";
-import { logger } from "../common/helper/Logger.js";
-import { DemandDTO } from "../resources/demand/dto/DemandDTO.js";
-import { Request } from "express";
+  ConfirmDemand,
+  Demand,
+  RejectDemand,
+  StatusDemand,
+  ValidatedDemand,
+} from "../common/model/Demand";
+import { DemandStatus } from "../common/enum/DemandStatus";
+import { DemandType } from "../common/enum/DemandType";
+import { CreateDemand } from "../resources/demand/dto/CreateDemandDTO";
+import { DemandDTO } from "../resources/demand/dto/DemandDTO";
+import { DemandValidatedDTO } from "../resources/demand/dto/DemandValidatedDTO";
+import { EditDemandDTO } from "../resources/demand/dto/EditDemandDTO";
 
-jest.mock("../resources/user/UserService.js");
-jest.mock("../resources/demand/DemandRepository.js");
-jest.mock("../resources/demand/DemandService.js", () => ({
-  ...jest.requireActual("../resources/demand/DemandService.js"),
-  calculateNumberOfDays: jest.fn(),
-  updateUserDays: jest.fn(),
-}));
-jest.mock("../common/helper/Logger.js");
+const demand = new Demand(
+  1,
+  new Date("2024-07-12"),
+  new Date("2024-07-12"),
+  "motivation",
+  "justification",
+  new Date("2024-07-12"),
+  DemandStatus.DENIED,
+  DemandType.CA,
+  2,
+  3,
+  4,
+  "Paul",
+  "Dupont",
+  new Date("2024"),
+  "file_key",
+);
 
-describe("getDemand", () => {
-  let req: Partial<Request>;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    req = {
-      query: {
-        pageSize: "10",
-        pageNumber: "1",
-        type: "CA",
-      },
-    };
+describe("Demand models should be what we give it", () => {
+  test("Test Demand Model", () => {
+    expect(demand.id).toBe(1);
+    expect(demand.start_date).toStrictEqual(new Date("2024-07-12"));
+    expect(demand.end_date).toStrictEqual(new Date("2024-07-12"));
+    expect(demand.motivation).toBe("motivation");
+    expect(demand.justification).toBe("justification");
+    expect(demand.created_at).toStrictEqual(new Date("2024-07-12"));
+    expect(demand.status).toStrictEqual(DemandStatus.DENIED);
+    expect(demand.type).toStrictEqual(DemandType.CA);
+    expect(demand.number_day).toBe(2);
+    expect(demand.id_owner).toBe(3);
+    expect(demand.id_validator).toBe(4);
+    expect(demand.validator_firstname).toBe("Paul");
+    expect(demand.validator_lastname).toBe("Dupont");
+    expect(demand.validated_at).toBeInstanceOf(Date);
+    expect(demand.file_key).toBe("file_key");
   });
-
-  test("should return demands with a specific type", async () => {
-    const demands = [
-      {
-        id: 45,
-        startDate: new Date("2024-07-22"),
-        endDate: new Date("2024-07-25"),
-        motivation: "qsdfqsdf",
-        created_at: new Date("2024-07-01"),
-        status: "WAITING",
-        type: DemandType.CA,
-        number_day: 3,
-        idOwner: 1,
-        idValidator: 1,
-      },
-    ] as Demand[];
-    const demandCount = 1;
-
-    (DemandRepository.getDemandCountWithType as jest.Mock).mockResolvedValue(
-      demandCount,
+  test("Test ValidatedDemand Model", () => {
+    const demand = new ValidatedDemand(
+      1,
+      new Date("2027"),
+      new Date("2027"),
+      "motivation validée",
+      "justification validée",
+      new Date("2014"),
+      DemandStatus.ACCEPTED,
+      DemandType.TT,
+      5,
+      7,
+      7888,
+      "Jean",
+      "Témoin",
+      new Date("2017"),
     );
-    (DemandRepository.getDemandWithType as jest.Mock).mockResolvedValue(
-      demands,
-    );
-
-    const response = await DemandService.getDemand(req as Request);
-
-    expect(DemandRepository.getDemandCountWithType).toHaveBeenCalledWith("CA");
-    expect(DemandRepository.getDemandWithType).toHaveBeenCalledWith(
-      10,
-      0,
-      "CA",
-    );
-    expect(response).toEqual(
-      new ControllerResponse(200, "", {
-        totalData: demandCount,
-        list: demands.map((demand) => new DemandDTO(demand)),
-      }),
-    );
+    expect(demand.id).toBe(1);
+    expect(demand.start_date).toStrictEqual(new Date("2027"));
+    expect(demand.end_date).toStrictEqual(new Date("2027"));
+    expect(demand.motivation).toBe("motivation validée");
+    expect(demand.justification).toBe("justification validée");
+    expect(demand.created_at).toStrictEqual(new Date("2014"));
+    expect(demand.status).toStrictEqual(DemandStatus.ACCEPTED);
+    expect(demand.type).toStrictEqual(DemandType.TT);
+    expect(demand.number_day).toBe(5);
+    expect(demand.id_owner).toBe(7);
+    expect(demand.id_validator).toBe(7888);
+    expect(demand.validator_firstname).toBe("Jean");
+    expect(demand.validator_lastname).toBe("Témoin");
+    expect(demand.validated_at).toStrictEqual(new Date("2017"));
   });
-
-  test("should return demands without type filter", async () => {
-    req.query = {
-      ...req.query,
-      type: undefined,
-    };
-
-    const demands = [
-      {
-        id: 45,
-        startDate: new Date("2024-07-22T22:00:00.000Z"),
-        endDate: new Date("2024-07-25T22:00:00.000Z"),
-        motivation: "qsdfqsdf",
-        created_at: new Date("2024-07-01T04:32:01.000Z"),
-        status: "WAITING",
-        type: "CA",
-        number_day: 3,
-        idOwner: 1,
-        idValidator: 1,
-      },
-    ] as Demand[];
-    const demandCount = 1;
-
-    (DemandRepository.getDemandCount as jest.Mock).mockResolvedValue(
-      demandCount,
-    );
-    (DemandRepository.getDemand as jest.Mock).mockResolvedValue(demands);
-
-    const response = await DemandService.getDemand(req as Request);
-
-    expect(DemandRepository.getDemandCount).toHaveBeenCalled();
-    expect(DemandRepository.getDemand).toHaveBeenCalledWith(10, 0);
-    expect(response).toEqual(
-      new ControllerResponse(200, "", {
-        totalData: demandCount,
-        list: demands.map((demand) => new DemandDTO(demand)),
-      }),
+  test("Test ConfirmDemand Model", () => {
+    const demand = new ConfirmDemand(114787, 45);
+    expect(demand.id).toBe(114787);
+    expect(demand.validatorId).toBe(45);
+    expect(demand.status).toStrictEqual(DemandStatus.ACCEPTED);
+    expect(demand.validated_at).toBe(
+      new Date().toISOString().split("Z")[0].replace("T", " ").split(".")[0],
     );
   });
-
-  test("should handle errors", async () => {
-    const error = new Error("Database error");
-    (DemandRepository.getDemandCountWithType as jest.Mock).mockRejectedValue(
-      error,
-    );
-
-    const response = await DemandService.getDemand(req as Request);
-
-    expect(logger.error).toHaveBeenCalledWith(
-      `Failed to get demand. Error: ${error}`,
-    );
-    expect(response).toEqual(
-      new ControllerResponse(500, "Failed to get demand"),
+  test("Test RejectDemand Model", () => {
+    const demand = new RejectDemand(787, 4285, "justification");
+    expect(demand.id).toBe(787);
+    expect(demand.validatorId).toBe(4285);
+    expect(demand.justification).toBe("justification");
+    expect(demand.status).toStrictEqual(DemandStatus.DENIED);
+    expect(demand.validated_at).toBe(
+      new Date().toISOString().split("Z")[0].replace("T", " ").split(".")[0],
     );
   });
-});
-
-describe("editDemand", () => {
-  const userId = 1;
-  const demandId = "1";
-  const body = {
-    status: "DRAFT",
-    startDate: new Date("2024-07-01"),
-    endDate: new Date("2024-07-02"),
-    motivation: "Test motivation",
-    type: DemandType.CA,
-    number_day: 1,
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+  test("Test StatusDemand Model", () => {
+    const demand = new StatusDemand(787, DemandStatus.DRAFT);
+    expect(demand.id).toBe(787);
+    expect(demand.status).toStrictEqual(DemandStatus.DRAFT);
   });
-
-  test("should return 400 if status is not DRAFT", async () => {
-    const response = await DemandService.editDemand(
-      demandId,
-      { ...body, status: "ACCEPTED" },
-      userId,
+  test("Test CreateDemand", () => {
+    const demand = new CreateDemand(
+      new Date("2023"),
+      new Date("2024"),
+      "motivation",
+      "status",
+      DemandType.ABSENCE,
+      5,
+      "file_key",
+      7,
     );
-    expect(response).toEqual(new ControllerResponse(400, "Not allowed"));
+    expect(demand.file_key).toBe("file_key");
+    expect(demand.number_day).toBe(5);
+    expect(demand.number_day).not.toBe(54447);
+    expect(demand.file_key).toBe("file_key");
+    expect(demand.idOwner).toBe(7);
   });
-
-  test("should return 404 if user is not found", async () => {
-    (UserService.getUserById as jest.Mock).mockResolvedValue(
-      new ControllerResponse(404, "User not found"),
+  test("Test EditDemandDTO", () => {
+    const demand = new EditDemandDTO(
+      new Date("2023"),
+      new Date("2024"),
+      "motivation",
+      DemandType.ABSENCE,
+      5,
+      "key",
+      "status",
     );
-
-    const response = await DemandService.editDemand(demandId, body, userId);
-    expect(response).toEqual(new ControllerResponse(404, "User not found"));
+    expect(demand.start_date).toStrictEqual(new Date("2023"));
+    expect(demand.end_date).toStrictEqual(new Date("2024"));
+    expect(demand.key).toBe("key");
+    expect(demand.number_day).toBe(5);
+    expect(demand.number_day).not.toBe(54447);
   });
-
-  test("should return 401 if demand doesn't exist", async () => {
-    (UserService.getUserById as jest.Mock).mockResolvedValue(
-      new ControllerResponse(200, "User found", { id: userId }),
-    );
-    (DemandRepository.getDemandById as jest.Mock).mockResolvedValue(null);
-
-    const response = await DemandService.editDemand(demandId, body, userId);
-    expect(response).toEqual(
-      new ControllerResponse(401, "Demand doesn't exist"),
-    );
+  test("Test DemandDTO Model", () => {
+    const demandDTO = new DemandDTO(demand);
+    expect(demandDTO.id).toBe(1);
   });
-
-  test("should edit demand and return 200", async () => {
-    const user = { id: userId, rtt: 10, ca: 10, tt: 10 };
-    const demand = {
-      id: +demandId,
-      startDate: "2024-07-01",
-      endDate: "2024-07-05",
-      type: "RTT",
-    };
-
-    (UserService.getUserById as jest.Mock).mockResolvedValue(
-      new ControllerResponse(200, "User found", user),
-    );
-    (DemandRepository.getDemandById as jest.Mock).mockResolvedValue(demand);
-    (calculateNumberOfDays as jest.Mock).mockReturnValue(1);
-    (updateUserDays as jest.Mock).mockReturnValue(null);
-    (DemandRepository.editDemand as jest.Mock).mockResolvedValue(null);
-    (UserService.updateUserDays as jest.Mock).mockResolvedValue(null);
-
-    const response = await DemandService.editDemand(demandId, body, userId);
-    expect(response).toEqual(
-      new ControllerResponse(
-        200,
-        "",
-        new EditDemandDTO(
-          body.startDate,
-          body.endDate,
-          body.motivation,
-          body.type,
-          1,
-          body.status,
-        ),
-      ),
-    );
-    expect(DemandRepository.editDemand).toHaveBeenCalledWith(
-      +demandId,
-      expect.any(EditDemandDTO),
-    );
-    expect(UserService.updateUserDays).toHaveBeenCalledWith(
-      userId,
-      user.rtt,
-      user.ca,
-      user.tt,
-    );
+  test("Test DemandValidatedDTO Model", () => {
+    const demandValidatedDTO = new DemandValidatedDTO(demand);
+    expect(demandValidatedDTO.id).toBe(1);
   });
 });

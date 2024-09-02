@@ -1,4 +1,4 @@
-import { UserAddress } from "../../../common/model/Address.js";
+import { Address } from "../../../common/model/Address.js";
 import { User } from "../../../common/model/User.js";
 
 export class UserListDTO {
@@ -7,7 +7,7 @@ export class UserListDTO {
   lastname: string;
   email: string;
   phone: string;
-  address: UserAddress;
+  address: Address;
   active: boolean;
   avatar_url: string;
 
@@ -17,7 +17,7 @@ export class UserListDTO {
     this.lastname = user.lastname;
     this.email = user.email;
     this.phone = user.phone;
-    this.address = new UserAddress(user);
+    this.address = new Address(user);
     this.active = user.active;
     this.avatar_url = avatar_url || "";
   }

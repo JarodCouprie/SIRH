@@ -1,5 +1,5 @@
 import { ExpenseRepository } from "./ExpenseRepository.js";
-import { Expense, ExpenseStatus } from "../../common/model/Expense.js";
+import { Expense } from "../../common/model/Expense.js";
 import {
   ExpenseInvalidation,
   ExpenseListDTO,
@@ -10,30 +10,35 @@ import { logger } from "../../common/helper/Logger.js";
 import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "./dto/ExpenseAmountDateAndStatusDTO.js";
 import { MinioClient } from "../../common/helper/MinioClient.js";
+import { ExpenseStatus } from "../../common/enum/ExpenseStatus";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
     try {
       const offset = req.query.offset || "0";
       const limit = req.query.limit || "10";
-      const type = req.query.type || null;
+      const type = req.params.type || null;
 
-      if (type != null) {
+      if (type != null && type != "ALL") {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByUserIdAndType(
             userId,
             +offset,
             +limit,
-            type.toString(),
+            type,
           );
+        const expensesCount =
+          await ExpenseRepository.getExpensesCountByTypeAndUserId(type, userId);
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
         );
-        return new ControllerResponse<ExpenseListDTO[]>(
-          200,
-          "",
-          expensesListDto,
-        );
+
+        const data = {
+          expenses: expensesListDto,
+          totalExpensesCount: expensesCount,
+        };
+
+        return new ControllerResponse(200, "", data);
       }
       const expenses: Expense[] =
         await ExpenseRepository.getExpensesValuesByUserId(
@@ -41,10 +46,18 @@ export class ExpenseService {
           +offset,
           +limit,
         );
+      const expensesCount =
+        await ExpenseRepository.getExpensesCountByUserId(userId);
       const expensesListDto: ExpenseListDTO[] = expenses.map(
         (expense: Expense) => new ExpenseListDTO(expense),
       );
-      return new ControllerResponse<ExpenseListDTO[]>(200, "", expensesListDto);
+
+      const data = {
+        expenses: expensesListDto,
+        totalExpensesCount: expensesCount,
+      };
+
+      return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(500, "Failed to get expenses");
@@ -83,32 +96,41 @@ export class ExpenseService {
     try {
       const offset = req.query.offset || "0";
       const limit = req.query.limit || "10";
-      const type = req.query.type || null;
+      const type = req.params.type || null;
 
       if (type != null) {
         const expenses: Expense[] =
           await ExpenseRepository.getExpensesValuesByType(
             +offset,
             +limit,
-            type.toString(),
+            type,
           );
+        const expensesCount =
+          await ExpenseRepository.getExpensesCountByType(type);
         const expensesListDto: ExpenseListDTO[] = expenses.map(
           (expense: Expense) => new ExpenseListDTO(expense),
         );
-        return new ControllerResponse<ExpenseListDTO[]>(
-          200,
-          "",
-          expensesListDto,
-        );
+        const data = {
+          expenses: expensesListDto,
+          totalExpensesCount: expensesCount,
+        };
+
+        return new ControllerResponse(200, "", data);
       }
       const expenses: Expense[] = await ExpenseRepository.getExpensesValues(
         +offset,
         +limit,
       );
+      const expensesCount = await ExpenseRepository.getExpensesCount();
       const expensesListDto: ExpenseListDTO[] = expenses.map(
         (expense: Expense) => new ExpenseListDTO(expense),
       );
-      return new ControllerResponse<ExpenseListDTO[]>(200, "", expensesListDto);
+
+      const data = {
+        expenses: expensesListDto,
+        totalExpensesCount: expensesCount,
+      };
+      return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error in Service: ${error}`);
       return new ControllerResponse(500, "Failed to get expenses");
@@ -210,10 +232,15 @@ export class ExpenseService {
   public static async getExpenseDemand(id: string, userId: number) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
-      const expense: ExpenseListDTO = new ExpenseListDTO(
-        expenseTemp,
-        await MinioClient.getSignedUrl(expenseTemp.file_key),
-      );
+      let expense: ExpenseListDTO;
+      if (expenseTemp.file_key) {
+        expense = new ExpenseListDTO(
+          expenseTemp,
+          await MinioClient.getSignedUrl(expenseTemp.file_key),
+        );
+      } else {
+        expense = new ExpenseListDTO(expenseTemp);
+      }
       if (expense.id_owner != userId)
         return new ControllerResponse(403, "Access denied");
 
@@ -244,7 +271,7 @@ export class ExpenseService {
 
   public static async getExpensesCount(req: Request) {
     try {
-      const type: string = req.query.type?.toString() || "ALL";
+      const type: string = req.params.type || "ALL";
       let count: number;
       if (type == null || type == "ALL") {
         const result: any = await ExpenseRepository.getExpensesCount();
@@ -263,7 +290,7 @@ export class ExpenseService {
 
   public static async getExpensesCountByUserId(req: Request, userId: number) {
     try {
-      const type = req.query.type?.toString() || "ALL";
+      const type: string = req.params.type || "ALL";
       let count;
       if (type == null || type == "ALL") {
         const result: any =
@@ -309,9 +336,8 @@ export class ExpenseService {
     userId: number,
   ) {
     try {
-      const user_id = userId.toString();
       const expenses: Expense[] =
-        await ExpenseRepository.getExpensesAmountDateAndStatusByUserId(user_id);
+        await ExpenseRepository.getExpensesAmountDateAndStatusByUserId(userId);
 
       const expensesAmountDateAndStatusDTO: ExpenseAmountDateAndStatusDTO[] =
         expenses.map(
@@ -334,7 +360,7 @@ export class ExpenseService {
   public static async getExpensesAmountDateAndStatusByDate(req: Request) {
     try {
       const selectedDate =
-        req.query.date?.toString() || new Date().toDateString();
+        req.query.date?.toLocaleString() || new Date().toDateString();
       const monthName = new Date(selectedDate).toLocaleDateString("eng", {
         month: "long",
       });
@@ -369,7 +395,7 @@ export class ExpenseService {
   ) {
     try {
       const selectedDate: string =
-        req.query.date?.toString() || new Date().toDateString();
+        req.query.date?.toLocaleString() || new Date().toDateString();
       const monthName = new Date(selectedDate).toLocaleDateString("eng", {
         month: "long",
       });

@@ -1,4 +1,5 @@
-import { Expense, ExpenseStatus } from "../../../common/model/Expense.js";
+import { Expense } from "../../../common/model/Expense.js";
+import { ExpenseStatus } from "../../../common/enum/ExpenseStatus";
 
 export class ExpenseAmountDateAndStatusDTO {
   amount: number;

@@ -1,5 +1,3 @@
-import { Department } from "./Department.js";
-
 export class Team {
   id: number;
   label: string;

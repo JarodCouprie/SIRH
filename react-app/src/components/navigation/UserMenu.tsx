@@ -60,15 +60,15 @@ export function UserMenu() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="noneLeft"
-            className="flex w-full justify-between gap-2"
+            className="flex w-full justify-between gap-2 outline-none hover:bg-gray-700"
           >
-            <div className="flex w-full gap-2">
+            <div className="flex w-full items-center gap-2">
               <Avatar className="size-8">
                 <AvatarImage
                   src={currentUser?.avatar_url}
                   alt={`avatar image of ${currentUser?.firstname} ${currentUser?.lastname}`}
                 />
-                <AvatarFallback>
+                <AvatarFallback className="dark:bg-gray-100">
                   {currentUser.firstname.charAt(0)}
                   {currentUser.lastname.charAt(0)}
                 </AvatarFallback>

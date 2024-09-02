@@ -3,8 +3,6 @@ import { DemandRepository } from "./DemandRepository.js";
 import {
   ConfirmDemand,
   Demand,
-  DemandStatus,
-  DemandType,
   RejectDemand,
   StatusDemand,
   ValidatedDemand,
@@ -18,13 +16,10 @@ import { UserService } from "../user/UserService.js";
 import { MinioClient } from "../../common/helper/MinioClient.js";
 import { UserRepository } from "../user/UserRepository.js";
 import { DemandValidatedDTO } from "./dto/DemandValidatedDTO.js";
-import {
-  ExpenseListDTO,
-  ExpenseValidation,
-} from "../expense/dto/ExpenseListDTO.js";
-import { ExpenseRepository } from "../expense/ExpenseRepository.js";
 import { User } from "../../common/model/User.js";
 import { DemandEntity } from "../../common/entity/demand/demand.entity.js";
+import { DemandType } from "../../common/enum/DemandType";
+import { DemandStatus } from "../../common/enum/DemandStatus";
 
 export function calculateNumberOfDays(
   start_date: Date,

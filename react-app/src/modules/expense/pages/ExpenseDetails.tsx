@@ -186,7 +186,7 @@ export function ExpenseDetails() {
   };
 
   const handlePreviewFile = () => {
-    window.open(expense.fileUrl, "_blank");
+    window.open(`${expense.fileUrl}`, "_blank");
   };
 
   return (
@@ -227,7 +227,7 @@ export function ExpenseDetails() {
                   </AlertDialogContent>
                 </AlertDialog>
                 <Button
-                  variant={"callToAction"}
+                  variant="callToAction"
                   className="text-lg"
                   onClick={handleEdit}
                 >
