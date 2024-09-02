@@ -402,24 +402,6 @@ router.get(
   },
 );
 
-router.get("/count/:type", verifyToken, async (req: Request, res: Response) => {
-  let userId = (req as CustomRequest).token.userId;
-  const { code, message, data } = await ExpenseService.getExpensesCountByUserId(
-    req,
-    userId,
-  );
-  res.status(code).json({ message, data });
-});
-
-router.get(
-  "/count/all/:type",
-  verifyToken,
-  async (req: Request, res: Response) => {
-    const { code, message, data } = await ExpenseService.getExpensesCount(req);
-    res.status(code).json({ message, data });
-  },
-);
-
 // Gestion des demandes liées aux frais
 
 router.put(
@@ -464,6 +446,25 @@ router.put(
   },
 );
 
+/**
+ * @swagger
+ * /api/expense/{id}:
+ *   delete:
+ *     summary: Supprime une demande de frais
+ *     description: Supprime la demande de frais portant l'id indiqué, il faut être propriétaire de la demande pour pouvoir la supprimer
+ *     parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: integer
+ *          required: true
+ *          description: ID de la demande de frais à supprimer
+ *     responses:
+ *       200:
+ *         description: Suppression effectuée avec succès
+ *       500:
+ *         description: Échec de la suppression de la demande
+ */
 router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } = await ExpenseService.delExpenseDemand(
@@ -473,6 +474,81 @@ router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
   res.status(code).json({ message, data });
 });
 
+/**
+ * @swagger
+ * /api/expense/{id}:
+ *   get:
+ *     summary: Récupère la demande de frais souhaitée
+ *     description: Récupère la demande de frais selon l'ID, il faut être admin ou propriétaire de la demande pour la récupérer.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: id de la demande de frais cible
+ *     responses:
+ *       200:
+ *         description: Retourne la demande de frais souhaitée
+ *         content:
+ *           application/json:
+ *            type: object
+ *            properties:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: identifiant de l'expense
+ *                   type:
+ *                     type: string
+ *                     description: Type de la demande (TRAVEL, COMPENSATION, FOOD, HOUSING)
+ *                   amount:
+ *                     type: integer
+ *                     description : montant en euro de la demande
+ *                   motivation:
+ *                     type: string
+ *                     description: Justification et explication du contexte de la demande
+ *                   created_at:
+ *                     type: string
+ *                     format: date
+ *                     description: date de création de la demande
+ *                   facturation_date:
+ *                    type: string
+ *                    format: date
+ *                    description: date de facturation de la demande
+ *                   status:
+ *                     type: string
+ *                     description: Status actuel de la demande (REFUNDED, NOT_REFUNDED, WAITING)
+ *                   id_owner:
+ *                     type: integer
+ *                     description: id de l'utilisateur propriétaire de la demande
+ *                   fileUrl:
+ *                     type: string
+ *                     description: lien vers le fichier joint à la demande
+ *                     required: false
+ *                   id_validator:
+ *                     type: integer
+ *                     description: id de l'utilisateur ayant validé la demande s'il y en a un
+ *                     required: false
+ *                   justification:
+ *                     type: string
+ *                     description: justification du choix en cas de refus de la demande
+ *                   validator_firstname:
+ *                     type: string
+ *                     description: prénom du validateur
+ *                     required: false
+ *                   validator_lastname:
+ *                     type: string
+ *                     description: prénom du validateur
+ *                     required: false
+ *                   validated_at:
+ *                     type: string
+ *                     format: date
+ *                     description: date de validation
+ *                     required: false
+ *       500:
+ *         description: Échec de la récupération de la demande
+ */
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   let userId = (req as CustomRequest).token.userId;
   const { code, message, data } = await ExpenseService.getExpenseDemand(

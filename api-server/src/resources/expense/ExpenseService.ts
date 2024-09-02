@@ -269,45 +269,6 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpensesCount(req: Request) {
-    try {
-      const type: string = req.params.type || "ALL";
-      let count: number;
-      if (type == null || type == "ALL") {
-        const result: any = await ExpenseRepository.getExpensesCount();
-        count = result;
-      } else {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByType(type);
-        count = result;
-      }
-      return new ControllerResponse<number>(200, "", count);
-    } catch (error) {
-      logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
-    }
-  }
-
-  public static async getExpensesCountByUserId(req: Request, userId: number) {
-    try {
-      const type: string = req.params.type || "ALL";
-      let count;
-      if (type == null || type == "ALL") {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByUserId(userId);
-        count = result;
-      } else {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByTypeAndUserId(type, userId);
-        count = result;
-      }
-      return new ControllerResponse<number>(200, "", count);
-    } catch (error) {
-      logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
-    }
-  }
-
   public static async getExpensesAmountDateAndStatus(req: Request) {
     try {
       const expenses: Expense[] =
