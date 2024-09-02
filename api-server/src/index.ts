@@ -28,10 +28,6 @@ const corsOptions = {
 
 initSocket();
 
-setInterval(() => {
-  NotificationSender.send(Date.now());
-}, 2000);
-
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors(corsOptions));

@@ -42,6 +42,7 @@ import { useCurrentUser } from "@/common/hooks/useCurrentUser.ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const socket = io("http://localhost:4000");
 
@@ -62,9 +63,13 @@ export function UserMenu() {
   const [notifications, setNotifications] = useState(0);
 
   useEffect(() => {
+    //TODO Initial call for notifications count
+  }, []);
+
+  useEffect(() => {
     socket.on("notification", ({ data }) => {
-      console.log("Notification reçue:", data);
-      setNotifications(+data.toString().slice(-1));
+      toast.message(`Vous avez reçu une nouvelle notification`);
+      setNotifications(Math.min(data, 99));
     });
 
     return () => {
@@ -122,7 +127,7 @@ export function UserMenu() {
                 Notifications
                 <DropdownMenuShortcut className="relative">
                   <BellIcon />
-                  <div className="absolute -right-2 -top-2 grid size-4 place-items-center rounded-full bg-red-600 text-center text-white">
+                  <div className="absolute -right-2.5 -top-2.5 grid size-5 place-items-center rounded-full bg-red-600 text-xs text-white">
                     {notifications}
                   </div>
                 </DropdownMenuShortcut>

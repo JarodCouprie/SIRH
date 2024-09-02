@@ -2,11 +2,15 @@ import { logger } from "../../common/helper/Logger.js";
 import { ControllerResponse } from "../../common/helper/ControllerResponse.js";
 import { UserRepository } from "../user/UserRepository.js";
 import { NotificationRepository } from "./NotificationRepository.js";
-import { Notification } from "../../common/model/Notification.js";
+import {
+  CreateNotification,
+  Notification,
+} from "../../common/model/Notification.js";
 import { NotificationDTO } from "./dto/NotificationDTO.js";
 import { RoleEnum } from "../../common/enum/RoleEnum.js";
 import { Request } from "express";
 import { CustomRequest } from "../../common/helper/CustomRequest.js";
+import { UserEntity } from "../../common/entity/user/user.entity";
 
 export class NotificationService {
   public static async getNotificationsByUserId(req: Request) {
@@ -56,12 +60,24 @@ export class NotificationService {
     }
   }
 
-  public static async createNotificationsFromRole(
-    notification: Notification,
+  public static async createNotificationsFromUserRoles(
+    notification: CreateNotification,
     roles: RoleEnum[],
   ) {
     try {
-      //TODO Not implemented yet
+      const users: UserEntity[] = await UserRepository.getUsersByRoles(roles);
+      if (!users || users.length === 0) {
+        return logger.error("No user found");
+      }
+      users.map(async (user) => {
+        const createNotification = new CreateNotification(
+          notification.description,
+          notification.type,
+          notification.id_sender,
+          user.id,
+        );
+        await NotificationRepository.createNotification(createNotification);
+      });
     } catch (error) {
       logger.error(`Failed to generate notifications. Error: ${error}`);
     }

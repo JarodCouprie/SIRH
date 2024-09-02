@@ -1,9 +1,4 @@
 import { Button } from "@/components/ui/button.js";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb.tsx";
 import { useEffect, useState } from "react";
 import { ExpenseList, selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import { ExpenseListCard } from "@/modules/expense/components/ExpenseListCard.tsx";

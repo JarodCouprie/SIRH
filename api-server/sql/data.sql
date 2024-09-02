@@ -46,5 +46,5 @@ INSERT INTO `demand`(`id`, `start_date`, `end_date`, `motivation`, `created_at`,
                      `id_owner`)
 VALUES ('1', CURRENT_DATE, CURRENT_DATE, 'je suis motive', CURRENT_DATE, 'WAITING', 'CA', 1, '1');
 
-INSERT INTO `notification` (`description`, `type`, `id_receiver`)
-VALUES ('Première notification que je dois décrire simplement', 'EXPENSE', '1');
+INSERT INTO `notification` (`description`, `type`, `id_receiver`, `id_sender`, touched)
+VALUES ('Première notification que je dois décrire simplement', 'EXPENSE', '1', '2', true);

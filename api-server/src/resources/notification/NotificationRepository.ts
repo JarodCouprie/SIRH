@@ -24,6 +24,14 @@ export class NotificationRepository {
     return rows[0].count;
   }
 
+  public static async getUntouchedNotificationsCountByUserId(userId: number) {
+    const [rows]: any = await this.pool.query(
+      "SELECT COUNT(*) as count FROM notification WHERE notification.touched = false AND notification.id_receiver = ?",
+      [userId],
+    );
+    return rows[0].count;
+  }
+
   public static async createNotification(notification: CreateNotification) {
     const [result] = await this.pool.query(
       `

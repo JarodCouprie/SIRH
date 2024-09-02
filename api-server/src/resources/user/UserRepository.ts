@@ -2,6 +2,7 @@ import { CreateUser, ResetUserPassword } from "../../common/model/User.js";
 import { DatabaseClient } from "../../common/helper/DatabaseClient.js";
 import { UpdateUserInfoDTO } from "./dto/UpdateUserInfoDTO.js";
 import { UpdateUserBankInfosDTO } from "./dto/UpdateUserBankInfosDTO.js";
+import { RoleEnum } from "../../common/enum/RoleEnum";
 
 export class UserRepository {
   private static pool = DatabaseClient.mysqlPool;
@@ -115,6 +116,20 @@ export class UserRepository {
           GROUP BY users.id;
       `,
       [email],
+    );
+    return rows[0];
+  }
+
+  public static async getUsersByRoles(roles: RoleEnum[]) {
+    const [rows]: any = await this.pool.query(
+      `
+          SELECT DISTINCT users.*
+          FROM users
+                   JOIN own_role ON users.id = own_role.id_user
+                   JOIN role ON role.id = own_role.id_role
+          WHERE role.label IN ?;
+      `,
+      [roles],
     );
     return rows[0];
   }

@@ -31,14 +31,14 @@ export class Notification {
 export class CreateNotification {
   description: string;
   type: NotificationType;
-  id_receiver: number;
   id_sender: number;
+  id_receiver?: number;
 
   constructor(
     description: string,
     type: NotificationType,
-    id_receiver: number,
     id_sender: number,
+    id_receiver?: number,
   ) {
     this.description = description;
     this.type = type;

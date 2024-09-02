@@ -138,7 +138,7 @@ CREATE TABLE notification
     id          BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     description VARCHAR(255),
     type        VARCHAR(50),
-    id_receiver BIGINT        NOT NULL,
+    id_receiver BIGINT,
     id_sender   BIGINT,
     touched     BOOLEAN       NOT NULL DEFAULT FALSE,
     created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -65,11 +65,8 @@ export class AgencyService {
 
   public static async getDemandGroupedByMonthData(req: Request) {
     const agencyData: any = await AgencyRepository.getDemandGroupedByMonth();
-    console.log(agencyData);
     const weekData: any = await AgencyRepository.getDemandGroupedByWeek();
-    console.log(weekData);
     const userAgency: any = await AgencyRepository.countUserInAgency(1);
-    console.log(userAgency);
 
     return new ControllerResponse(200, "", agencyData);
   }

@@ -128,7 +128,6 @@ export class TeamService {
 
   public static async deleteTeam(teamId: number) {
     try {
-      console.log(teamId);
       await TeamRepository.deleteTeam(+teamId);
       return new ControllerResponse(200, "");
     } catch (error) {
