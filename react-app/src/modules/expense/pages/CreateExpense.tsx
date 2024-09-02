@@ -292,15 +292,11 @@ export function CreateExpense() {
           </CardContent>
           <CardFooter className="justify-end">
             <div className="flex justify-end gap-8">
-              <Button
-                onClick={handleGoBackToList}
-                variant="link"
-                className="rounded p-4 text-lg hover:bg-gray-200 dark:hover:bg-gray-900"
-              >
+              <Button onClick={handleGoBackToList} variant="ghost">
                 Annuler
               </Button>
               <Button
-                className="rounded bg-blue-600 p-4 text-lg font-medium text-white hover:bg-blue-400 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-400"
+                variant="callToAction"
                 onClick={(e) => handleFormSubmit(e)}
               >
                 Envoyer
