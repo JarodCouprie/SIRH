@@ -70,8 +70,6 @@ export function UserMenu() {
 
   useEffect(() => {
     socket.on("notification", ({ data }) => {
-      console.log("DATA", data);
-      console.log("notifications", notifications);
       if (data !== notifications) {
         toast.message(`Vous avez reçu une nouvelle notification`);
         setNotifications(Math.min(data, 99));

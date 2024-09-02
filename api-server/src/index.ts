@@ -13,9 +13,7 @@ import userProfile from "./resources/userProfile/UserProfileController.js";
 import notification from "./resources/notification/NotificationController.js";
 import cors from "cors";
 import helmet from "helmet";
-import { Server } from "socket.io";
-import { getIo, initSocket } from "./common/helper/Socket";
-import { NotificationSender } from "./common/helper/NotificationSender";
+import { initSocket } from "./common/helper/Socket";
 
 dotenv.config();
 

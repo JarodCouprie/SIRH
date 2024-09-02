@@ -211,10 +211,10 @@ export class ExpenseService {
       await NotificationRepository.createNotification(notification);
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          userId,
+          expense.id_owner,
         );
 
-      NotificationSender.send(notificationCount, userId);
+      NotificationSender.send(notificationCount, expense.id_owner);
 
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
@@ -243,10 +243,10 @@ export class ExpenseService {
       await NotificationRepository.createNotification(notification);
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          userId,
+          expense.id_owner,
         );
 
-      NotificationSender.send(notificationCount, userId);
+      NotificationSender.send(notificationCount, expense.id_owner);
 
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
@@ -318,10 +318,10 @@ export class ExpenseService {
 
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          userId,
+          expense.id_owner,
         );
 
-      NotificationSender.send(notificationCount, userId);
+      NotificationSender.send(notificationCount, expense.id_owner);
 
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {

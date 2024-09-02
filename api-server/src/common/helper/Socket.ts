@@ -28,10 +28,15 @@ export const initSocket = () => {
 
       const userId = decoded.userId;
       userSockets[userId] = socket;
+
+      io.on("disconnect", () => {
+        console.log(`Utilisateur ${userId} déconnecté`);
+        delete userSockets[userId];
+      });
     });
   });
 
-  return io;
+  // return io;
 };
 
 export const getIo = () => {
