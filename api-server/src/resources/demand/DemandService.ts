@@ -182,10 +182,10 @@ export class DemandService {
 
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          updatedDemand.id_owner,
+          userId,
         );
 
-      NotificationSender.send(notificationCount);
+      NotificationSender.send(notificationCount, userId);
 
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
@@ -400,10 +400,10 @@ export class DemandService {
       await NotificationRepository.createNotification(notification);
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          updatedDemand.id_owner,
+          userId,
         );
 
-      NotificationSender.send(notificationCount);
+      NotificationSender.send(notificationCount, userId);
 
       return new ControllerResponse(200, "Demande acceptée avec succès");
     } catch (error) {
@@ -459,10 +459,10 @@ export class DemandService {
       await NotificationRepository.createNotification(notification);
       const notificationCount =
         await NotificationRepository.getUntouchedNotificationsCountByUserId(
-          updatedDemand.id_owner,
+          userId,
         );
 
-      NotificationSender.send(notificationCount);
+      NotificationSender.send(notificationCount, userId);
 
       return new ControllerResponse(200, "Demande rejetée avec succès");
     } catch (error) {

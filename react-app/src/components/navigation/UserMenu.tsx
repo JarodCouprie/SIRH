@@ -44,7 +44,9 @@ import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const socket = io("http://localhost:4000");
+const socket = io("http://localhost:4000", {
+  query: { token: localStorage.accessToken },
+});
 
 export function UserMenu() {
   const { setSystemTheme, setDarkTheme, setLightTheme } = useTheme();
@@ -68,8 +70,12 @@ export function UserMenu() {
 
   useEffect(() => {
     socket.on("notification", ({ data }) => {
-      toast.message(`Vous avez reçu une nouvelle notification`);
-      setNotifications(Math.min(data, 99));
+      console.log("DATA", data);
+      console.log("notifications", notifications);
+      if (data !== notifications) {
+        toast.message(`Vous avez reçu une nouvelle notification`);
+        setNotifications(Math.min(data, 99));
+      }
     });
 
     return () => {
@@ -127,9 +133,11 @@ export function UserMenu() {
                 Notifications
                 <DropdownMenuShortcut className="relative">
                   <BellIcon />
-                  <div className="absolute -right-2.5 -top-2.5 grid size-5 place-items-center rounded-full bg-red-600 text-xs text-white">
-                    {notifications}
-                  </div>
+                  {notifications > 0 && (
+                    <div className="absolute -right-2.5 -top-2.5 grid size-5 place-items-center rounded-full bg-red-600 text-xs text-white">
+                      {notifications}
+                    </div>
+                  )}
                 </DropdownMenuShortcut>
               </DropdownMenuItem>
             </NavLink>
