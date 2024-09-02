@@ -201,7 +201,7 @@ describe("ExpenseAmountDateAndStatusDTO", () => {
         500,
         "motivation",
         new Date("2141"),
-        new Date(),
+        new Date("2141"),
         ExpenseStatus.WAITING,
         0,
         0,
