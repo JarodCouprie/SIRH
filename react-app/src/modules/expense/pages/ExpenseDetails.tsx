@@ -134,14 +134,8 @@ export function ExpenseDetails() {
     try {
       await customFetcher("http://localhost:5000/api/expense/" + id, {
         method: "DELETE",
-      }).then((response) => {
-        if (response.response.status !== 200) {
-          toast.error("Echec de l'opération");
-          return;
-        } else {
-          toast.message("Suppression effectuée");
-          navigate("/expense");
-        }
+      }).then(() => {
+        navigate("/expense");
       });
     } catch {
       toast.error(`Echec de l'opération`);

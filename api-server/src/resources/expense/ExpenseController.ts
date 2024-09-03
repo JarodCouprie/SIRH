@@ -484,7 +484,7 @@ router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: integern
  *         required: true
  *         description: id de la demande de frais cible
  *     responses:

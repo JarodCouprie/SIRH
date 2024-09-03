@@ -66,7 +66,10 @@ export class ExpenseService {
       return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la récupération des demandes de frais",
+      );
     }
   }
 
@@ -94,7 +97,10 @@ export class ExpenseService {
       });
     } catch (error) {
       logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la récupération des demandes de frais",
+      );
     }
   }
 
@@ -139,7 +145,10 @@ export class ExpenseService {
       return new ControllerResponse(200, "", data);
     } catch (error) {
       logger.error(`Failed to get expenses. Error in Service: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la récupération des demandes de frais",
+      );
     }
   }
 
@@ -158,10 +167,13 @@ export class ExpenseService {
       }
 
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
-      return new ControllerResponse(200, "Operation was a success");
+      return new ControllerResponse(200, "Demande de frais créée");
     } catch (error) {
       logger.error(`Failed to create expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to create expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la création de la demande de frais",
+      );
     }
   }
 
@@ -171,7 +183,7 @@ export class ExpenseService {
         req.params.id,
       );
       if (targetExpense.id_owner != userId)
-        return new ControllerResponse(403, "Access unauthorized");
+        return new ControllerResponse(403, "Accés refusé");
 
       let expense: Expense = JSON.parse(req.body.body);
 
@@ -187,10 +199,16 @@ export class ExpenseService {
         req.params.id,
         expense,
       );
-      return new ControllerResponse(200, "Operation was a success");
+      return new ControllerResponse(
+        200,
+        "Modification de la demande n°" + req.params.id,
+      );
     } catch (error) {
       logger.error(`Failed to update expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to update expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la modification de la demande",
+      );
     }
   }
 
@@ -219,7 +237,10 @@ export class ExpenseService {
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to edit the expense");
+      return new ControllerResponse(
+        500,
+        "Echec de la validation de la demande de frais",
+      );
     }
   }
 
@@ -251,7 +272,7 @@ export class ExpenseService {
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to edit the expense");
+      return new ControllerResponse(500, "Echec du refus de la demande");
     }
   }
 
@@ -263,10 +284,13 @@ export class ExpenseService {
         return new ControllerResponse(403, "Access unauthorized");
 
       const result: any = await ExpenseRepository.delExpenseDemand(id);
-      return new ControllerResponse(200, "Operation was a success");
+      return new ControllerResponse(200, "La demande de frais a été supprimée");
     } catch (error) {
       logger.error(`Failed to delete expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to delete expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la suppression de la demande",
+      );
     }
   }
 
@@ -288,7 +312,7 @@ export class ExpenseService {
       logger.error(`Failed to get expense. Error: ${error}`);
       return new ControllerResponse<ExpenseListDTO>(
         500,
-        "Failed to get expense",
+        "Echec de la récupération de la demande",
       );
     }
   }
@@ -321,10 +345,13 @@ export class ExpenseService {
 
       NotificationSender.send(notificationCount, expense.id_owner);
 
-      return new ControllerResponse(200, "Operation was a success");
+      return new ControllerResponse(200, "La demande a été validée");
     } catch (error) {
       logger.error(`Failed to confirm expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to confirm expenses");
+      return new ControllerResponse(
+        500,
+        "Echec de la validation de la demande",
+      );
     }
   }
 
@@ -346,7 +373,7 @@ export class ExpenseService {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Failed to get expenses amount and facturation date",
+        "Echec de la récupération de la demande de frais",
       );
     }
   }
@@ -372,7 +399,7 @@ export class ExpenseService {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Failed to get expenses amount and facturation date",
+        "Echec de la récupération de la demande de frais",
       );
     }
   }
@@ -404,7 +431,7 @@ export class ExpenseService {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Failed to get expenses amount and facturation date",
+        "Echec de la récupération de la demande de frais",
       );
     }
   }
@@ -440,7 +467,7 @@ export class ExpenseService {
       logger.error(`Failed to get expenses. Error: ${error}`);
       return new ControllerResponse(
         500,
-        "Failed to get expenses amount and facturation date",
+        "Echec de la récupération de la demande de frais",
       );
     }
   }
