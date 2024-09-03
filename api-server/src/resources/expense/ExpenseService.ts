@@ -167,7 +167,7 @@ export class ExpenseService {
       }
 
       const result: any = await ExpenseRepository.createExpenseDemand(expense);
-      return new ControllerResponse(200, "Demande de frais créé");
+      return new ControllerResponse(200, "Demande de frais créée");
     } catch (error) {
       logger.error(`Failed to create expenses. Error: ${error}`);
       return new ControllerResponse(

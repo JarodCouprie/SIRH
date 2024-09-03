@@ -128,6 +128,14 @@ export function CreateExpense() {
   };
 
   const handleFormSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (
+      createdExpense.type === "" ||
+      createdExpense.amount === "" ||
+      createdExpense.motivation === ""
+    ) {
+      toast.error("Veuillez compléter tous les champs du formulaire");
+      return;
+    }
     e.preventDefault();
     createdExpense.facturation_date.setHours(3);
     const date = createdExpense.facturation_date.toISOString().split("T")[0];
