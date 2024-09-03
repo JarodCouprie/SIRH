@@ -237,7 +237,7 @@ export class ExpenseService {
         "Votre demande de frais a été rejetée",
         NotificationType.EXPENSE,
         expense.id,
-        userId,
+        expense.id_owner,
       );
 
       await NotificationRepository.createNotification(notification);

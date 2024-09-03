@@ -111,7 +111,7 @@ export const NotificationsCard = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={1} className="h-24 text-center">
+                <TableCell colSpan={2} className="h-24 text-center">
                   Aucune Notification
                 </TableCell>
               </TableRow>
