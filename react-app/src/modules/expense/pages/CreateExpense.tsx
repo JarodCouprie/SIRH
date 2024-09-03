@@ -155,27 +155,7 @@ export function CreateExpense() {
           body: formData,
         },
         false,
-      ).then((response) => {
-        if (
-          response.response.status !== 200 &&
-          response.response.status !== 400
-        ) {
-          toast.error(`Echec de l'opération`);
-          return;
-        } else if (response.response.status == 400) {
-          toast.error(`Les données renseignées sont invalides ou incomplètes`);
-        } else {
-          if (method == "POST")
-            toast.message(
-              `Nouvelle demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturation_date} a été créée.`,
-            );
-          else
-            toast.message(
-              `La demande de frais du type ${createdExpense.type} à la date du ${createdExpense.facturation_date} a été modifiée.`,
-            );
-          navigate("/expense");
-        }
-      });
+      ).then();
     } catch {
       toast.error(`Echec de l'opération`);
     }
