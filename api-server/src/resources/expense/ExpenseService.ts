@@ -229,7 +229,7 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpenseDemand(id: string, userId: number) {
+  public static async getExpenseDemand(id: string) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
       let expense: ExpenseListDTO;
@@ -241,8 +241,6 @@ export class ExpenseService {
       } else {
         expense = new ExpenseListDTO(expenseTemp);
       }
-      if (expense.id_owner != userId)
-        return new ControllerResponse(403, "Access denied");
 
       return new ControllerResponse<ExpenseListDTO>(200, "", expense);
     } catch (error) {
