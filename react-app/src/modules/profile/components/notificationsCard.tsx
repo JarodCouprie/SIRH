@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { GoDotFill } from "react-icons/go";
 
 export const NotificationsCard = () => {
   const [pageSize, setPageSize] = useState(5);
@@ -92,23 +93,42 @@ export const NotificationsCard = () => {
           </TableHeader>
           <TableBody>
             {notifications?.length ? (
-              notifications?.map((notification: any) => (
-                <TableRow
-                  key={`${notification?.id}`}
-                  className="hover:cursor-pointer"
-                  onClick={() => handleTouchNotification(notification?.id)}
-                >
-                  <TableCell className="text-wrap font-medium">
-                    {notification?.description}
-                  </TableCell>
-                  <TableCell>
-                    {new Date(notification?.created_at).toLocaleDateString(
-                      "fr-FR",
-                      dateOptions,
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))
+              notifications?.map((notification: any) =>
+                notification?.touched ? (
+                  <TableRow
+                    key={`${notification?.id}`}
+                    className="hover:cursor-pointer"
+                    onClick={() => handleTouchNotification(notification?.id)}
+                  >
+                    <TableCell className="flex items-center gap-2 text-wrap font-light">
+                      <span>{notification?.description}</span>
+                    </TableCell>
+                    <TableCell className="font-light">
+                      {new Date(notification?.created_at).toLocaleDateString(
+                        "fr-FR",
+                        dateOptions,
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <TableRow
+                    key={`${notification?.id}`}
+                    className="hover:cursor-pointer"
+                    onClick={() => handleTouchNotification(notification?.id)}
+                  >
+                    <TableCell className="flex items-center gap-2 text-wrap font-medium">
+                      <GoDotFill className="text-orange-700 dark:text-orange-400" />
+                      <span>{notification?.description}</span>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(notification?.created_at).toLocaleDateString(
+                        "fr-FR",
+                        dateOptions,
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ),
+              )
             ) : (
               <TableRow>
                 <TableCell colSpan={2} className="h-24 text-center">

@@ -32,7 +32,30 @@ export const Dashboard = () => {
   return (
     <MainRoot title="Dashboard">
       <div className="grid size-full grid-cols-3 grid-rows-6 gap-4">
-        <Card className="col-start-3 row-span-3 row-start-1">
+        <Card className="row-span-4">
+          <CardHeader className="text-gray-900 dark:text-gray-300">
+            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
+              <div className="flex flex-wrap items-center gap-4">
+                <GrGroup />
+                <span>Mon service</span>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <div className="col-span-2 col-start-1 row-span-2 row-start-5">
+          <NotificationsCard />
+        </div>
+        <Card className="row-span-4">
+          <CardHeader className="text-gray-900 dark:text-gray-300">
+            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
+              <div className="flex flex-wrap items-center gap-4">
+                <MdHomeRepairService />
+                <span>Mon équipe</span>
+              </div>
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="row-span-3">
           <CardHeader className="text-gray-900 dark:text-gray-300">
             <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
               <div className="flex flex-wrap items-center gap-4">
@@ -50,29 +73,6 @@ export const Dashboard = () => {
             <FieldRow title="RTT">{currentUser.rtt} jours</FieldRow>
             <FieldRow title="Télétravail">{currentUser.tt} jours</FieldRow>
           </CardContent>
-        </Card>
-        <div className="col-span-2 col-start-1 row-span-2 row-start-1">
-          <NotificationsCard />
-        </div>
-        <Card className="row-span-4 row-start-3">
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
-              <div className="flex flex-wrap items-center gap-4">
-                <GrGroup />
-                <span>Mon service</span>
-              </div>
-            </CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="row-span-4 row-start-3">
-          <CardHeader className="text-gray-900 dark:text-gray-300">
-            <CardTitle className="flex flex-wrap justify-between gap-2 text-xl">
-              <div className="flex flex-wrap items-center gap-4">
-                <MdHomeRepairService />
-                <span>Mon équipe</span>
-              </div>
-            </CardTitle>
-          </CardHeader>
         </Card>
         <MapContainer
           className="col-start-3 row-span-3 row-start-4 size-full rounded-xl"
