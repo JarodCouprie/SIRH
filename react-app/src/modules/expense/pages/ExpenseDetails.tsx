@@ -134,7 +134,9 @@ export function ExpenseDetails() {
     try {
       await customFetcher("http://localhost:5000/api/expense/" + id, {
         method: "DELETE",
-      }).then();
+      }).then(() => {
+        navigate("/expense");
+      });
     } catch {
       toast.error(`Echec de l'opération`);
     }

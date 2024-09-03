@@ -155,7 +155,9 @@ export function CreateExpense() {
           body: formData,
         },
         false,
-      ).then();
+      ).then(() => {
+        navigate("/expense");
+      });
     } catch {
       toast.error(`Echec de l'opération`);
     }
