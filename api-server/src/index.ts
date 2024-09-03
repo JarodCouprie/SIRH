@@ -70,6 +70,7 @@ const swaggerOptions = {
   apis: ["./src/resources/**/*.ts"],
 };
 
+// @ts-ignore
 const swaggerDocs = swaggerjsdoc(swaggerOptions);
 app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
