@@ -42,13 +42,15 @@ export function NavBar() {
           <NavBarLink link="/expense" title="Frais">
             <MdOutlineReceiptLong className="size-6" />
           </NavBarLink>
-          <NavBarLink link="/organisation" title="Organisation">
-            <TbBuildingCommunity className="size-6" />
-          </NavBarLink>
           {navLinkDisplayed && (
-            <NavBarLink link="/user" title="Collaborateurs">
-              <GrGroup className="size-6" />
-            </NavBarLink>
+            <>
+              <NavBarLink link="/organisation" title="Organisation">
+                <TbBuildingCommunity className="size-6" />
+              </NavBarLink>
+              <NavBarLink link="/user" title="Collaborateurs">
+                <GrGroup className="size-6" />
+              </NavBarLink>
+            </>
           )}
         </div>
       </div>

@@ -41,6 +41,9 @@ export const Dashboard = () => {
               </div>
             </CardTitle>
           </CardHeader>
+          <CardContent className="grid place-items-center text-gray-500">
+            Vous n'êtes affilié à aucun service
+          </CardContent>
         </Card>
         <div className="col-span-2 col-start-1 row-span-2 row-start-5">
           <NotificationsCard />
@@ -54,6 +57,9 @@ export const Dashboard = () => {
               </div>
             </CardTitle>
           </CardHeader>
+          <CardContent className="grid place-items-center text-gray-500">
+            Vous n'êtes affilié à aucune équipe
+          </CardContent>
         </Card>
         <Card className="row-span-3">
           <CardHeader className="text-gray-900 dark:text-gray-300">
