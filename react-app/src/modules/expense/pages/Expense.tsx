@@ -1,15 +1,11 @@
 import { Button } from "@/components/ui/button.js";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb.tsx";
 import { useEffect, useState } from "react";
 import { ExpenseList, selectedTypeEnum } from "@/models/ExpenseModel.ts";
 import { ExpenseListCard } from "@/modules/expense/components/ExpenseListCard.tsx";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -29,6 +25,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
+import { Card } from "@/components/ui/card.js";
 
 export function Expense() {
   const [selectedType, setSelectedType] = useState(selectedTypeEnum.ALL);
@@ -76,131 +79,122 @@ export function Expense() {
     </Button>
   );
 
-  return (
-    <MainRoot title="Frais" action={newExpense}>
-      <MonthlyExpenseDetails />
-      <div className="border-b-2 pt-6">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <button
-                onClick={() => {
-                  setSelectedType(selectedTypeEnum.ALL);
-                  setPageNumber(1);
-                }}
-                className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400"
-              >
-                Général
-              </button>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <button
-                onClick={() => {
-                  setSelectedType(selectedTypeEnum.TRAVEL);
-                  setPageNumber(1);
-                }}
-                className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400"
-              >
-                Déplacement
-              </button>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <button
-                onClick={() => {
-                  setSelectedType(selectedTypeEnum.COMPENSATION);
-                  setPageNumber(1);
-                }}
-                className="cursor-pointer border-indigo-700  hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400"
-              >
-                Indemnités
-              </button>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <button
-                onClick={() => {
-                  setSelectedType(selectedTypeEnum.HOUSING);
-                  setPageNumber(1);
-                }}
-                className="cursor-pointer border-indigo-700 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400"
-              >
-                Hébergement
-              </button>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <button
-                onClick={() => {
-                  setSelectedType(selectedTypeEnum.FOOD);
-                  setPageNumber(1);
-                }}
-                className="cursor-pointer border-indigo-700 hover:text-indigo-700 dark:border-indigo-400 dark:hover:text-indigo-400"
-              >
-                Restauration
-              </button>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-      <div className="py-2">
+  const tableExpense = (
+    <>
+      <Card>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead />
               <TableHead className="text-left"> Type de demande </TableHead>
               <TableHead className="text-left"> Frais </TableHead>
-              <TableHead className="text-left"> Date de facturation </TableHead>
+              <TableHead className="text-left">Date de facturation</TableHead>
               <TableHead className="text-left"> Status </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {expenses.map((expense) => (
-              <ExpenseListCard expense={expense} key={expense.id} />
-            ))}
+            {expenses.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  Aucune demande de frais n'a été trouvée
+                </TableCell>
+              </TableRow>
+            ) : (
+              expenses.map((expense) => (
+                <ExpenseListCard expense={expense} key={expense.id} />
+              ))
+            )}
           </TableBody>
         </Table>
-        <div className="flex w-full justify-between py-2">
-          <div className="flex items-center gap-2">
-            <Label>Demande de frais par page</Label>
-            <Select
-              onValueChange={(value) => setLimit(parseInt(value))}
-              defaultValue={limit.toString()}
-            >
-              <SelectTrigger className="w-fit">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-950 dark:text-gray-100">
-              {`${limit * (pageNumber - 1) + 1} - ${maxValue()} sur ${expensesCount}`}
-            </span>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setPageNumber(pageNumber - 1);
-              }}
-              disabled={pageNumber === 1}
-            >
-              <CaretLeftIcon />
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setPageNumber(pageNumber + 1);
-              }}
-              disabled={limit * pageNumber >= expensesCount}
-            >
-              <CaretRightIcon />
-            </Button>
-          </div>
+      </Card>
+      <div className="flex w-full justify-between py-2">
+        <div className="flex items-center gap-2">
+          <Label>Demande de frais par page</Label>
+          <Select
+            onValueChange={(value) => setLimit(parseInt(value))}
+            defaultValue={limit.toString()}
+          >
+            <SelectTrigger className="w-fit">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-950 dark:text-gray-100">
+            {`${expenses.length === 0 ? 0 : limit * (pageNumber - 1) + 1} - ${maxValue()} sur ${expensesCount}`}
+          </span>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setPageNumber(pageNumber - 1);
+            }}
+            disabled={pageNumber === 1}
+          >
+            <CaretLeftIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setPageNumber(pageNumber + 1);
+            }}
+            disabled={limit * pageNumber >= expensesCount}
+          >
+            <CaretRightIcon />
+          </Button>
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <MainRoot title="Frais" action={newExpense}>
+      <MonthlyExpenseDetails />
+      <Tabs defaultValue="all" className="pt-8">
+        <TabsList className="flex flex-wrap">
+          <TabsTrigger
+            value="all"
+            onClick={() => setSelectedType(selectedTypeEnum.ALL)}
+          >
+            Général
+          </TabsTrigger>
+          <TabsTrigger
+            value="travel"
+            onClick={() => setSelectedType(selectedTypeEnum.TRAVEL)}
+          >
+            Déplacement
+          </TabsTrigger>
+          <TabsTrigger
+            value="food"
+            onClick={() => setSelectedType(selectedTypeEnum.FOOD)}
+          >
+            Restauration
+          </TabsTrigger>
+          <TabsTrigger
+            value="compensation"
+            onClick={() => setSelectedType(selectedTypeEnum.COMPENSATION)}
+          >
+            Indemnités
+          </TabsTrigger>
+          <TabsTrigger
+            value="housing"
+            onClick={() => setSelectedType(selectedTypeEnum.HOUSING)}
+          >
+            Hébergement
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="all">{tableExpense}</TabsContent>
+        <TabsContent value="food">{tableExpense}</TabsContent>
+        <TabsContent value="travel">{tableExpense}</TabsContent>
+        <TabsContent value="compensation">{tableExpense}</TabsContent>
+        <TabsContent value="housing">{tableExpense}</TabsContent>
+      </Tabs>
     </MainRoot>
   );
 }

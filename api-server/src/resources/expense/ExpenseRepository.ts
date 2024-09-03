@@ -92,7 +92,7 @@ export class ExpenseRepository {
           SELECT *
           FROM expense
           WHERE id_owner = ?
-          ORDER BY id
+          ORDER BY facturation_date DESC
           LIMIT ?,?;
       `,
       [user_id, offset, limit],

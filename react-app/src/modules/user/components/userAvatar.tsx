@@ -75,7 +75,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           <TooltipTrigger asChild>
             <AlertDialogTrigger asChild>
               <Avatar className="size-14 cursor-pointer">
-                <AvatarImage src={user?.avatar_url} />
+                <AvatarImage
+                  src={user?.avatar_url}
+                  alt={`avatar image of ${user?.firstname} ${user?.lastname}`}
+                />
                 <AvatarFallback>
                   {user?.firstname?.charAt(0)}
                   {user?.lastname?.charAt(0)}

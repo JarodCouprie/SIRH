@@ -17,10 +17,10 @@ const badgeVariants = cva(
         outline: "text-gray-950 dark:text-gray-50",
         accepted:
           "text-emerald-800 bg-emerald-200/80 dark:text-emerald-600 dark:bg-emerald-900/40 border-none",
-        denied:
-          "text-red-800 bg-red-200/80 dark:text-red-600 dark:bg-red-900/40 border-none",
-        waiting:
-          "text-yellow-800 bg-amber-300/40 dark:text-yellow-600 dark:bg-yellow-600/20 border-none",
+        neutral:
+          "text-gray-800 bg-gray-200/80 dark:text-gray-400 dark:bg-gray-700/50 border-none",
+        denied: "text-red-600 bg-red-600/15 border-none",
+        waiting: "bg-amber-500/15 text-amber-500 border-none",
         draft:
           "text-blue-800 bg-sky-300/40 dark:text-sky-600 dark:bg-sky-600/20 border-none",
       },

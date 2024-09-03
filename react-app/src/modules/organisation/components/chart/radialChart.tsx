@@ -1,8 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -17,27 +15,31 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.js";
-const chartData = [{ month: "january", desktop: 1260, mobile: 570 }];
+
+const chartData = [{ month: "january", present: 6, absent: 4 }];
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Present",
     color: "hsl(var(--chart-1))",
   },
   mobile: {
-    label: "Mobile",
+    label: "Absent",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-export function RadialChartAgency() {
-  const totalVisitors = chartData[0].desktop + chartData[0].mobile;
+export function RadialChartAgency({
+  title = "Area Chart - Interactive",
+  description = "Showing total visitors for the last 3 months",
+}) {
+  const totalVisitors = chartData[0].present + chartData[0].absent;
 
   return (
     <Card className="flex size-full flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Radial Chart - Stacked</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
@@ -63,16 +65,16 @@ export function RadialChartAgency() {
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) - 16}
-                          className="fill-foreground text-2xl font-bold"
+                          className="text-2xl font-bold dark:fill-white"
                         >
                           {totalVisitors.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 4}
-                          className="fill-muted-foreground"
+                          className="font-bold dark:fill-white"
                         >
-                          Visitors
+                          Total employé
                         </tspan>
                       </text>
                     );
@@ -81,14 +83,14 @@ export function RadialChartAgency() {
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="desktop"
+              dataKey="present"
               stackId="a"
               cornerRadius={5}
               fill="var(--color-desktop)"
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="mobile"
+              dataKey="absent"
               fill="var(--color-mobile)"
               stackId="a"
               cornerRadius={5}
@@ -97,14 +99,7 @@ export function RadialChartAgency() {
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
   );
 }

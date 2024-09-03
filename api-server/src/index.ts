@@ -10,8 +10,12 @@ import agency from "./resources/agency/AgencyController.js";
 import department from "./resources/department/DepartmentController.js";
 import team from "./resources/team/TeamController.js";
 import userProfile from "./resources/userProfile/UserProfileController.js";
+import notification from "./resources/notification/NotificationController.js";
 import cors from "cors";
 import helmet from "helmet";
+import swaggerjsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import { initSocket } from "./common/helper/Socket";
 
 dotenv.config();
 
@@ -21,6 +25,8 @@ const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
+
+initSocket();
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -36,6 +42,7 @@ app.use("/api/agency", agency);
 app.use("/api/service", department);
 app.use("/api/team", team);
 app.use("/api/profile", userProfile);
+app.use("/api/notification", notification);
 
 app.get("/", verifyToken, (req: Request, res: Response) => {
   res.send("API SIRH");
@@ -46,5 +53,25 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`[server]: Serveur running at http://localhost:${port}`);
   });
 }
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API SIRH",
+      description: "API de gestion des données de l'application SIRH",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000/",
+      },
+    ],
+  },
+  apis: ["./src/resources/**/*.ts"],
+};
+
+// @ts-ignore
+const swaggerDocs = swaggerjsdoc(swaggerOptions);
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 export default app;

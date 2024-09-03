@@ -1,10 +1,10 @@
 import { MainRoot } from "@/components/navigation/MainRoot.tsx";
-import { InProgress } from "@/components/navigation/InProgress.tsx";
+import { NotificationsCard } from "@/modules/profile/components/notificationsCard.tsx";
 
 export const Notifications = () => {
   return (
     <MainRoot title="Notifications">
-      <InProgress />
+      <NotificationsCard />
     </MainRoot>
   );
 };

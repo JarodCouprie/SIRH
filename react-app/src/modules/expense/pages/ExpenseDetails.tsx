@@ -14,7 +14,7 @@ import {
   ExpenseStatus,
   ExpenseType,
 } from "@/models/ExpenseModel.ts";
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge.tsx";
 import { toast } from "sonner";
 import {
@@ -28,15 +28,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
-import { MdOutlineVisibility } from "react-icons/md";
+import { MdOutlineDelete, MdOutlineVisibility } from "react-icons/md";
 import { undefined } from "zod";
 import { customFetcher } from "@/common/helper/fetchInstance.js";
+import { FieldRow } from "@/components/fieldRow.tsx";
 
 export function ExpenseDetails() {
   const navigate = useNavigate();
   const handleGoBackToList = () => {
     navigate("/expense");
   };
+
   const [expense, setExpense] = useState(
     new ExpenseList(
       "0",
@@ -120,23 +122,11 @@ export function ExpenseDetails() {
   ) => {
     switch (enumToTranslate) {
       case ExpenseStatus.WAITING:
-        return (
-          <Badge variant="waiting" className="text-xl">
-            En attente
-          </Badge>
-        );
+        return <Badge variant="waiting">En attente</Badge>;
       case ExpenseStatus.REFUNDED:
-        return (
-          <Badge variant="accepted" className="text-xl">
-            Remboursé
-          </Badge>
-        );
+        return <Badge variant="accepted">Remboursé</Badge>;
       case ExpenseStatus.NOT_REFUNDED:
-        return (
-          <Badge variant="denied" className="text-xl">
-            Non remboursé
-          </Badge>
-        );
+        return <Badge variant="denied">Non remboursé</Badge>;
     }
   };
 
@@ -189,6 +179,44 @@ export function ExpenseDetails() {
     window.open(`${expense.fileUrl}`, "_blank");
   };
 
+  const buttons = () => {
+    if (expense.status === "WAITING") {
+      return (
+        <div className="flex flex-row justify-end gap-5">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost">
+                <MdOutlineDelete className="mr-2 size-5 text-red-600" />
+                <span className="text-red-600">Supprimer</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Êtes-vous sûr de vouloir supprimer cette demande ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action est irrévesrible, les données supprimée ne
+                  pourront pas être restaurée.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Confirmer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Button variant="callToAction" onClick={handleEdit}>
+            <Pencil1Icon className="mr-2 size-5" />
+            Modifier
+          </Button>
+        </div>
+      );
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between py-4">
@@ -205,79 +233,30 @@ export function ExpenseDetails() {
               <CardTitle className="text-lg">
                 Visualisation de la demande n°{expense.id}
               </CardTitle>
-              <div className="flex flex-row justify-end gap-5">
-                <AlertDialog>
-                  <AlertDialogTrigger>Supprimer</AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Êtes-vous sûr de vouloir supprimer cette demande ?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Cette action est irrévesrible, les données supprimée ne
-                        pourront pas être restaurée.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete}>
-                        Confirmer
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-                <Button
-                  variant="callToAction"
-                  className="text-lg"
-                  onClick={handleEdit}
-                >
-                  Modifier
-                </Button>
-              </div>
+              {buttons()}
             </div>
           </CardHeader>
-          <CardContent className="flex flex-col p-4">
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Type</div>
-              <div className="text-xl">
-                {translateAndDisplayExpenseTypeEnum(expense.type)}
-              </div>
-            </div>
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Montant</div>
-              <div className="text-xl">{expense.amount}€</div>
-            </div>
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Description</div>
-              <div className="flex flex-wrap text-xl">{expense.motivation}</div>
-            </div>
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Date de facturation</div>
-              <div className="text-xl">
-                {expense.facturation_date.toLocaleDateString()}
-              </div>
-            </div>
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Date de création</div>
-              <div className="text-xl">
-                {expense.created_at.toLocaleDateString()}
-              </div>
-            </div>
-            <div className="rounded border-b border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Status</div>
-              <div className="text-xl">
-                {translateAndDisplayExpenseStatusEnum(expense.status)}
-              </div>
-            </div>
-            <div className="rounded border-gray-300/50 p-4 dark:border-gray-700/50">
-              <div className="font-bold">Fichier</div>
+          <CardContent className="divide-y divide-slate-300 dark:divide-slate-700">
+            <FieldRow title="Type">
+              {translateAndDisplayExpenseTypeEnum(expense.type)}
+            </FieldRow>
+            <FieldRow title="Montant">{expense.amount}€</FieldRow>
+            <FieldRow title="Description">{expense.motivation}</FieldRow>
+            <FieldRow title="Date de facturation">
+              {expense.facturation_date.toLocaleDateString()}
+            </FieldRow>
+            <FieldRow title="Date de création">
+              {expense.created_at.toLocaleDateString()}
+            </FieldRow>
+            <FieldRow title="Status">
+              {translateAndDisplayExpenseStatusEnum(expense.status)}
+            </FieldRow>
+            <FieldRow title="Fichier">
               <div className="flex flex-wrap gap-2">
-                <div className="text-xl">
-                  {fetchFileNameFromUrl(expense.fileUrl)}
-                </div>
+                <div className="">{fetchFileNameFromUrl(expense.fileUrl)}</div>
                 <div className="">{previewButton(expense.fileUrl)}</div>
               </div>
-            </div>
+            </FieldRow>
           </CardContent>
         </Card>
       </div>

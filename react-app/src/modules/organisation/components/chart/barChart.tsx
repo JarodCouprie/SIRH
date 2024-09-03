@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -14,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.js";
@@ -26,12 +24,11 @@ import {
 } from "@/components/ui/chart.js";
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { day: "Lundi", absence: 5 },
+  { day: "Mardi", absence: 2 },
+  { day: "Mercredi", absence: 1 },
+  { day: "Jeudi", absence: 2 },
+  { day: "Vendredi", absence: 3 },
 ];
 
 const chartConfig = {
@@ -48,12 +45,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarChartAgency() {
+export function BarChartAgency({
+  title = "Area Chart - Interactive",
+  description = "Showing total visitors for the last 3 months",
+}) {
   return (
     <Card className="size-full">
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -75,26 +75,26 @@ export function BarChartAgency() {
               tickFormatter={(value) => value.slice(0, 3)}
               hide
             />
-            <XAxis dataKey="desktop" type="number" hide />
+            <XAxis dataKey="absence" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="desktop"
+              dataKey="absence"
               layout="vertical"
               fill="var(--color-desktop)"
               radius={4}
             >
               <LabelList
-                dataKey="month"
+                dataKey="day"
                 position="insideLeft"
                 offset={8}
                 className="fill-[--color-label]"
                 fontSize={12}
               />
               <LabelList
-                dataKey="desktop"
+                dataKey="absence"
                 position="right"
                 offset={8}
                 className="fill-foreground"
@@ -104,14 +104,6 @@ export function BarChartAgency() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter>
     </Card>
   );
 }

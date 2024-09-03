@@ -74,7 +74,7 @@ export class AgencyRepository {
 
   public static async getDemandGroupedByMonth() {
     const [rows] = await this.pool.query(
-      `SELECT DATE_FORMAT(created_at, '%Y-%m') AS date,
+      `SELECT DATE_FORMAT(start_date, '%Y-%m') AS date,
               COUNT(*)                         AS count
        FROM demand
        WHERE status = 'ACCEPTED'
@@ -82,6 +82,41 @@ export class AgencyRepository {
        ORDER BY date`,
     );
     return rows;
+  }
+  public static async getDemandGroupedByWeek() {
+    const [rows] = await this.pool.query(
+      `SELECT DATE_FORMAT(start_date, '%Y-%m-%d') AS date,
+              COUNT(*) AS count
+       FROM demand
+       WHERE status = 'ACCEPTED'
+         AND WEEKDAY(start_date) IN (0, 4)  
+       GROUP BY date
+       ORDER BY date`,
+    );
+    return rows;
+  }
+
+  public static async countUserInAgency(idAgency: number) {
+    const [result]: any = await this.pool.query(
+      `
+          SELECT agency.label AS agency_name,
+                 COUNT(users.id) AS total_users,
+                 COUNT(CASE WHEN demand.id IS NULL THEN 1 END) AS total_present,
+                 COUNT(CASE WHEN demand.id IS NOT NULL THEN 1 END) AS total_absent
+          FROM users
+                   JOIN belong_team ON users.id = belong_team.id_user
+                   JOIN team ON belong_team.id_team = team.id
+                   JOIN service ON team.id_service = service.id
+                   JOIN agency ON service.id_agency = agency.id
+                   LEFT JOIN demand ON users.id = demand.id_owner
+              AND demand.status = 'ACCEPTED'
+              AND CURDATE() BETWEEN demand.start_date AND demand.end_date
+          WHERE agency.id = ?
+          GROUP BY agency.label;
+      `,
+      [idAgency],
+    );
+    return result;
   }
 
   public static async createAgency(agency: CreateAgency) {
@@ -92,6 +127,18 @@ export class AgencyRepository {
           VALUES (?, ?)
       `,
       [agency.label, agency.id_address],
+    );
+    return rows[0];
+  }
+
+  public static async deleteAgency(id: number) {
+    const [rows]: any = await this.pool.query(
+      `
+          DELETE
+          FROM agency
+          WHERE id = ?;
+      `,
+      [id],
     );
     return rows[0];
   }
