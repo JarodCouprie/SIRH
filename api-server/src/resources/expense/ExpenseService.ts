@@ -270,7 +270,7 @@ export class ExpenseService {
     }
   }
 
-  public static async getExpenseDemand(id: string, userId: number) {
+  public static async getExpenseDemand(id: string) {
     try {
       const expenseTemp = await ExpenseRepository.getExpenseDemand(id);
       let expense: ExpenseListDTO;
@@ -282,8 +282,6 @@ export class ExpenseService {
       } else {
         expense = new ExpenseListDTO(expenseTemp);
       }
-      if (expense.id_owner != userId)
-        return new ControllerResponse(403, "Access denied");
 
       return new ControllerResponse<ExpenseListDTO>(200, "", expense);
     } catch (error) {
@@ -327,45 +325,6 @@ export class ExpenseService {
     } catch (error) {
       logger.error(`Failed to confirm expenses. Error: ${error}`);
       return new ControllerResponse(500, "Failed to confirm expenses");
-    }
-  }
-
-  public static async getExpensesCount(req: Request) {
-    try {
-      const type: string = req.params.type || "ALL";
-      let count: number;
-      if (type == null || type == "ALL") {
-        const result: any = await ExpenseRepository.getExpensesCount();
-        count = result;
-      } else {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByType(type);
-        count = result;
-      }
-      return new ControllerResponse<number>(200, "", count);
-    } catch (error) {
-      logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
-    }
-  }
-
-  public static async getExpensesCountByUserId(req: Request, userId: number) {
-    try {
-      const type: string = req.params.type || "ALL";
-      let count;
-      if (type == null || type == "ALL") {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByUserId(userId);
-        count = result;
-      } else {
-        const result: any =
-          await ExpenseRepository.getExpensesCountByTypeAndUserId(type, userId);
-        count = result;
-      }
-      return new ControllerResponse<number>(200, "", count);
-    } catch (error) {
-      logger.error(`Failed to get expenses. Error: ${error}`);
-      return new ControllerResponse(500, "Failed to get expenses");
     }
   }
 

@@ -3,7 +3,7 @@ import { ExpenseType } from "../../../common/enum/ExpenseType";
 import { ExpenseStatus } from "../../../common/enum/ExpenseStatus";
 
 export class ExpenseListDTO {
-  id: string;
+  id: number;
   type: ExpenseType;
   amount: number;
   motivation: string;

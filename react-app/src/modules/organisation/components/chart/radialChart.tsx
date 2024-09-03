@@ -16,7 +16,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart.js";
 
-const chartData = [{ month: "january", present: 40, absent: 10 }];
+const chartData = [{ month: "january", present: 6, absent: 4 }];
 
 const chartConfig = {
   desktop: {

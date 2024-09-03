@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/chart.js";
 
 const chartData = [
-  { day: "Lundi", absence: 7 },
-  { day: "Mardi", absence: 5 },
+  { day: "Lundi", absence: 5 },
+  { day: "Mardi", absence: 2 },
   { day: "Mercredi", absence: 1 },
   { day: "Jeudi", absence: 2 },
   { day: "Vendredi", absence: 3 },

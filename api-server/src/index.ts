@@ -13,6 +13,8 @@ import userProfile from "./resources/userProfile/UserProfileController.js";
 import notification from "./resources/notification/NotificationController.js";
 import cors from "cors";
 import helmet from "helmet";
+import swaggerjsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 import { initSocket } from "./common/helper/Socket";
 
 dotenv.config();
@@ -51,5 +53,24 @@ if (process.env.NODE_ENV !== "test") {
     console.log(`[server]: Serveur running at http://localhost:${port}`);
   });
 }
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API SIRH",
+      description: "API de gestion des données de l'application SIRH",
+    },
+    servers: [
+      {
+        url: "http://localhost:5000/",
+      },
+    ],
+  },
+  apis: ["./src/resources/**/*.ts"],
+};
+
+const swaggerDocs = swaggerjsdoc(swaggerOptions);
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 export default app;
