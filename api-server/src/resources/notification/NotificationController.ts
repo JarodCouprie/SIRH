@@ -10,10 +10,14 @@ const router = Router();
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   const { code, message, data } =
     await NotificationService.getNotificationsByUserId(req);
-
-  const userId = (req as CustomRequest).token.userId;
-
   res.status(code).json({ message, data });
+});
+
+router.get("/touch/:id", verifyToken, async (req: Request, res: Response) => {
+  const { code, message } = await NotificationService.markNotificationAsTouched(
+    +req.params.id,
+  );
+  res.status(code).json({ message });
 });
 
 export default router;

@@ -72,7 +72,7 @@ export const Organisation = () => {
   const newOrg = (
     <Button variant="callToAction" onClick={handleClickCreate}>
       <PlusIcon className="mr-2 size-4" />
-      Créer une organisation
+      Créer une agence
     </Button>
   );
 

@@ -84,4 +84,17 @@ export class NotificationService {
       logger.error(`Failed to generate notifications. Error: ${error}`);
     }
   }
+
+  public static async markNotificationAsTouched(notificationId: number) {
+    try {
+      await NotificationRepository.markNotificationAsTouched(notificationId);
+      return new ControllerResponse(200, "Notification marquée comme lue");
+    } catch (error) {
+      logger.error(`Failed to touch notification. Error: ${error}`);
+      return new ControllerResponse(
+        500,
+        "Impossible de marquée la notification comme lue",
+      );
+    }
+  }
 }
