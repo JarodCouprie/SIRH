@@ -22,13 +22,13 @@ export function NavBar() {
      bg-gray-800 transition-all duration-500 max-md:w-20"
     >
       <div className="flex flex-col">
-        <div className="flex items-center gap-4 border-b border-slate-700 p-4 max-md:items-center">
+        <div className="flex items-center gap-2 border-b border-slate-700 p-4 max-md:justify-center">
           <img
             src="src/assets/Logo_SIRH.svg"
-            className="float-start size-10"
+            className="size-10"
             alt="Logo SIRH"
           />
-          <h1 className="text-2xl font-bold text-gray-100 max-md:hidden">
+          <h1 className="text-3xl font-semibold text-gray-100 max-md:hidden">
             SIRH
           </h1>
         </div>
@@ -42,13 +42,15 @@ export function NavBar() {
           <NavBarLink link="/expense" title="Frais">
             <MdOutlineReceiptLong className="size-6" />
           </NavBarLink>
-          <NavBarLink link="/organisation" title="Organisation">
-            <TbBuildingCommunity className="size-6" />
-          </NavBarLink>
           {navLinkDisplayed && (
-            <NavBarLink link="/user" title="Collaborateurs">
-              <GrGroup className="size-6" />
-            </NavBarLink>
+            <>
+              <NavBarLink link="/organisation" title="Organisation">
+                <TbBuildingCommunity className="size-6" />
+              </NavBarLink>
+              <NavBarLink link="/user" title="Collaborateurs">
+                <GrGroup className="size-6" />
+              </NavBarLink>
+            </>
           )}
         </div>
       </div>

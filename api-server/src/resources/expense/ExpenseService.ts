@@ -11,6 +11,12 @@ import { Request } from "express";
 import { ExpenseAmountDateAndStatusDTO } from "./dto/ExpenseAmountDateAndStatusDTO.js";
 import { MinioClient } from "../../common/helper/MinioClient.js";
 import { ExpenseStatus } from "../../common/enum/ExpenseStatus";
+import { CreateNotification } from "../../common/model/Notification";
+import { NotificationType } from "../../common/enum/NotificationType";
+import { NotificationRepository } from "../notification/NotificationRepository";
+import { NotificationSender } from "../../common/helper/NotificationSender";
+import { NotificationService } from "../notification/NotificationService";
+import { RoleEnum } from "../../common/enum/RoleEnum";
 
 export class ExpenseService {
   public static async getExpensesValuesByUserId(req: Request, userId: number) {
@@ -192,6 +198,24 @@ export class ExpenseService {
     try {
       const expense_ = new ExpenseValidation(id, userId);
       const statusChange = await ExpenseRepository.confirmExpense(expense_);
+
+      const expense = await ExpenseRepository.getExpenseDemand(String(id));
+
+      const notification = new CreateNotification(
+        "Votre demande de frais a été validée",
+        NotificationType.EXPENSE,
+        expense.id,
+        expense.id_owner,
+      );
+
+      await NotificationRepository.createNotification(notification);
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          expense.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, expense.id_owner);
+
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);
@@ -207,6 +231,23 @@ export class ExpenseService {
         userId,
       );
       const statusChange = await ExpenseRepository.rejectExpense(expense_);
+
+      const expense = await ExpenseRepository.getExpenseDemand(String(id));
+      const notification = new CreateNotification(
+        "Votre demande de frais a été rejetée",
+        NotificationType.EXPENSE,
+        expense.id,
+        expense.id_owner,
+      );
+
+      await NotificationRepository.createNotification(notification);
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          expense.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, expense.id_owner);
+
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the expense. Error: ${error}`);
@@ -255,11 +296,31 @@ export class ExpenseService {
   public static async confirmExpenseDemand(req: Request, userId: number) {
     try {
       const status = req.body.ExpenseStatus;
-      const result: any = await ExpenseRepository.confirmExpenseDemand(
-        +req.params.id,
-        status,
-        userId,
+      const expenseId = +req.params.id;
+      await ExpenseRepository.confirmExpenseDemand(expenseId, status, userId);
+
+      const expense = await ExpenseRepository.getExpenseDemand(
+        String(expenseId),
       );
+
+      const notification = new CreateNotification(
+        "Une demande de frais attend votre validation",
+        NotificationType.EXPENSE,
+        expense.id,
+      );
+
+      await NotificationService.createNotificationsFromUserRoles(notification, [
+        RoleEnum.HR,
+        RoleEnum.ADMIN,
+      ]);
+
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          expense.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, expense.id_owner);
+
       return new ControllerResponse(200, "Operation was a success");
     } catch (error) {
       logger.error(`Failed to confirm expenses. Error: ${error}`);

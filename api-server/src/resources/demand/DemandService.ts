@@ -20,6 +20,13 @@ import { User } from "../../common/model/User.js";
 import { DemandEntity } from "../../common/entity/demand/demand.entity.js";
 import { DemandType } from "../../common/enum/DemandType";
 import { DemandStatus } from "../../common/enum/DemandStatus";
+import { ExpenseRepository } from "../expense/ExpenseRepository";
+import { CreateNotification } from "../../common/model/Notification";
+import { NotificationType } from "../../common/enum/NotificationType";
+import { NotificationRepository } from "../notification/NotificationRepository";
+import { NotificationSender } from "../../common/helper/NotificationSender";
+import { NotificationService } from "../notification/NotificationService";
+import { RoleEnum } from "../../common/enum/RoleEnum";
 
 export function calculateNumberOfDays(
   start_date: Date,
@@ -158,6 +165,28 @@ export class DemandService {
         status: DemandStatus.WAITING,
       };
       const statusChange = await DemandRepository.editStatusDemand(demand_);
+
+      const updatedDemand = await DemandRepository.getDemandById(+id);
+
+      const notification = new CreateNotification(
+        "Une demande attend votre validation",
+        NotificationType.DEMAND,
+        updatedDemand.id,
+      );
+
+      await NotificationService.createNotificationsFromUserRoles(notification, [
+        RoleEnum.HR,
+        RoleEnum.ADMIN,
+        RoleEnum.LEAVE_MANAGER,
+      ]);
+
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          updatedDemand.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, updatedDemand.id_owner);
+
       return new ControllerResponse(200, "", statusChange);
     } catch (error) {
       logger.error(`Failed to edit the demand. Error: ${error}`);
@@ -359,6 +388,23 @@ export class DemandService {
     try {
       const demand = new ConfirmDemand(id, userId);
       await DemandRepository.confirmDemand(demand);
+
+      const updatedDemand = await DemandRepository.getDemandById(id);
+      const notification = new CreateNotification(
+        "Votre demande a été validée",
+        NotificationType.DEMAND,
+        updatedDemand.id,
+        updatedDemand.id_owner,
+      );
+
+      await NotificationRepository.createNotification(notification);
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          updatedDemand.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, updatedDemand.id_owner);
+
       return new ControllerResponse(200, "Demande acceptée avec succès");
     } catch (error) {
       logger.error(`Failed to confirm demand. Error: ${error}`);
@@ -401,6 +447,23 @@ export class DemandService {
       }
 
       await UserRepository.updateUserDays(user.id, user.rtt, user.ca, user.tt);
+
+      const updatedDemand = await DemandRepository.getDemandById(id);
+      const notification = new CreateNotification(
+        "Votre demande a été rejetée",
+        NotificationType.DEMAND,
+        updatedDemand.id,
+        updatedDemand.id_owner,
+      );
+
+      await NotificationRepository.createNotification(notification);
+      const notificationCount =
+        await NotificationRepository.getUntouchedNotificationsCountByUserId(
+          updatedDemand.id_owner,
+        );
+
+      NotificationSender.send(notificationCount, updatedDemand.id_owner);
+
       return new ControllerResponse(200, "Demande rejetée avec succès");
     } catch (error) {
       logger.error(`Failed to reject demand. Error: ${error}`);

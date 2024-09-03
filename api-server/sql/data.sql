@@ -90,3 +90,7 @@ INSERT INTO belong_team (id_team, id_user) VALUES
                                                (5, 2);
 
 
+
+
+INSERT INTO `notification` (`description`, `type`, `id_receiver`, `id_sender`, touched)
+VALUES ('Première notification que je dois décrire simplement', 'EXPENSE', '1', '2', true);

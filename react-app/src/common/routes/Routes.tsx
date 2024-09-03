@@ -37,8 +37,10 @@ export const Routes = () => {
   ];
 
   if (currentUser.id && !userHasRequiredRoles) {
-    const routeIndex = childrenRoutes.indexOf(userRoutes);
-    childrenRoutes.splice(routeIndex, 1);
+    const userRoutesIndex = childrenRoutes.indexOf(userRoutes);
+    const organisationRoutesIndex = childrenRoutes.indexOf(organisationRoutes);
+    childrenRoutes.splice(userRoutesIndex, 1);
+    childrenRoutes.splice(organisationRoutesIndex, 1);
   }
 
   const publicRoutes = [

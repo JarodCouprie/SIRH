@@ -164,7 +164,6 @@ export class TeamRepository {
   }
 
   public static async deleteTeam(idTeam: number) {
-    console.log(idTeam);
     const [rows]: any = await this.pool.query(
       `DELETE
        FROM team
